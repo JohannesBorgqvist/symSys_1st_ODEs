@@ -23,4 +23,9 @@ echo ""
 python3 generate_report.py
 cd ../Output
 pdflatex summary_report.tex
-
+pdflatex summary_report.tex
+echo "============================================================"
+echo "EVERYTHING WAS EXECUTED SUCCESFULLY!"
+echo ""
+echo ""
+echo "============================================================"
