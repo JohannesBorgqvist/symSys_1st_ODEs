@@ -1,0 +1,6 @@
+name: symSys_1st_ODEs
+dependencies:
+  - sympy
+  - math
+  - itertools
+  -
