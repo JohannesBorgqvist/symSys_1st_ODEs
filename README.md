@@ -23,11 +23,9 @@ The script also generates a LaTeX report with *pdflatex*. The version of *pdflat
 **Copyright 2020 Han The Thanh (pdfTeX) et al.**<br>
 
 ## Setting up the project using anaconda
-The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). 
-
-*conda env create -f symSys_1st_ODEs.yml*
-
-*conda activate symSys_1st_ODEs*
-
-
-*conda deactivate*
+The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed, the required dependencies in order to run the script is accessed by creating an anconda environment with the provided yml-file. This is done with the following command:<br>
+*conda env create -f symSys_1st_ODEs.yml*.<br>
+After this, the environment is activated with the command:<br>
+*conda activate symSys_1st_ODEs*,<br>
+and it is deactivated using<br>
+*conda deactivate*.<br>
