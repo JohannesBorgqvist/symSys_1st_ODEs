@@ -3,6 +3,7 @@ Welcome to the git repositry "*symSys_1st_ODEs*". This is a Python and LaTeX bas
 
 ## Description of the project
 
+![Drag Racing](Fig3.pdf)
 
 ## Pre-requisites to run the scripts
 
