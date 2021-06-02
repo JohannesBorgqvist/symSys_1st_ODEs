@@ -1,0 +1,12 @@
+name: symSys_1st_ODEs
+dependencies:
+  - python = 3.8.3
+  - sympy = 1.6.1
+  - math
+  - itertools
+  - os
+  - pandas = 1.0.5
+  - pickle
+  - sys
+  - notebook = 6.0.3
+  - anaconda = 2020.07
