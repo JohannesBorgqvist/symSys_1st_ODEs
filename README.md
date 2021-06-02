@@ -15,7 +15,7 @@ The programming has been done in Python, and as an output the script generates a
 1. *python*, version 3.8.3,
 2. *pandas*, version 1.0.5,
 3. *notebook*, version 6.0.3,
-4. *anaconda*, version 2020.07 (*not required but convenient*). 
+4. *anaconda*, version 2020.07 (*not required but convenient*). <br>
 The script also generates a LaTeX report with *pdflatex*. The version of *pdflatex* that has been used for this project is the following:<br>
 **pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)**,<br>
 **kpathsea version 6.3.2**,<br>
