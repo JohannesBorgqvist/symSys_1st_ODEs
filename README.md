@@ -1,4 +1,6 @@
 # symSys_1st_ODEs
+**Author**: Johannes Borgqvist<br>
+**Date**: 2021-06-02<br>
 Welcome to the git repositry "*symSys_1st_ODEs*". This is a Python and LaTeX based project which conducts automated symbolic calculations of the symmetries of systems of first order ODEs using sympy.
 
 ## Description of the project
@@ -22,6 +24,7 @@ The script also generates a LaTeX report with *pdflatex*. The version of *pdflat
 **kpathsea version 6.3.2**,<br>
 **Copyright 2020 Han The Thanh (pdfTeX) et al.**<br>
 
+To run all scripts and generate a report, a bash script called "*run\_all.sh*" has been created. It might be neccessary to get permission to run the file first which can be done by typing "*chmod +x run\_all.sh*" and then the script is executed with the command "*./run\_all.sh*".
 ## Setting up the project using anaconda
 The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed, the required dependencies in order to run the script is accessed by creating an anconda environment with the provided yml-file. This is done with the following command:<br>
 *conda env create -f symSys_1st_ODEs.yml*.<br>
