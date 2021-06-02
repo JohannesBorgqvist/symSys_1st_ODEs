@@ -11,15 +11,13 @@ The scripts have been developed on a laptop with the following operating system:
 with the following properties:<br>
 **Kernel: Linux 5.8.0-53-generic**<br>
 **Architecture: x86-64**.<br>
-The programming has been done in Python, and as an output the script generates a LaTeX-file with the calculated generator. The versions of packages required for the programming scripts are the following:
-
+The programming has been done in Python, and as an output the script generates a LaTeX-file with the calculated generator. The versions of packages required for the programming scripts are the following:<br>
 1. *python*, version 3.8.3,
 2. *pandas*, version 1.0.5,
 3. *notebook*, version 6.0.3,
 4. *anaconda*, version 2020.07 (*not required but convenient*). 
 The script also generates a LaTeX report with *pdflatex*. The version of *pdflatex* that has been used for this project is the following:<br>
-
-**pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)**m<br>
+**pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)**,<br>
 **kpathsea version 6.3.2**,<br>
 **Copyright 2020 Han The Thanh (pdfTeX) et al.**<br>
 
