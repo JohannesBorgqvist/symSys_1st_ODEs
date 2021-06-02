@@ -1,3 +1,19 @@
-
-Notes/Calculations/calculations.synctex.gz
-Code/Notebooks/.ipynb_checkpoints/SymPy_example_ODE-checkpoint.ipynb
+# Ignore these formats often created
+# when tex-files are compiled with
+# pdflatex
+*.log
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.out
+*.toc
+*.tex~
+*.bib~
+*.py~
+*.sh~
+*.md~
+# We also remove the gitignore itself
+.gitignore
+.gitignore~
