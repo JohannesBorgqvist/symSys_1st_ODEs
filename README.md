@@ -6,13 +6,17 @@ This repositry provides an automated framework for calulculating the symmetry ge
 ![Hydons_ODEs](ODE_sys.jpg)
 
 ## Pre-requisites to run the scripts
-The scripts have been developed on a laptop with the following operating system:
-
-**Ubuntu 20.10**
+The scripts have been developed on a laptop with the following operating system:<br>
+**Ubuntu 20.10**<br>
 with the following properties:
 **Kernel: Linux 5.8.0-53-generic**<br>
 **Architecture: x86-64**.<br>
+The programming has been done in Python, and as an output the script generates a LaTeX-file with the calculated generator. The versions of packages required for the programming scripts are the following:
 
+1. *python*, version 3.8.3,
+2. *pandas*, version 1.0.5,
+3. *notebook*, version 6.0.3,
+4. *anaconda*, version 2020.07 (*not required but convenient*). 
 
 
 ## Setting up the project using anaconda
