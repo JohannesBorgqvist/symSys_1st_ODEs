@@ -116,7 +116,12 @@ def read_input_model(file_name):
                 list_reaction = [] # Reaction terms
                 # Loop over reaction terms and find all symbols in them
                 for i in range(len(reaction_terms)):
-                    list_reaction += [a for a in reaction_terms[i].atoms(Symbol)] 
+                    list_reaction += [a for a in reaction_terms[i].atoms(Symbol)]
+                    list_reaction += [a for a in reaction_terms[i].atoms(Function)]                     
+                print("Variables+Parameters:")
+                print(list_var_par)
+                print("Reaction terms:")
+                print(list_reaction)                
                 # See if both these guys contains the same symbols and that the correct number of ODEs is provided.                    
                 if (set(list_var_par)==set(list_reaction)) and (len(reaction_terms) == (len(variables)-1) ):
                     model_reading_successful = True                       

@@ -2,7 +2,7 @@
 #=======================================================================
 cd ./Code/
 echo "============================================================"
-echo "RUNNING SCRIPT 1 OUT OF 1"
+echo "RUNNING SCRIPT 1 OUT OF 2"
 echo ""
 echo ""
 echo "Calculating the generator for Hydons_model."
@@ -12,6 +12,17 @@ echo "============================================================"
 echo " "
 echo ""
 python3 launch_symmetry_calculations.py hydons_model 1
+echo "============================================================"
+echo "RUNNING SCRIPT 2 OUT OF 2"
+echo ""
+echo ""
+echo "Calculating the generator for Linear_model."
+echo "The results are stored in the folder:"
+echo "Output"
+echo "============================================================"
+echo " "
+echo ""
+python3 launch_symmetry_calculations.py linear_model 1
 echo "============================================================"
 echo "GENERATING REPORT"
 echo ""
