@@ -1,4 +1,5 @@
-- [] Make sure code work for the general linear case,
+# TASK LIST FOR THE SYM_SYS PROJECT
+- [ ] Make sure code work for the general linear case,
 - [ ] Make the code work for the DBH model,
 - [ ] Add branches github,
 - [ ] Fix sources for the Introduction,
