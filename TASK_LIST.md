@@ -12,4 +12,8 @@
 - [ ] Find more system of ODEs with known symmetries from mathematical biology.
 - [ ] Fix error of "from sympy import *" where we need to import each part of sympy individually,
 - [x] This is how you check a box! Just and an x in the box.
+
+
+REALLY GOOD LINK FOR WORKING WITH BRANCHES IN GIT:
+https://thenewstack.io/dont-mess-with-the-master-working-with-branches-in-git-and-github/
   
