@@ -16,4 +16,9 @@
 
 REALLY GOOD LINK FOR WORKING WITH BRANCHES IN GIT:
 https://thenewstack.io/dont-mess-with-the-master-working-with-branches-in-git-and-github/
+
+Needed to set up the branches one for each user:
+1. Johannes's branch,
+2. Fredrik's branch,
+3. Ruth's branch.
   
