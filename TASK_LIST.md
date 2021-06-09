@@ -1,7 +1,7 @@
 # TASK LIST FOR THE SYM_SYS PROJECT
 - [ ] Make sure code work for the general linear case,
 - [ ] Make the code work for the DBH model,
-- [ ] Add branches github,
+- [x] Add branches github,
 - [ ] Fix sources for the Introduction,
 - [ ] Fix sources for the Discussion,
 - [ ] Shorten the code for the algorithm,
