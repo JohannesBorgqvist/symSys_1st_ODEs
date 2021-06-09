@@ -10,5 +10,6 @@
 - [ ] Make sure that the code can run on Windows,
 - [ ] Make sure that the code can run on Mac,
 - [ ] Find more system of ODEs with known symmetries from mathematical biology.
+- [ ] Fix error of "from sympy import *" where we need to import each part of sympy individually,
 - [x] This is how you check a box! Just and an x in the box.
   
