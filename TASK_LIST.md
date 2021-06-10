@@ -11,6 +11,7 @@
 - [ ] Make sure that the code can run on Mac,
 - [ ] Find more system of ODEs with known symmetries from mathematical biology.
 - [ ] Fix error of "from sympy import *" where we need to import each part of sympy individually,
+- [ ] Fix so that the generator is saved with align instead of as equation,
 - [x] This is how you check a box! Just and an x in the box.
 
 
