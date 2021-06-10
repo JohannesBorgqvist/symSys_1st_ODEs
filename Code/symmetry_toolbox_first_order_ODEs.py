@@ -420,6 +420,10 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
         # Append the equation
         eq_alg.append(temp_sum)
     # Solve each equation
+    print(latex(B_algebraic))
+    print(latex(eq_alg))
+    print(pivot_columns)
+    print(latex(Matrix(len(c_reduced),1,c_reduced)))
     eq_alg = [solve(eq_alg[i],c_reduced[i](x[0])) for i in pivot_columns]
     #------------------------------------------------------------------------------
     # STEP 5: IF THE SYSTEM IS DIAGONISABLE IT WILL BE SOLVED WITH LINEAR ALGEBRA

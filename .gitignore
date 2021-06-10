@@ -2,7 +2,6 @@
 # when tex-files are compiled with
 # pdflatex
 *.html
-*.tex
 *.log
 *.aux
 *.bbl
