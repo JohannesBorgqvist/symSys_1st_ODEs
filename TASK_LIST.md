@@ -5,7 +5,8 @@
 - [ ] Fix sources for the Introduction,
 - [ ] Fix sources for the Discussion,
 - [ ] Shorten the code for the algorithm,
-- [ ] Add a notebook in the Github,
+- [ ] Create a notebook for Hydon's model in the Github,
+- [ ] Create notebooks for linear + DBH models
 - [ ] Calculate the most general ODE system from the Lie algebra of the DBH model,
 - [ ] Make sure that the code can run on Windows,
 - [ ] Make sure that the code can run on Mac,
@@ -14,6 +15,25 @@
 - [ ] Fix so that the generator is saved with align instead of as equation,
 - [ ] Decide where to publish (see the second section below),
 - [x] This is how you check a box! Just and an x in the box.
+- [ ] Calculate symmetries for LV-model
+- [ ] Add charateristic to theory section
+- [ ] Split defs in theory section
+- [ ] Name parts of determining equations (currently "pseudo")
+- [ ] Name type of anzats (currently "projective")
+- [ ] Change name of algebraic equations from solutionk of ODEs to "constraints"
+- [ ] Add block matrix derivation before algorithm
+- [ ] Rewrite algorithm section; polynomials, notation etc + structure
+- [ ] Simpler model worked as detailed example
+- [ ] Move full calc of Hydon's model to supplementary
+- [ ] Include partial example Hydon's model in example section
+- [ ] Derive DBH model from symmetries
+- [ ] Complete derivation of Hydon's to standard form
+- [ ] Change to tau=0 everywhere in the DBH model
+- [ ] Compute symmetries for oscillator models (Brusselator + Oregonator)
+- [ ] Compute SIR AIDS model (Murray p. 338)
+- [ ] Check calculations for Hydon's model derivation
+- [ ] Derive linear model from symmetries
+- [ ] Understand method of deriving ODEs from symmetries and invariant
 
 
 
