@@ -483,7 +483,94 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     # Find the pivot elements in the algebraic matrix
     pivot_columns = B_algebraic.rref()[1]
     # Row reduce the algebraic matrix 
-    B_algebraic = B_algebraic.rref()[0]        
+    B_algebraic = B_algebraic.rref()[0]
+    #------------------------------------------------------------------------------
+    # STEP 5 of 8: IF SYSTEM IS DIAGONISABLE WE TRY TO SOLVE IT WITH CLASSICAL
+    # LINEAR ALGEBRA
+    #-----------------------------------------------------------------------------
+    print("The matrix A:")
+    print("%s\n"%(str(latex(A,mode='equation'))))
+    print("Is A diagonisable?\n")
+    print(A.is_diagonalizable())
+    print("The matrix B:")
+    print("%s\n"%(str(latex(B,mode='equation'))))
+    print("The coefficient c_reduced:")
+    print("%s\n"%(str(latex(Matrix(len(c_reduced),1,c_reduced),mode='equation'))))
+    print("The algebraic equations B_algebraic")
+    print("%s\n"%(str(latex(B_algebraic,mode='equation'))))    
+    # If A is diagonizable we will try to
+    # solve the system at hand
+    if A.is_diagonalizable():
+        print("We entered?\n")
+        #-------------------------------------------------------
+        # MATRIX CALCULATIONS
+        #-------------------------------------------------------
+        # Allocate memory for our solutions
+        solutions = zeros(len(c_reduced),1)
+        # Diagonalise matrix inv(A)*B
+        M = A.inv()*B
+        # CASE 1: M is diagonizable
+        if M.is_diagonalizable():
+            (P, D) = M.diagonalize()
+            # Define a new matrix exp_D
+            exp_D = D
+            # Calculate the rows in this matrix
+            rows, cols = exp_D.shape
+            # Loop over the diagonal, take the
+            # exponent of that value times the time
+            # and multiply with an arbitrary coefficient
+            for rI in range(rows):
+                # For some reason, we need to define the name
+                # C1 in order to do a substitution
+                exec("C%d = symbols('C%d')"%(coefficient_counter,coefficient_counter))
+                # Change the matrix at hand 
+                exec("exp_D[rI,rI] = C%d*exp(exp_D[rI,rI]*x[0])"%(coefficient_counter))
+                # Update the coefficient counter
+                coefficient_counter += 1
+            # Calculate the solution
+            num_of_eqs, cols = M.shape
+            # Loop over columns and construct the solutions
+            for c in range(cols):
+                solutions += exp_D[c,c]*P[:,c]
+            # Substitute these value in to each and every one of the equations
+            for i in range(len(c_reduced)):
+                # Loop over all coefficients in c and do the substitutions
+                for index in range(len(c)):
+                    # If the element contains our coefficient, replace it
+                    # by the substitution
+                    if c[index]==c_reduced[i]:
+                        c[index] = simplify(solutions[i,0])
+                    else:
+                        # Neglect all coefficients that are integer, which most often mean that they take the value zero. In this case we just move on.
+                        if type(c[index]) != int:
+                            # Check if the current coefficient is a function
+                            list_func = [a.func for a in c[index].atoms(function.AppliedUndef)]
+                            # MOST IMPORTANTLY: Check if the current coefficient is multiplied by some strange factor. In this case, we shall only do the substitution directly. Otherwise, we should just move on.
+                            list_mul = [a.func for a in c[index].atoms(Mul)]
+                            # Also, we need to make sure that we can differentiate between symbols which the integration constants, e.g. C1, are and our lovely coefficients ,e.g. c_0_1, are not.
+                            list_symb = [a.func for a in c[index].atoms(Symbol)] 
+                            # Apparently there is a symbolic zero which can cause problems which is stored as a symbolic number. Apparently, there is a type called exactly number which the symbolic zero is stored as but not the coefficients. This will allow us to differentiate between the two. 
+                            list_number = [a.func for a in c[index].atoms(Number)] 
+                            # CASE 1: We have a function multiplied with various parameters, a so called "mul"=> Substitute the solution directly! 
+                            if len(list_mul) != 0:
+                                # Substitute the solution into the coefficient of interest
+                                temp_expression = c[index]
+                                c[index] = temp_expression.subs(c_reduced[i](x[0]),simplify(solutions[i,0]))          
+            # The indices that we want to remove from the vector c
+            indices_to_remove = [i for i in range(len(c_reduced)) for j in range(len(c)) if c[j]==c_reduced[i]]
+            # Sort the indices in reversed order
+            indices_to_remove.sort(reverse=True)
+            # Loop over indices and remove them
+            for i in indices_to_remove:
+                del c_reduced[i]
+            # Just the equation system to zero
+            eq_sys = []
+            eq_sys_new = eq_sys.copy()
+            eq_alg = []
+            # The same goes for the coefficient_counter which
+            # is not updated. So we return a copy of it
+            coefficient_counter_new = coefficient_counter            
+            return eq_alg, eq_sys_new,coefficient_counter_new
     #------------------------------------------------------------------------------
     # STEP 5 of 7: SUBSTITUTION OF PIVOT ELEMETNS IN THE SYSTEM OF EQUATIONS.
     # WE HAVE TWO TYPES OF PIVOT ELEMENTS. THE ZERO ONES WHICH ARE REMOVED FROM
@@ -964,8 +1051,8 @@ def solve_algebraic_equations(x,c,c_original,eq_alg,coefficient_counter,eta_list
     for tangent_number in range(len(eta_list)):
         # Loop through all coefficients and replace them in all tangents
         for index in range(len(c)):
-            # Print our belowed coefficient
-            print("\t%s\t=\t%s,\t%s\n"%(str(c_original[index]),str(c[index]),str(type(c[index]))))
+            # Print our belowed coefficients
+            #print("\t%s\t=\t%s,\t%s\n"%(str(c_original[index]),str(c[index]),str(type(c[index]))))
             
             # Substitute coefficient in the tangents
             eta_list[tangent_number] = eta_list[tangent_number].subs(c_original[index](x[0]),c[index])
@@ -1024,7 +1111,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     #----------------------------------------------------------------    
     # We call this "max_iter" times in the hope that we can solve the
     # remaining system
-    max_iter = 50
+    max_iter = 5
     # Add a counter which helps us interrupt the while-loop
     iter_counter = 1
     # Loop until all equations are solved
@@ -1043,6 +1130,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
         # of iterations, we simply give up
         if iter_counter>max_iter:
             break
+    print("Number of arbitrary coefficients:\t%d\n"%(int(coefficient_counter)))
     print(len(eq_sys))
     print("\\begin{align*}")
     for i in range(len(eq_sys)):
