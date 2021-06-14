@@ -14,7 +14,7 @@
 #=================================================================================
 #=================================================================================
 import read_and_write_data # Home-made
-import symmetry_toolbox_first_order_ODEs # Home-made
+import symmetry_toolbox_first_order_ODEs_2 # Home-made
 from sympy import *
 #=================================================================================
 #=================================================================================
@@ -48,13 +48,13 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         # Print to the user that we are creating ansätze
         print("\t\t\tStep 2 out of 6: Creating tangent ansätze...")
         # Calculate our new tangents and the variables
-        x, c, eta_list = symmetry_toolbox_first_order_ODEs.create_tangent_ansatze(num_of_variables,num_of_states,tangent_degree)
+        x, c, eta_list = symmetry_toolbox_first_order_ODEs_2.create_tangent_ansatze(num_of_variables,num_of_states,tangent_degree)
         # Print that this is done
         print("\t\t\t\tDone!")
         # Print to the user that we are calculating the linearised symmetry conditions
         print("\t\t\tStep 3 out of 6: Calculating the linearised symmetry conditions...")
         # Calculate the linearised symmetry conditions
-        lin_sym_list = symmetry_toolbox_first_order_ODEs.lin_sym_cond(x,eta_list,omega_list)
+        lin_sym_list = symmetry_toolbox_first_order_ODEs_2.lin_sym_cond(x,eta_list,omega_list)
         # Print that this is done
         print("\t\t\t\tDone!")
         # Print to the user that we are calculating the determining equations
@@ -62,12 +62,12 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         # Define the degree we want on our monomial
         degree_monomial = 4
         # Step 4.3: Calculate our so called "determining equations"
-        det_eq, monomials, lin_sym_eq_number = symmetry_toolbox_first_order_ODEs.determining_equations(x,lin_sym_list,degree_monomial)
+        det_eq, monomials, lin_sym_eq_number = symmetry_toolbox_first_order_ODEs_2.determining_equations(x,lin_sym_list,degree_monomial)
         # Print that this is done
         print("\t\t\t\tDone!")
         # Print to the user that we are solving the determining equations
         print("\t\t\tStep 5 out of 6: Solving the determining equations...")
-        X,c_original,c,eq_alg,sol_alg = symmetry_toolbox_first_order_ODEs.solve_determining_equations(x,eta_list,c,det_eq,variables)
+        X,c_original,c,eq_alg,sol_alg = symmetry_toolbox_first_order_ODEs_2.solve_determining_equations(x,eta_list,c,det_eq,variables)
         # Change the name of the variables
         for i in range(len(variables)):
             from_str = str(latex(x[i]))
