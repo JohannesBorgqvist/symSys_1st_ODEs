@@ -357,7 +357,10 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
         # Loop over all coefficients in the tangential ansätze
         # and define our matrices
         for coeff in c_reduced:
+            # Save the derivative of the A coefficient
             A_mat.append(-isolated_eq.coeff(Derivative(coeff(x[0]),x[0])))
+            # Save the coefficient of the coefficient in the tangential
+            # ansätze
             B_mat.append(isolated_eq.coeff(coeff(x[0])))
     # Finally we generate the matrices from our lists A_mat and B_mat
     num_of_rows = len(eq_sys) # Number of rows
@@ -488,16 +491,6 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     # STEP 5 of 8: IF SYSTEM IS DIAGONISABLE WE TRY TO SOLVE IT WITH CLASSICAL
     # LINEAR ALGEBRA
     #-----------------------------------------------------------------------------
-    print("The matrix A:")
-    print("%s\n"%(str(latex(A,mode='equation'))))
-    print("Is A diagonisable?\n")
-    print(A.is_diagonalizable())
-    print("The matrix B:")
-    print("%s\n"%(str(latex(B,mode='equation'))))
-    print("The coefficient c_reduced:")
-    print("%s\n"%(str(latex(Matrix(len(c_reduced),1,c_reduced),mode='equation'))))
-    print("The algebraic equations B_algebraic")
-    print("%s\n"%(str(latex(B_algebraic,mode='equation'))))    
     # If A is diagonizable we will try to
     # solve the system at hand
     if A.is_diagonalizable():
@@ -714,40 +707,67 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
         # Define a help_counter to keep track where the algebraic equation
         # is located in the list eq_sys
         help_counter = 0
-        # Define a logical variable telling us if we have a differential equation
-        # or not
+        # Make a list where we save the indices where the solvable equations occurred
+        indices_solvable_equations = []
+        # Save the solvable equation
+        solvable_equation = []
+        # Make a logical variable defining if we have already
+        # found a differential equation
         differential_equation = False
         # Loop over the equations 
         for isolated_eq in eq_sys:
-            # Find all coefficients in our current equation
-            list_func = [a.func for a in isolated_eq.atoms(function.AppliedUndef)]
-            # Loop over all coefficients
-            for coeff in list_func:
-                # Loop over all terms in the equation
-                for term in isolated_eq.args:
-                    # Check if we have the derivative, and 
-                    # if so it is a differential equation 
-                    # meaning that we abort
-                    if term.has(Derivative(coeff(x[0]),x[0])):
-                        differential_equation = True
-                        break
-                # If we have a differential equation break the loop
-                if differential_equation:
-                    break
-            # Algebraic equation
-            if not differential_equation:
+            # Allocate four lists for the derivatives, the functions,
+            # and their respective indices in the vector c_reduced
+            list_der = [] # Coefficients in front of derivatives of tangential coefficient
+            list_der_indices = [] # Indices of differential equation in vector c
+            list_func = [] # Coefficient of tangential coefficient
+            list_func_indices = [] # Indices of tangential coefficient
+            # Loop over all coefficients and find the derivatives of the tangentialcoefficients, the tangential coefficients themselves and their respective indices
+            for i in range(len(c_reduced)):
+                # Save the derivatives
+                if isolated_eq.coeff(Derivative(c_reduced[i](x[0]),x[0])) != 0:
+                    # Derivative of tangential coefficient
+                    list_der.append(isolated_eq.coeff(Derivative(c_reduced[i](x[0]),x[0])))
+                    # Index in vector c_reduced 
+                    list_der_indices.append(i)
+                # Save the tangential coefficient
+                if isolated_eq.coeff(c_reduced[i](x[0])) != 0:
+                    # Tangential coefficient
+                    list_func.append(isolated_eq.coeff(c_reduced[i](x[0])))
+                    # Index in vector c_reduced
+                    list_func_indices.append(i)
+            # Check if we have a solvable differential equation: one derivative, one or zero functions and that we only do one ODE at a time
+            if len(list_der) == 1 and len(list_func) <= 1 and not differential_equation:
+                # Define a temporary logical variable which will
+                # get us out of trouble in case the differential equation
+                # has an unknown function in the right hand side
+                temporary_life_saver = True
+                # Check if we only have one derivative and one function
+                if len(list_der) == len(list_func) and len(list_der) == 1:
+                    # Check if the two functions are different
+                    if list_der_indices[0] != list_func_indices[0]:
+                        # In this case, we do not attempt to solve
+                        # the ODE at hand
+                        temporary_life_saver = False
+                # Solve the equations and move on
+                if temporary_life_saver:
+                    indices_solvable_equations.append(help_counter) # index of equation
+                    solvable_equation.append(isolated_eq) # Save the equation
+                    differential_equation = True # We found a differential equation
+                    continue # Next iteration please
+            # Let's check if we have an algebraic equation
+            elif len(list_der) == 0 and isolated_eq != 0:
                 eq_alg.append(isolated_eq)
                 eq_alg_ind.append(help_counter)
-            else: # Differential equation
-                differential_equation = False
+            # Increase the help_counter to keep track of the indices
             help_counter += 1
         # Remove algebraic equations from the differential equations:
-        # Sort the indices of the algebraic equations in descending order
+        # Sort the indices of the algebraic equations in descending order,
         eq_alg_ind.sort(reverse=True)
-        # Loop over these indices and remove them
+        # Loop over these indices and remove them,
         for index in eq_alg_ind:
             del eq_sys[index]
-        # Very important detail, namely to reset the indices of the algebraic equations
+        # Very important detail, namely to reset the indices of the algebraic equations.
         eq_alg_ind = []  
         #----------------------------------------------------------------------
         # SOLVE DIFFERENTIAL EQUATIONS
@@ -760,36 +780,26 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
         # Make a list where we save the indices where the solvable equations occurred
         indices_solvable_equations = []
         # Loop over all equations and save the ones with a single function
-        for eq_temp in eq_sys:
-            # Save all functions in a list
-            list_of_functions = [a.func for a in eq_temp.atoms(function.AppliedUndef)]
-            # See if we have merely one function
-            if len(list_of_functions) == 1:
-                # Extract the equation at hand, and solve it
-                eq_save = dsolve(Eq(eq_temp,0))
-                # Extract the RHS of the solved equation
-                RHS = eq_save.rhs
-                # Introduce a temporary character needed
-                # for the substitution
-                temp_char = 'K'
-                # Use the home-built function "sub_const"
-                # which renames the newly introduced coefficients
-                # to the correct number given by the coefficient
-                # counter
-                RHS = sub_const(RHS, temp_char,coefficient_counter)           
-                # Lastly re-define our newly solved equation
-                eq_save = Eq(eq_save.lhs,RHS)
-                # Save the solution to our newly solved equation
-                # that is re-named appropriately as well
-                solutions_solvable_equations.append(eq_save)
-                # Increase the coefficient_counter
-                coefficient_counter += 1
-                # Save where in the equation system it occurs
-                indices_solvable_equations.append(help_counter)
-                # We break as soon as we find a solution
-                break                
-            # Increment the help_counter
-            help_counter += 1
+        for eq_temp in solvable_equation:
+            # Extract the equation at hand, and solve it
+            eq_save = dsolve(Eq(eq_temp,0))
+            # Extract the RHS of the solved equation
+            RHS = eq_save.rhs
+            # Introduce a temporary character needed
+            # for the substitution
+            temp_char = 'K'
+            # Use the home-built function "sub_const"
+            # which renames the newly introduced coefficients
+            # to the correct number given by the coefficient
+            # counter
+            RHS = sub_const(RHS, temp_char,coefficient_counter)           
+            # Lastly re-define our newly solved equation
+            eq_save = Eq(eq_save.lhs,RHS)
+            # Save the solution to our newly solved equation
+            # that is re-named appropriately as well
+            solutions_solvable_equations.append(eq_save)
+            # Increase the coefficient_counter
+            coefficient_counter += 1
         # If the number of solvable equations are zero, we are finished
         if len(solutions_solvable_equations) == 0:
             # Time to get out
@@ -1111,11 +1121,13 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     #----------------------------------------------------------------    
     # We call this "max_iter" times in the hope that we can solve the
     # remaining system
-    max_iter = 5
+    max_iter = 3
     # Add a counter which helps us interrupt the while-loop
     iter_counter = 1
     # Loop until all equations are solved
     while len(eq_sys) != 0:
+        print("ITER %d OUT OF %d\n"%(int(iter_counter),int(max_iter)))
+        print("\t\tSOLVE ODEs")
         # Try to solve the remaining system with the solution algorithm
         eq_alg_extra, eq_sys_new, coefficient_counter_new = solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,variables)
         # Update the coefficient counter
@@ -1131,6 +1143,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
         if iter_counter>max_iter:
             break
     print("Number of arbitrary coefficients:\t%d\n"%(int(coefficient_counter)))
+    print("Number of unknowns:\t%d"%(int(len(c_reduced))))
+    print("%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced),mode='equation*'))))
     print(len(eq_sys))
     print("\\begin{align*}")
     for i in range(len(eq_sys)):
@@ -1141,6 +1155,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     # Solve algebraic equations
     #----------------------------------------------------------------
     #----------------------------------------------------------------
+    print("\t\tSOLVE ALGEBRAIC EQUATIONS")
     X,eq_alg_original,sol_alg = solve_algebraic_equations(x,c,c_original,eq_alg,coefficient_counter,eta_list)    
     # Return the solved coefficients and the generator
     return X,c_original,c,eq_alg_original,sol_alg
