@@ -419,12 +419,35 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     for i in range(len(reduced_sys)):
         if i > 0:
             M_tilde = M_tilde.row_insert(i, reduced_sys[i].T)          
+    # Split the matrix into its component parts
+    A = M_tilde[:,0:(len(c_reduced))]
+    B = -M_tilde[:,len(c_reduced):(2*len(c_reduced))]
+    print("### Reduction based on column space.")
+    print("Dimensions of A")
+    print(A.shape)
+    print("\\begin{equation*}")
+    print("A=%s"%(str(latex(A))))
+    print("\\end{equation*}")
+    print("Dimensions of B")
+    print(B.shape)
+    print("\\begin{equation*}")
+    print("B=%s"%(str(latex(B))))
+    print("\\end{equation*}")
+    print("The coefficient vector c:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
+    print("\\end{equation*}")
+    print("The coefficient vector c_reduced:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
+    print("\\end{equation*}")
+    print("%d unknowns remain"%(int(len(c_reduced))))    
     # Row-reduce the expanded matrix
     M_tilde = M_tilde.rref()[0]
     # Split the matrix into its component parts
-    A = -M_tilde[:,0:(len(c_reduced))]
-    B = M_tilde[:,len(c_reduced):(2*len(c_reduced))]
-    print("### Reduction based on column space.")
+    A = M_tilde[:,0:(len(c_reduced))]
+    B = -M_tilde[:,len(c_reduced):(2*len(c_reduced))]
+    print("### Row-reduction after column space.")
     print("Dimensions of A")
     print(A.shape)
     print("\\begin{equation*}")
@@ -485,544 +508,19 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     print("\\begin{equation*}")
     print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
     print("\\end{equation*}")
-    print("%d unknowns remain"%(int(len(c_reduced))))    
-    #------------------------------------------------------------------------------
-    # STEP 4 of 7: FIND THE PIVOT ELEMENTS OF THE NEW MATRIX B_algebraic AND CLASSIFY THEM INTO TWO CATEGORIES: THE PIVOT ELEMENTS WHICH ARE ZERO AND THE NON-ZERO PIVOTELEMENTS. PUT ALL COEFFICIENTS OF THE ZERO PIVOT ELEMENTS TO ZERO AND REMOVE THE CORRESPONDING COLUMNS IN THE MATRICES A, B AND B_algebraic. 
-    #-----------------------------------------------------------------------------
-    # Find the pivot elements in the algebraic matrix
-    pivot_columns = B_algebraic.rref()[1]
-    # Row reduce the algebraic matrix 
-    B_algebraic = B_algebraic.rref()[0]
-    # Loop over the matrix and find out which pivot elements that correspond 
-    # to a null row (except for the pivot element itself that is...)
-    num_of_rows, num_of_cols = B_algebraic.shape    
-    # Given the pivot columns, calculate the pivot rows
-    pivot_rows = [i for i in range(num_of_rows) for j in pivot_columns if B_algebraic[i,j]==1 ]
-    # CLASSIFY THE PIVOT ELEMENTS IN B_extract AS
-    # EITHER ZERO PIVOT ELEMENTS OR NON-ZERO PIVOT
-    # ELEMENTS:
-    # Find the zero pivot columns
-    pivot_columns_zero = []
-    # Find the non-zero pivot columns
-    pivot_columns_non_zero = []
-    # Save pivot rows
-    pivot_rows_zero = []
-    # Find the zero-pivot element if you
-    # know what I mean...
-    # Use a help index
-    help_index = 0
-    # Loop over pivot rows
-    for i in pivot_rows:
-        # Allocate a row_sum
-        row_sum = 0
-        # Loop over all columns
-        for j in range(num_of_cols):
-            # Sum all elements except for the pivot element
-            # itself
-            if j != pivot_columns[help_index]:
-                row_sum += B_algebraic[i,j]
-        # If this sum is zero we have a so called zero pivot element
-        if row_sum == 0:
-            pivot_rows_zero.append(i) # Save this index
-        # Increment the help index
-        help_index += 1
-    # Find the corresponding column for these rows.
-    # In other words, find the Pivot columns that 
-    # correspond to rows with only one non-zero element.
-    for i in pivot_rows_zero:
-        for j in pivot_columns:
-            if B_algebraic[i,j]==1:
-                pivot_columns_zero.append(j)
-    # Find the other pivot elements
-    pivot_columns_non_zero = list(set(pivot_columns).difference(pivot_columns_zero))
-    # Firstly, set these elements to zero in c.
-    # The beautiful programming trick here is to
-    # do the looping in reverse order.
-    for index in pivot_columns_zero[::-1]:
-        # Set all these elements in c to zero.
-        c[index] = 0
-        # Remove these element in c_reduced
-        del c_reduced[index]
-        # Remove the columns
-        A.col_del(index)
-        B.col_del(index)
-        B_algebraic.col_del(index)
-    # Remove zero-rows in B_algebraic
-    for i in pivot_rows_zero[::-1]:
-        B_algebraic.row_del(i)
-    # Find the pivot elements in the algebraic matrix
-    pivot_columns = B_algebraic.rref()[1]
-    # Row reduce the algebraic matrix 
-    B_algebraic = B_algebraic.rref()[0]
-    print("### Substitutions of pivot elements.")
-    print("Dimensions of A")
-    print(A.shape)
-    print("\\begin{equation*}")
-    print("A=%s"%(str(latex(A))))
-    print("\\end{equation*}")
-    print("Dimensions of B")
-    print(B.shape)
-    print("\\begin{equation*}")
-    print("B=%s"%(str(latex(B))))
-    print("\\end{equation*}")
-    print("Dimensions of B_algebraic")
-    print(B_algebraic.shape)
-    print("\\begin{equation*}")
-    print("B_{\mathrm{algebraic}}=%s"%(str(latex(B_algebraic))))
-    print("\\end{equation*}")    
-    print("The coefficient vector c:")
-    print("\\begin{equation*}")
-    print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
-    print("\\end{equation*}")
-    print("The coefficient vector c_reduced:")
-    print("\\begin{equation*}")
-    print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
-    print("\\end{equation*}")
-    print("%d unknowns remain"%(int(len(c_reduced))))        
-    #------------------------------------------------------------------------------
-    # STEP 5 of 8: IF SYSTEM IS DIAGONISABLE WE TRY TO SOLVE IT WITH CLASSICAL
-    # LINEAR ALGEBRA
-    #-----------------------------------------------------------------------------
-    # If A is diagonizable we will try to
-    # solve the system at hand
-    if A.is_diagonalizable():
-        #-------------------------------------------------------
-        # MATRIX CALCULATIONS
-        #-------------------------------------------------------
-        # Allocate memory for our solutions
-        solutions = zeros(len(c_reduced),1)
-        # Diagonalise matrix inv(A)*B
-        M = A.inv()*B
-        # CASE 1: M is diagonizable
-        if M.is_diagonalizable():
-            (P, D) = M.diagonalize()
-            # Define a new matrix exp_D
-            exp_D = D
-            # Calculate the rows in this matrix
-            rows, cols = exp_D.shape
-            # Loop over the diagonal, take the
-            # exponent of that value times the time
-            # and multiply with an arbitrary coefficient
-            for rI in range(rows):
-                # For some reason, we need to define the name
-                # C1 in order to do a substitution
-                exec("C%d = symbols('C%d')"%(coefficient_counter,coefficient_counter))
-                # Change the matrix at hand 
-                exec("exp_D[rI,rI] = C%d*exp(exp_D[rI,rI]*x[0])"%(coefficient_counter))
-                # Update the coefficient counter
-                coefficient_counter += 1
-            # Calculate the solution
-            num_of_eqs, cols = M.shape
-            # Loop over columns and construct the solutions
-            for c in range(cols):
-                solutions += exp_D[c,c]*P[:,c]
-            # Substitute these value in to each and every one of the equations
-            for i in range(len(c_reduced)):
-                # Loop over all coefficients in c and do the substitutions
-                for index in range(len(c)):
-                    # If the element contains our coefficient, replace it
-                    # by the substitution
-                    if c[index]==c_reduced[i]:
-                        c[index] = simplify(solutions[i,0])
-                    else:
-                        # Neglect all coefficients that are integer, which most often mean that they take the value zero. In this case we just move on.
-                        if type(c[index]) != int:
-                            # Check if the current coefficient is a function
-                            list_func = [a.func for a in c[index].atoms(function.AppliedUndef)]
-                            # MOST IMPORTANTLY: Check if the current coefficient is multiplied by some strange factor. In this case, we shall only do the substitution directly. Otherwise, we should just move on.
-                            list_mul = [a.func for a in c[index].atoms(Mul)]
-                            # Also, we need to make sure that we can differentiate between symbols which the integration constants, e.g. C1, are and our lovely coefficients ,e.g. c_0_1, are not.
-                            list_symb = [a.func for a in c[index].atoms(Symbol)] 
-                            # Apparently there is a symbolic zero which can cause problems which is stored as a symbolic number. Apparently, there is a type called exactly number which the symbolic zero is stored as but not the coefficients. This will allow us to differentiate between the two. 
-                            list_number = [a.func for a in c[index].atoms(Number)] 
-                            # CASE 1: We have a function multiplied with various parameters, a so called "mul"=> Substitute the solution directly! 
-                            if len(list_mul) != 0:
-                                # Substitute the solution into the coefficient of interest
-                                temp_expression = c[index]
-                                c[index] = temp_expression.subs(c_reduced[i](x[0]),simplify(solutions[i,0]))          
-            # The indices that we want to remove from the vector c
-            indices_to_remove = [i for i in range(len(c_reduced)) for j in range(len(c)) if c[j]==c_reduced[i]]
-            # Sort the indices in reversed order
-            indices_to_remove.sort(reverse=True)
-            # Loop over indices and remove them
-            for i in indices_to_remove:
-                del c_reduced[i]
-            # Just the equation system to zero
-            eq_sys = []
-            eq_sys_new = eq_sys.copy()
-            eq_alg = []
-            # The same goes for the coefficient_counter which
-            # is not updated. So we return a copy of it
-            coefficient_counter_new = coefficient_counter            
-            return eq_alg, eq_sys_new,coefficient_counter_new
-    #------------------------------------------------------------------------------
-    # STEP 5 of 7: SUBSTITUTION OF PIVOT ELEMETNS IN THE SYSTEM OF EQUATIONS.
-    # WE HAVE TWO TYPES OF PIVOT ELEMENTS. THE ZERO ONES WHICH ARE REMOVED FROM
-    # THE SYSTEM OF EQUATIONS AND THE NON-ZERO ONES WHICH ARE SUBSTITUTED INTO
-    # THE SYSTEM OF EQUATIONS
-    #------------------------------------------------------------------------------
-    # This is done by transferring the system from a matrix system to a system of equations. Then, each algebraic equation is solved and the corresponding solution is substituted into the system of equations which shrinks. Also, the coefficient vector c is updated with coefficient that are solved along the way. 
-    #----------------------------------------------------
-    # DIFFERENTIAL EQUATIONS
-    #----------------------------------------------------
-    # Calculate the dimension of the new A
-    m,n = A.shape
-    # Define a list for the equations in the matrix A
-    eq_sys = []
-    # Loop over the rows to extract each equation
-    for i in rows_nonzero:
-        # Define the equation in a temporary variable
-        temp_eq = 0
-        # Loop over the columns and perform the matrix multiplication
-        for j in range(n):
-            # Extract the coefficient
-            coeff = c_reduced[j]
-            # Perform the matrix multiplication for the derivatives
-            # of the coefficients (i.e the matrix A)
-            temp_eq += A[i,j]*Derivative(coeff(x[0]),x[0])
-            # Perform the matrix multiplication for the coefficients
-            # themselves (i.e. the matrix)
-            temp_eq += -( B[i,j] * coeff(x[0]) )
-        # Save only the non-trivial equations
-        if temp_eq != 0:
-            # Save the equation in our vector
-            eq_sys.append(temp_eq)
-    #----------------------------------------------------
-    # ALGEBRAIC EQUATIONS
-    #----------------------------------------------------
-    # Now, we do the same for the algebraic equations
-    row_alg, n = B_algebraic.shape
-    # Define a list for the algebraic equations
-    eq_alg = []
-    # Loop over the rows to extract each equation
-    for i in range(row_alg):
-        # Define the equation in a temporary variable
-        temp_eq = 0
-        # Loop over the columns and perform the matrix multiplication
-        for j in range(n):
-            # Extract the coefficient
-            coeff = c_reduced[j]
-            temp_eq += B_algebraic[i,j] * coeff(x[0]) 
-        # Save only the non-trivial equations
-        if temp_eq != 0:
-            # Save the equation in our vector
-            eq_alg.append(temp_eq)
-    #----------------------------------------------------
-    # SOLVE ALGEBRAIC EQUATIONS, UPDATE C AND REMOVE
-    # COEFFICIENTS FROM THE SYSTEM OF DIFFERENTIAL 
-    # EQUATIONS THAT WE HAVE LEFT CALLED eq_sys
-    #----------------------------------------------------
-    # Loop over all algebraic equations 
-    for i in range(len(eq_alg)):
-        # Extract the coefficient
-        coeff = c_reduced[pivot_columns[i]]
-        # Define the equation 
-        eq = Eq(-eq_alg[i]+coeff(x[0]),coeff(x[0]))
-        # Solve the equation
-        sol = solve(eq,coeff(x[0]))
-        # Loop through all non-algebraic equations and conduct
-        # the substitution at hand
-        for j in range(len(eq_sys)):
-            # Extract an equation
-            eq_temp = eq_sys[j]
-            # Simplify and evaluate
-            eq_temp = simplify(eq_temp.doit())
-            # Do the appropriate substitution
-            eq_sys[j] = eq_temp.subs(coeff(x[0]),sol[0])
-        # Loop through the vector c (the original coefficient vector)
-        # and do the same substitution
-        for index in range(len(c)):
-            # If the element contains our coefficient, replace it
-            # by the substitution
-            if c[index]==coeff:
-                c[index] = sol[0]
-    # Save all indices of equations that are potentially zero
-    indices_null_equations = []
-    # Add all indices of trivial or null equations
-    for eq_index in range(len(eq_sys)):
-        # Extract the equation
-        eq_temp = eq_sys[eq_index]
-        # The equation is zero?
-        if eq_temp == 0:
-            indices_null_equations.append(eq_index) # Save the index!
-    # Now, we will sort the indices of the null equations in descending order
-    # so that we can remove them from the system of equations
-    indices_null_equations.sort(reverse=True)
-    # Loop over these indices and remove them
-    for index in indices_null_equations:
-        del eq_sys[index]
-    for index in pivot_columns[::-1]:
-        # Remove these elements in c_reduced
-        del c_reduced[index]
-    #------------------------------------------------------------------------------
-    # STEP 6 of 7: SOLVE EACH DIFFERENTIAL EQUATION THAT CONTAINS MERELY ONE FUNCTION
-    #------------------------------------------------------------------------------
-    # Due to the previous steps of the algorithm, the system is almost guarantueed to have ODEs with only on function that can be solved by caring out a single integration. If this solution is substituted into the remaining equations, more such equations will be created. This step is carried out until no more equations with just one unknown occurs. If some algebraic equations are created they will be saved in a list called "eq_alg" and they will be handled subsequently in the very last step.
-    # We have a variable saying that the system contains solvable equations
-    solvable_equations_exists = True
-    # Save all algebraic equations that are introduced
-    eq_alg = []
-    # Print a help iterator
-    help_iterator = 1
-    print("### Solve each single ODE")
-    # Define the indices of the algebraic equations: 
-    eq_alg_ind = [] # Needed in order to remove them from eq_sys
-    # We solve all solvable equations, until there exist no more of them!
-    while solvable_equations_exists:
-        # Start by checking that we have any equations left:
-        if len(eq_sys) == 0: # All equations are solved?
-            # In case the answer is yes: Time to get out!
-            solvable_equations_exists = False
-            # Go to the next iteration
-            continue
-        print("\t\t\tIteration %d"%(help_iterator))
-        help_iterator += 1
-        #----------------------------------------------------------------------
-        # REMOVE ALGEBRAIC EQUATIONS
-        #----------------------------------------------------------------------
-        # Indices for the zero equations
-        indices_zero_equations = []
-        # Make sure that all derivatives are evaluated before we continue
-        for index in range(len(eq_sys)):
-            num, denom = fraction(simplify(eq_sys[index].doit()))
-            eq_sys[index] = num
-            # If we have a zero equation we will have to remove it...
-            if eq_sys[index] == 0:
-                indices_zero_equations.append(index)
-        # Sort the indices in reverse order
-        indices_zero_equations.sort(reverse=True)
-        # Remove these equations
-        for i in indices_zero_equations:
-            del eq_sys[i]
-        # Print the equations system
-        print("Original ODE sys")
-        print("\\begin{align*}")
-        for eq_temp in eq_sys:
-            print("%s&=0\\\\"%(str(latex(eq_temp))))
-        print("\\end{align*}")
-        print("Original algebraic sys")
-        print("\\begin{align*}")
-        for eq_temp in eq_alg:
-            print("%s&=0\\\\"%(str(latex(eq_temp))))
-        print("\\end{align*}")        
-        # Re-set these equations
-        indices_zero_equations = []
-        # Before any equations are solved, we need to be sure
-        # that no algebraic equations exist among our equations.
-        # If so the program will crash when it tries to use
-        # "dsolve" to solve the differential equations
-        # Define a help_counter to keep track where the algebraic equation
-        # is located in the list eq_sys
-        help_counter = 0
-        # Make a list where we save the indices where the solvable equations occurred
-        indices_solvable_equations = []
-        # Save the solvable equation
-        solvable_equation = []
-        # Make a logical variable defining if we have already
-        # found a differential equation
-        differential_equation = False
-        # Loop over the equations 
-        for isolated_eq in eq_sys:
-            # Allocate four lists for the derivatives, the functions,
-            # and their respective indices in the vector c_reduced
-            list_der = [] # Coefficients in front of derivatives of tangential coefficient
-            list_der_indices = [] # Indices of differential equation in vector c
-            list_func = [] # Coefficient of tangential coefficient
-            list_func_indices = [] # Indices of tangential coefficient
-            # Loop over all coefficients and find the derivatives of the tangentialcoefficients, the tangential coefficients themselves and their respective indices
-            for i in range(len(c_reduced)):
-                # Save the derivatives
-                if isolated_eq.coeff(Derivative(c_reduced[i](x[0]),x[0])) != 0:
-                    # Derivative of tangential coefficient
-                    list_der.append(isolated_eq.coeff(Derivative(c_reduced[i](x[0]),x[0])))
-                    # Index in vector c_reduced 
-                    list_der_indices.append(i)
-                # Save the tangential coefficient
-                if isolated_eq.coeff(c_reduced[i](x[0])) != 0:
-                    # Tangential coefficient
-                    list_func.append(isolated_eq.coeff(c_reduced[i](x[0])))
-                    # Index in vector c_reduced
-                    list_func_indices.append(i)
-            # Check if we have a solvable differential equation: one derivative, one or zero functions and that we only do one ODE at a time
-            if len(list_der) == 1 and len(list_func) <= 1 and not differential_equation:
-                # Define a temporary logical variable which will
-                # get us out of trouble in case the differential equation
-                # has an unknown function in the right hand side
-                temporary_life_saver = True
-                # Check if we only have one derivative and one function
-                if len(list_der) == len(list_func) and len(list_der) == 1:
-                    # Check if the two functions are different
-                    if list_der_indices[0] != list_func_indices[0]:
-                        # In this case, we do not attempt to solve
-                        # the ODE at hand
-                        temporary_life_saver = False
-                # Solve the equations and move on
-                if temporary_life_saver:
-                    indices_solvable_equations.append(help_counter) # index of equation
-                    solvable_equation.append(isolated_eq) # Save the equation
-                    differential_equation = True # We found a differential equation
-                    continue # Next iteration please
-            # Let's check if we have an algebraic equation
-            elif len(list_der) == 0 and isolated_eq != 0:
-                eq_alg.append(isolated_eq)
-                eq_alg_ind.append(help_counter)
-            # Increase the help_counter to keep track of the indices
-            help_counter += 1
-        # Remove algebraic equations from the differential equations:
-        # Sort the indices of the algebraic equations in descending order,
-        eq_alg_ind.sort(reverse=True)
-        # Loop over these indices and remove them,
-        for index in eq_alg_ind:
-            del eq_sys[index]
-        # Very important detail, namely to reset the indices of the algebraic equations.
-        eq_alg_ind = []
-        # Print the equations system
-        print("Finding solvable equations")
-        print("Equation system:")
-        print("\\begin{align*}")
-        for eq_temp in eq_sys:
-            print("%s&=0\\\\"%(str(latex(eq_temp))))
-        print("\\end{align*}")
-        print("Algebraic system:")
-        print("\\begin{align*}")
-        for eq_temp in eq_alg:
-            print("%s&=0\\\\"%(str(latex(eq_temp))))
-        print("\\end{align*}")            
-        # Print solvable equation
-        print("Solvable equation")
-        if len(solvable_equation)!=0:
-            print("\\begin{equation*}")
-            print("%s"%(str(latex(solvable_equation[0]))))
-            print("\\end{equation*}")
-        else:
-            print("No solvable equation")
-        #----------------------------------------------------------------------
-        # SOLVE DIFFERENTIAL EQUATIONS
-        #----------------------------------------------------------------------
-        # Loop over all equations and save the solvable ones
-        # Allocate memory for all solvable equations
-        solutions_solvable_equations = []
-        # Save a help counter
-        help_counter = 0
-        # Make a list where we save the indices where the solvable equations occurred
-        indices_solvable_equations = []
-        # Loop over all equations and save the ones with a single function
-        for eq_temp in solvable_equation:
-            # Extract the equation at hand, and solve it
-            eq_save = dsolve(Eq(eq_temp,0))
-            # Extract the RHS of the solved equation
-            RHS = eq_save.rhs
-            # Introduce a temporary character needed
-            # for the substitution
-            temp_char = 'K'
-            # Use the home-built function "sub_const"
-            # which renames the newly introduced coefficients
-            # to the correct number given by the coefficient
-            # counter
-            RHS = sub_const(RHS, temp_char,coefficient_counter)           
-            # Lastly re-define our newly solved equation
-            eq_save = Eq(eq_save.lhs,RHS)
-            # Save the solution to our newly solved equation
-            # that is re-named appropriately as well
-            solutions_solvable_equations.append(eq_save)
-            # Increase the coefficient_counter
-            coefficient_counter += 1
-        # If the number of solvable equations are zero, we are finished
-        if len(solutions_solvable_equations) == 0:
-            # Time to get out
-            solvable_equations_exists = False
-            continue
-        else: # We have solvable equations
-            #----------------------------------------------------------------------
-            # UPDATE COEFFICIENT VECTORS
-            #----------------------------------------------------------------------
-            # Sort the indices of the solvable equations in descending
-            # order (largest to smallest)
-            indices_solvable_equations.sort(reverse=True)
-            # Loop over these indices and remove them from the equations
-            # as we have already solved them! 
-            for index in indices_solvable_equations:
-                del eq_sys[index]
-            # Make a vector where the solved coefficient occurs in the vector
-            # c_reduced
-            indices_solved_coefficients = []            
-            # Loop over all solutions, and then we will substitute these solutions in three steps. Firstly, we will substitute them into the equation system. Secondly, we will substitute them in the coefficient vector c. Thirdly, we will remove these coefficients in the reduced coefficient vector c_reduced. 
-            for solution in solutions_solvable_equations:
-                # STEP 1: Loop over the solutions and substitute these solutions
-                # into all remaining equations
-                # Loop over the remaining equations 
-                for eq_number in range(len(eq_sys)):
-                    # Save the current equation where the substitution is done
-                    eq_temp = eq_sys[eq_number].subs(solution.lhs,solution.rhs)
-                    num, denom = fraction(simplify(eq_temp.doit()))                
-                    eq_temp = num
-                    # Evaluate derivatives and simplify
-                    eq_sys[eq_number] = eq_temp
-                # STEP 2: Loop over the coefficient vector c and substitute our newly find coefficients into the coefficient vector c.Loop over the coefficients
-                for c_index in range(len(c)):
-                    # Neglect all coefficients that are integer, which most often mean that they take the value zero. In this case we just move on.
-                    if type(c[c_index]) != int:
-                        # If we have the solution, let's replace it!
-                        if c[c_index] == solution.lhs:
-                            # Replace the coefficient at hand
-                            c[c_index] = solution.rhs
-                        # Check if the current coefficient is a function
-                        list_func = [a.func for a in c[c_index].atoms(function.AppliedUndef)]
-                        # MOST IMPORTANTLY: Check if the current coefficient is multiplied by some strange factor. In this case, we shall only do the substitution directly. Otherwise, we should just move on.
-                        list_mul = [a.func for a in c[c_index].atoms(Mul)]
-                        # Also, we need to make sure that we can differentiate between symbols which the integration constants, e.g. C1, are and our lovely coefficients ,e.g. c_0_1, are not.
-                        list_symb = [a.func for a in c[c_index].atoms(Symbol)] 
-                        # Apparently there is a symbolic zero which can cause problems which is stored as a symbolic number. Apparently, there is a type called exactly number which the symbolic zero is stored as but not the coefficients. This will allow us to differentiate between the two. 
-                        list_number = [a.func for a in c[c_index].atoms(Number)]  
-                        # CASE 1: We have a function multiplied with various parameters, a so called "mul"=> Substitute the solution directly! 
-                        if len(list_mul) != 0:
-                            # Substitute the solution into the coefficient of interest
-                            temp_expression = c[c_index]
-                            c[c_index] = temp_expression.subs(solution.lhs,solution.rhs)
-                        else: # We do not have an "mul"-type expression. 
-                            # Could be the desired coefficients, but we also have these sneaky integration coefficients, e.g. C1, which are symbols. We need to just ignore the integration coefficients. So we only do this for non-symbols, non-function and non-muls.
-                            if len(list_func) == 0 and len(list_mul) == 0 and len(list_symb) == 0 and len(list_number) == 0: # We do not have an integration constant
-                                temp_expression = c[c_index]
-                                if temp_expression(x[0]) == solution.lhs:
-                                    # Replace the coefficient at hand
-                                    c[c_index] = solution.rhs
-                # STEP 3: Loop over the reduced coefficient vector c_reduced and find out where our coefficient of interest is stored. These indices will then be sorted in descending order so that we can remove these indices from our vector c_reduced.
-                for i in range(len(c_reduced)):
-                    # We have our coefficient at the current index!
-                    temp_expression = c_reduced[i]
-                    if temp_expression(x[0]) == solution.lhs:
-                        # Save our lovely index
-                        indices_solved_coefficients.append(i)
-            # Only remove the unique indices so we do not remove a coefficient twice...
-            indices_solved_coefficients = list(set(indices_solved_coefficients))
-            # Now, we will sort the indices of the coefficient that are to be removed from c_reduced in descending order again. 
-            indices_solved_coefficients.sort(reverse=True)
-            # Loop over these indices and remove them
-            for index in indices_solved_coefficients:
-                del c_reduced[index]
-            # Re-set the solved indices
-            indices_solved_coefficients = []            
-            # Now we are back for another iteration in our while loop...
-            # Print the equations system
-            print("After the fact: ODE sys")
-            print("\\begin{align*}")
-            for eq_temp in eq_sys:
-                print("%s&=0\\\\"%(str(latex(eq_temp))))
-            print("\\end{align*}")
-            print("After the fact:algebraic sys")
-            print("\\begin{align*}")
-            for eq_temp in eq_alg:
-                print("%s&=0\\\\"%(str(latex(eq_temp))))
-            print("\\end{align*}")
-            print("The coefficient vector c:")
-            print("\\begin{equation*}")
-            print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
-            print("\\end{equation*}")
-            print("The coefficient vector c_reduced:")
-            print("\\begin{equation*}")
-            print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
-            print("\\end{equation*}")
-            print("%d unknowns remain"%(int(len(c_reduced))))                    
+    print("%d unknowns remain"%(int(len(c_reduced))))
+    # PRINT THE EIGEN VECTORS OF B
+    print("Eigen values of B")
+    print(latex(B.eigenvals()))  #returns eigenvalues and their algebraic multiplicity
+    print("Eigen vectors of B")
+    eigen_vectors_B = B.eigenvects()[0]
+    eigen_vectors_B = eigen_vectors_B[2]
+    print(latex(eigen_vectors_B))  #returns eigenvalues, eigenvects
+    print("Number of eigen vectors")
+    print(len(eigen_vectors_B))
+    
+    print("Is B diagonisible?")
+    print(B.is_diagonalizable())
     #------------------------------------------------------------------------------
     # STEP 7 of 7: RETURN THE SYSTEM OF EQUATIONS AND THE ALGEBRAIC EQUATIONS
     #------------------------------------------------------------------------------
@@ -1030,10 +528,13 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     # seem to update when we exit the function.
     # So we make a copy and return that copy which
     # works    
-    eq_sys_new = eq_sys.copy()
+    #eq_sys_new = eq_sys.copy()
+    eq_sys_new = []
     # The same goes for the coefficient_counter which
     # is not updated. So we return a copy of it
     coefficient_counter_new = coefficient_counter
+    # Algebraic equations
+    eq_alg = []
     # Return the algebraic equations and the ODEs
     return eq_alg, eq_sys_new,coefficient_counter_new    
 #----------------------------------------------------------------------------------
@@ -1212,20 +713,24 @@ def solve_algebraic_equations(x,c,c_original,eq_alg,coefficient_counter,eta_list
     X = "\\begin{align*}\nX&="
     # Define a help_counter
     help_counter = 0
-    # Loop over tangents
-    for tangent_number in range(len(eta_list)):
-        # Loop through all coefficients and replace them in all tangents
-        for index in range(len(c)):            
-            # Substitute coefficient in the tangents
-            eta_list[tangent_number] = eta_list[tangent_number].subs(c_original[index](x[0]),c[index])
-        # Add all non-trivial tangents to the generator    
-        if eta_list[tangent_number]!=0:
-            X += "\\left(" + str(latex(eta_list[tangent_number])) + "\\right)" + "\partial x_{" + str(tangent_number) + "}\\\\"
-            if tangent_number < (len(eta_list)-1):
-                X+="&+"                       
-    # Add the final touch to the generator
-    X += "\\end{align*}"
-    X = X.replace("+\\end{align*}", ".\\end{align*}")
+    if help_counter == 1:
+        # Loop over tangents
+        for tangent_number in range(len(eta_list)):
+            # Loop through all coefficients and replace them in all tangents
+            for index in range(len(c)):            
+                # Substitute coefficient in the tangents
+                eta_list[tangent_number] = eta_list[tangent_number].subs(c_original[index](x[0]),c[index])
+                # Add all non-trivial tangents to the generator    
+                if eta_list[tangent_number]!=0:
+                    X += "\\left(" + str(latex(eta_list[tangent_number])) + "\\right)" + "\partial x_{" + str(tangent_number) + "}\\\\"
+                if tangent_number < (len(eta_list)-1):
+                    X+="&+"                       
+        # Add the final touch to the generator
+        X += "\\end{align*}"
+        X = X.replace("+\\end{align*}", ".\\end{align*}")
+    else:
+        X += "\\\\\n\\end{align*}"
+        sol_alg = []
     # Return the solved coefficients and the generator
     return X,eq_alg_original,sol_alg    
 #----------------------------------------------------------------------------------
