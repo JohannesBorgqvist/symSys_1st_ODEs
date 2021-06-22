@@ -536,9 +536,6 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     print(latex(mat_temp,mode='equation'))
     print("Row-reduced expanded matrix")
     print(latex(mat_temp.rref()[0],mode='equation'))
-    print("A solution using the LU solver")
-    soln = B.LUsolve(v_temp)
-    print(latex(soln,mode='equation'))
     
 
     temp_list = [1, -1, 1, 3]
@@ -552,7 +549,9 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     eigen_vectors_temp = eigen_vectors_temp[2]
     print(latex(eigen_vectors_temp))  #returns eigenvalues, eigenvects
     print("Number of eigen vectors")
-    print(len(eigen_vectors_temp))    
+    print(len(eigen_vectors_temp))
+    print("Our coefficient vector c")
+    print(latex(Matrix(len(c),1,c),mode='equation'))
     #------------------------------------------------------------------------------
     # STEP 7 of 7: RETURN THE SYSTEM OF EQUATIONS AND THE ALGEBRAIC EQUATIONS
     #------------------------------------------------------------------------------
