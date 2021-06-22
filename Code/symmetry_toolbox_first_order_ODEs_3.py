@@ -521,6 +521,38 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     
     print("Is B diagonisible?")
     print(B.is_diagonalizable())
+    print("Calculate rank of the matrix B:")
+    print(B.rank())
+    # Try to solve the
+    mat_temp = B
+    num_rows, num_cols = B.shape
+    v_temp = Matrix(len(list(eigen_vectors_B[0])),1,list(eigen_vectors_B[0]))
+    print("Eigen vector of interest:")
+    print(latex(v_temp,mode='equation'))
+    mat_temp = mat_temp.col_insert(num_cols,v_temp)
+    print("Original matrix B:")
+    print(latex(B,mode='equation'))
+    print("Expanded matrix [B|v_1]:")
+    print(latex(mat_temp,mode='equation'))
+    print("Row-reduced expanded matrix")
+    print(latex(mat_temp.rref()[0],mode='equation'))
+    print("A solution using the LU solver")
+    soln = B.LUsolve(v_temp)
+    print(latex(soln,mode='equation'))
+    
+
+    temp_list = [1, -1, 1, 3]
+    temp_mat = Matrix(2,2,temp_list)
+    print("Example matrix")
+    print(latex(temp_mat,mode='equation'))
+    print("Eigen values of example matrix")
+    print(latex(temp_mat.eigenvals()))
+    print("Eigen vectors of example Matrix")
+    eigen_vectors_temp = temp_mat.eigenvects()[0]
+    eigen_vectors_temp = eigen_vectors_temp[2]
+    print(latex(eigen_vectors_temp))  #returns eigenvalues, eigenvects
+    print("Number of eigen vectors")
+    print(len(eigen_vectors_temp))    
     #------------------------------------------------------------------------------
     # STEP 7 of 7: RETURN THE SYSTEM OF EQUATIONS AND THE ALGEBRAIC EQUATIONS
     #------------------------------------------------------------------------------

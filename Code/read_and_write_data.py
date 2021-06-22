@@ -65,7 +65,6 @@ def read_input_model(file_name):
     model_reading_successful = False
     # Check if the file exists
     file_str = "../Input/" + file_name + ".xlsx"
-    print(file_str)
     #  Read the model
     if os.path.isfile(file_str):
         # Store the model in a data frame df
@@ -117,13 +116,9 @@ def read_input_model(file_name):
                 # Loop over reaction terms and find all symbols in them
                 for i in range(len(reaction_terms)):
                     list_reaction += [a for a in reaction_terms[i].atoms(Symbol)]
-                    list_reaction += [a for a in reaction_terms[i].atoms(Function)]                     
-                print("Variables+Parameters:")
-                print(list_var_par)
-                print("Reaction terms:")
-                print(list_reaction)                
+                    list_reaction += [a for a in reaction_terms[i].atoms(Function)] 
                 # See if both these guys contains the same symbols and that the correct number of ODEs is provided.                    
-                if (set(list_var_par)==set(list_reaction)) and (len(reaction_terms) == (len(variables)-1) ):
+                if ( set(list_reaction).issubset(set(list_var_par)) ) and (len(reaction_terms) == (len(variables)-1) ):
                     model_reading_successful = True                       
                 else:
                     print("\t\tERROR: The reaction terms and/or the states are given with the wrong format. Please check that the number of ODEs matches the number of states and that only defined symbols (parameters and variables) occurs in the reaction terms.")                        

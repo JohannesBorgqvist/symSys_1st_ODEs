@@ -354,19 +354,41 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     B_mat = []
     # Loop over all ODEs and save the coefficients
     for isolated_eq in eq_sys:
+        # Expand the equation at hand
+        eq_temp = expand(isolated_eq)
         # Loop over all coefficients in the tangential ansätze
         # and define our matrices
         for coeff in c_reduced:
             # Save the derivative of the A coefficient
-            A_mat.append(-isolated_eq.coeff(Derivative(coeff(x[0]),x[0])))
+            A_mat.append(-eq_temp.coeff(Derivative(coeff(x[0]),x[0])))
             # Save the coefficient of the coefficient in the tangential
             # ansätze
-            B_mat.append(isolated_eq.coeff(coeff(x[0])))
+            B_mat.append(eq_temp.coeff(coeff(x[0])))
     # Finally we generate the matrices from our lists A_mat and B_mat
     num_of_rows = len(eq_sys) # Number of rows
     num_of_cols = len(c_reduced) # Number of columns
     A = Matrix(num_of_rows,num_of_cols,A_mat) # Matrix A
     B = Matrix(num_of_rows,num_of_cols,B_mat) # Matrix B
+    print("### The original matrix formulation.")
+    print("Dimensions of A")
+    print(A.shape)
+    print("\\begin{equation*}")
+    print("A=%s"%(str(latex(A))))
+    print("\\end{equation*}")
+    print("Dimensions of B")
+    print(B.shape)
+    print("\\begin{equation*}")
+    print("B=%s"%(str(latex(B))))
+    print("\\end{equation*}")
+    print("The coefficient vector c:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
+    print("\\end{equation*}")
+    print("The coefficient vector c_reduced:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
+    print("\\end{equation*}")
+    print("%d unknowns remain"%(int(len(c_reduced))))
     #------------------------------------------------------------------------------
     # STEP 2 of 7: TRANSFER THE SYSTEM TO ONE MATRIX M=[A|-B] AND REDUCE THE NUMBER OF 
     # EQUATIONS BY FINDING A BASIS FOR THE COLUMN SPACE OF M^T. FINISH BY SPLITTING
@@ -402,6 +424,26 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     # Split the matrix into its component parts
     A = -M_tilde[:,0:(len(c_reduced))]
     B = M_tilde[:,len(c_reduced):(2*len(c_reduced))]
+    print("### Reduction based on column space.")
+    print("Dimensions of A")
+    print(A.shape)
+    print("\\begin{equation*}")
+    print("A=%s"%(str(latex(A))))
+    print("\\end{equation*}")
+    print("Dimensions of B")
+    print(B.shape)
+    print("\\begin{equation*}")
+    print("B=%s"%(str(latex(B))))
+    print("\\end{equation*}")
+    print("The coefficient vector c:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
+    print("\\end{equation*}")
+    print("The coefficient vector c_reduced:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
+    print("\\end{equation*}")
+    print("%d unknowns remain"%(int(len(c_reduced))))    
     #------------------------------------------------------------------------------
     # STEP 3 of 7: FIND THE PURELY ALGEBRAIC EQUATIONS WHICH CORRESPONDS TO THE ZERO ROWS IN THE MATRIX A. THE SAME ROWS IN THE MATRIX B WILL BE FORMULATED INTO A NEW MATRIX B_algebraic WHICH CONTAINS ONLY THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
@@ -419,6 +461,31 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     B_algebraic = B[rows_zero,:]
     # Update B
     B = B[rows_nonzero,:]
+    print("### Defining algebraic equations.")
+    print("Dimensions of A")
+    print(A.shape)
+    print("\\begin{equation*}")
+    print("A=%s"%(str(latex(A))))
+    print("\\end{equation*}")
+    print("Dimensions of B")
+    print(B.shape)
+    print("\\begin{equation*}")
+    print("B=%s"%(str(latex(B))))
+    print("\\end{equation*}")
+    print("Dimensions of B_algebraic")
+    print(B_algebraic.shape)
+    print("\\begin{equation*}")
+    print("B_{\mathrm{algebraic}}=%s"%(str(latex(B_algebraic))))
+    print("\\end{equation*}")    
+    print("The coefficient vector c:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
+    print("\\end{equation*}")
+    print("The coefficient vector c_reduced:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
+    print("\\end{equation*}")
+    print("%d unknowns remain"%(int(len(c_reduced))))    
     #------------------------------------------------------------------------------
     # STEP 4 of 7: FIND THE PIVOT ELEMENTS OF THE NEW MATRIX B_algebraic AND CLASSIFY THEM INTO TWO CATEGORIES: THE PIVOT ELEMENTS WHICH ARE ZERO AND THE NON-ZERO PIVOTELEMENTS. PUT ALL COEFFICIENTS OF THE ZERO PIVOT ELEMENTS TO ZERO AND REMOVE THE CORRESPONDING COLUMNS IN THE MATRICES A, B AND B_algebraic. 
     #-----------------------------------------------------------------------------
@@ -487,6 +554,31 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     pivot_columns = B_algebraic.rref()[1]
     # Row reduce the algebraic matrix 
     B_algebraic = B_algebraic.rref()[0]
+    print("### Substitutions of pivot elements.")
+    print("Dimensions of A")
+    print(A.shape)
+    print("\\begin{equation*}")
+    print("A=%s"%(str(latex(A))))
+    print("\\end{equation*}")
+    print("Dimensions of B")
+    print(B.shape)
+    print("\\begin{equation*}")
+    print("B=%s"%(str(latex(B))))
+    print("\\end{equation*}")
+    print("Dimensions of B_algebraic")
+    print(B_algebraic.shape)
+    print("\\begin{equation*}")
+    print("B_{\mathrm{algebraic}}=%s"%(str(latex(B_algebraic))))
+    print("\\end{equation*}")    
+    print("The coefficient vector c:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
+    print("\\end{equation*}")
+    print("The coefficient vector c_reduced:")
+    print("\\begin{equation*}")
+    print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
+    print("\\end{equation*}")
+    print("%d unknowns remain"%(int(len(c_reduced))))        
     #------------------------------------------------------------------------------
     # STEP 5 of 8: IF SYSTEM IS DIAGONISABLE WE TRY TO SOLVE IT WITH CLASSICAL
     # LINEAR ALGEBRA
@@ -494,7 +586,6 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     # If A is diagonizable we will try to
     # solve the system at hand
     if A.is_diagonalizable():
-        print("We entered?\n")
         #-------------------------------------------------------
         # MATRIX CALCULATIONS
         #-------------------------------------------------------
@@ -671,6 +762,9 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
     solvable_equations_exists = True
     # Save all algebraic equations that are introduced
     eq_alg = []
+    # Print a help iterator
+    help_iterator = 1
+    print("### Solve each single ODE")
     # Define the indices of the algebraic equations: 
     eq_alg_ind = [] # Needed in order to remove them from eq_sys
     # We solve all solvable equations, until there exist no more of them!
@@ -681,6 +775,8 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
             solvable_equations_exists = False
             # Go to the next iteration
             continue
+        print("\t\t\tIteration %d"%(help_iterator))
+        help_iterator += 1
         #----------------------------------------------------------------------
         # REMOVE ALGEBRAIC EQUATIONS
         #----------------------------------------------------------------------
@@ -698,8 +794,19 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
         # Remove these equations
         for i in indices_zero_equations:
             del eq_sys[i]
+        # Print the equations system
+        print("Original ODE sys")
+        print("\\begin{align*}")
+        for eq_temp in eq_sys:
+            print("%s&=0\\\\"%(str(latex(eq_temp))))
+        print("\\end{align*}")
+        print("Original algebraic sys")
+        print("\\begin{align*}")
+        for eq_temp in eq_alg:
+            print("%s&=0\\\\"%(str(latex(eq_temp))))
+        print("\\end{align*}")        
         # Re-set these equations
-        indices_zero_equations = []            
+        indices_zero_equations = []
         # Before any equations are solved, we need to be sure
         # that no algebraic equations exist among our equations.
         # If so the program will crash when it tries to use
@@ -768,7 +875,27 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
         for index in eq_alg_ind:
             del eq_sys[index]
         # Very important detail, namely to reset the indices of the algebraic equations.
-        eq_alg_ind = []  
+        eq_alg_ind = []
+        # Print the equations system
+        print("Finding solvable equations")
+        print("Equation system:")
+        print("\\begin{align*}")
+        for eq_temp in eq_sys:
+            print("%s&=0\\\\"%(str(latex(eq_temp))))
+        print("\\end{align*}")
+        print("Algebraic system:")
+        print("\\begin{align*}")
+        for eq_temp in eq_alg:
+            print("%s&=0\\\\"%(str(latex(eq_temp))))
+        print("\\end{align*}")            
+        # Print solvable equation
+        print("Solvable equation")
+        if len(solvable_equation)!=0:
+            print("\\begin{equation*}")
+            print("%s"%(str(latex(solvable_equation[0]))))
+            print("\\end{equation*}")
+        else:
+            print("No solvable equation")
         #----------------------------------------------------------------------
         # SOLVE DIFFERENTIAL EQUATIONS
         #----------------------------------------------------------------------
@@ -875,7 +1002,27 @@ def solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,va
                 del c_reduced[index]
             # Re-set the solved indices
             indices_solved_coefficients = []            
-            # Now we are back for another iteration in our while loop...    
+            # Now we are back for another iteration in our while loop...
+            # Print the equations system
+            print("After the fact: ODE sys")
+            print("\\begin{align*}")
+            for eq_temp in eq_sys:
+                print("%s&=0\\\\"%(str(latex(eq_temp))))
+            print("\\end{align*}")
+            print("After the fact:algebraic sys")
+            print("\\begin{align*}")
+            for eq_temp in eq_alg:
+                print("%s&=0\\\\"%(str(latex(eq_temp))))
+            print("\\end{align*}")
+            print("The coefficient vector c:")
+            print("\\begin{equation*}")
+            print("\mathbf{c}=%s"%(str(latex(Matrix(len(c),1,c)))))
+            print("\\end{equation*}")
+            print("The coefficient vector c_reduced:")
+            print("\\begin{equation*}")
+            print("\mathbf{c}_{\mathrm{reduced}}=%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced)))))
+            print("\\end{equation*}")
+            print("%d unknowns remain"%(int(len(c_reduced))))                    
     #------------------------------------------------------------------------------
     # STEP 7 of 7: RETURN THE SYSTEM OF EQUATIONS AND THE ALGEBRAIC EQUATIONS
     #------------------------------------------------------------------------------
@@ -925,6 +1072,14 @@ def solve_algebraic_equations(x,c,c_original,eq_alg,coefficient_counter,eta_list
             index_coefficient = [i for i in range(len(c_original)) for j in range(len(list_func)) if c_original[i](x[0])==list(list_func)[j]]
             if len(list_func) != 0:
                 # Substitute the expression for the coefficient and simplify the value
+                print("list_func")
+                print(list_func)
+                print("c")
+                print(c)
+                print("Current coefficient")
+                print(c[index_coefficient[0]])
+                print("Index coefficient")
+                print(index_coefficient)
                 num,denom = fraction(simplify(eq_temp.subs(list(list_func)[0],c[index_coefficient[0]])))
                 eq_temp = num
             else:
@@ -1060,10 +1215,7 @@ def solve_algebraic_equations(x,c,c_original,eq_alg,coefficient_counter,eta_list
     # Loop over tangents
     for tangent_number in range(len(eta_list)):
         # Loop through all coefficients and replace them in all tangents
-        for index in range(len(c)):
-            # Print our belowed coefficients
-            #print("\t%s\t=\t%s,\t%s\n"%(str(c_original[index]),str(c[index]),str(type(c[index]))))
-            
+        for index in range(len(c)):            
             # Substitute coefficient in the tangents
             eta_list[tangent_number] = eta_list[tangent_number].subs(c_original[index](x[0]),c[index])
         # Add all non-trivial tangents to the generator    
@@ -1121,14 +1273,15 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     #----------------------------------------------------------------    
     # We call this "max_iter" times in the hope that we can solve the
     # remaining system
-    max_iter = 3
+    max_iter = 1
     # Add a counter which helps us interrupt the while-loop
     iter_counter = 1
     # Loop until all equations are solved
     while len(eq_sys) != 0:
-        print("ITER %d OUT OF %d\n"%(int(iter_counter),int(max_iter)))
-        print("\t\tSOLVE ODEs")
         # Try to solve the remaining system with the solution algorithm
+        print("---------------------------------------")
+        print("## ITER %d OUT OF %d" %(int(iter_counter),int(max_iter)))
+        print("---------------------------------------")        
         eq_alg_extra, eq_sys_new, coefficient_counter_new = solve_linear_sys_ODEs(eq_sys,x,c_original,c,c_reduced,coefficient_counter,variables)
         # Update the coefficient counter
         coefficient_counter += coefficient_counter_new
@@ -1142,20 +1295,15 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
         # of iterations, we simply give up
         if iter_counter>max_iter:
             break
-    print("Number of arbitrary coefficients:\t%d\n"%(int(coefficient_counter)))
-    print("Number of unknowns:\t%d"%(int(len(c_reduced))))
-    print("%s"%(str(latex(Matrix(len(c_reduced),1,c_reduced),mode='equation*'))))
-    print(len(eq_sys))
-    print("\\begin{align*}")
-    for i in range(len(eq_sys)):
-        print("%s&=0\\\\"%(str(latex(eq_sys[i]))))
-    print("\\end{align*}")
     #----------------------------------------------------------------
     #----------------------------------------------------------------
     # Solve algebraic equations
     #----------------------------------------------------------------
     #----------------------------------------------------------------
-    print("\t\tSOLVE ALGEBRAIC EQUATIONS")
+    print("---------------------------------------")
+    print("## SOLVE ALGEBRAIC EQUATIONS")
+    print("---------------------------------------")        
     X,eq_alg_original,sol_alg = solve_algebraic_equations(x,c,c_original,eq_alg,coefficient_counter,eta_list)    
     # Return the solved coefficients and the generator
     return X,c_original,c,eq_alg_original,sol_alg
+
