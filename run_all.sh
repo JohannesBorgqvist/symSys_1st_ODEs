@@ -22,7 +22,7 @@ echo "Output"
 echo "============================================================"
 echo " "
 echo ""
-python3 launch_symmetry_calculations.py linear_model 1
+python3 launch_symmetry_calculations.py DBH_model 1
 echo "============================================================"
 echo "GENERATING REPORT"
 echo ""

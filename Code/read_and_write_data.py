@@ -138,85 +138,15 @@ def read_input_model(file_name):
 # The function takes various lists of equations, tangents, the variables,
 # the parameters, the algebraic equations, the solution of the algebraic equations and it saves all these lists in the pickle-format (i.e. binary files).
 # The files are stored in a subsub-folder of the folder "../Output" where the first folder is determined by the name in the input file and the second folder is a unique folder named after the time and date that the script was launched. Also, the generatoris written into the Markdown-file "out.md" stored in the sub folder of Output named after the name of the model which is defined in the model file. 
-def write_output_generator(tangent_degree,folder_name,variables,parameters,reaction_terms,x,omega_list,eta_list,lin_sym_list,det_eq,monomials,lin_sym_eq_number,X,c_original,c,eq_alg,sol_alg):
+def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_terms,omega_list):
     # Begin by creating our dear output folder
     path = "../Output/" + folder_name
     os.makedirs(path, exist_ok=True)
     # Create a sub folder in which we store all lists.
     # Each of these folders is named after the current date and time
     date_str = datetime.datetime.now().strftime("%I_%M%p_%d_%B-%Y")
-    sub_folder = path + "/" + date_str
-    os.makedirs(sub_folder, exist_ok=True)
     #-----------------------------------------------------------------------
-    # Part 1: Save all lists using pickle 
-    #-----------------------------------------------------------------------
-    # Save the states and the independent variable
-    temp_str = sub_folder + "/variables.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(variables))
-    # Save the parameters
-    temp_str = sub_folder + "/parameters.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(parameters))
-    # Save the reaction terms
-    temp_str = sub_folder + "/reaction_terms.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(reaction_terms))        
-    # Save the re-named variables
-    temp_str = sub_folder + "/x.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(x))
-    # Save the re-named reaction terms
-    temp_str = sub_folder + "/omega_list.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(omega_list))
-    # Save the tangents
-    eta_list = [str(eta_list[i]) for i in range(len(eta_list))]
-    temp_str = sub_folder + "/eta_list.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(eta_list))
-    # Save the lists of the linearised symmetry condition
-    lin_sym_list = [str(lin_sym_list[i]) for i in range(len(lin_sym_list))]
-    temp_str = sub_folder + "/lin_sym_list.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(lin_sym_list))        
-    # Save the determining equations
-    det_eq = [str(det_eq[i]) for i in range(len(det_eq))]
-    temp_str = sub_folder + "/det_eq.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(det_eq))
-    # Save the monomials
-    monomials = [str(monomials[i]) for i in range(len(monomials))]
-    temp_str = sub_folder + "/monomials.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(monomials))
-    # Save the list connecting the determining equations
-    # to the corresponding linearised symmetry condition
-    temp_str = sub_folder + "/lin_sym_eq_number.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(lin_sym_eq_number))
-    # Save the original coordinates
-    c_original = [str(c_original[i]) for i in range(len(c_original))]
-    temp_str = sub_folder + "/c_original.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(c_original))        
-    # Save the coordinates before the algebraic substitution
-    c = [str(c[i]) for i in range(len(c))]
-    temp_str = sub_folder + "/c.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(c))
-    # Save the algebraic equations
-    eq_alg = [str(eq_alg[i]) for i in range(len(eq_alg))]    
-    temp_str = sub_folder + "/eq_alg.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(eq_alg))
-    # Save the solutions to the algebraic equations
-    sol_alg = [str(sol_alg[i]) for i in range(len(sol_alg))]
-    temp_str = sub_folder + "/sol_alg.pickle"
-    with open(temp_str, 'wb') as outf:
-        outf.write(pickle.dumps(sol_alg))        
-    #-----------------------------------------------------------------------
-    # Part 2: Write the output to a Markdown file
+    # Write the output to a LaTeX file
     #-----------------------------------------------------------------------
     # Define the file which we write to
     file_path = path + "/out.tex"
@@ -228,10 +158,13 @@ def write_output_generator(tangent_degree,folder_name,variables,parameters,react
     # Print the degree of the polynomial in the ansätze
     f.write("\\textbf{Degree in tangential ansätze:}\t%d\\\\\n"%(int(tangent_degree)))
     # Print the system of ODEs
-    f.write("The reaction terms are:\n\n")
+    f.write("The system of ODEs is given by:\n\n")
     f.write("\\begin{align*}\n")
     for i in range(len(omega_list)):
-        f.write('\\dv{%s}{%s}&=%s\\\\\n'%(latex(variables[i+1]),latex(variables[0]),latex(reaction_terms[i])))
+        if i < len(omega_list) -1 :
+            f.write('\\dv{%s}{%s}&=%s,\\\\\n'%(latex(variables[i+1]),latex(variables[0]),latex(reaction_terms[i])))
+        else:
+            f.write('\\dv{%s}{%s}&=%s.\\\\\n'%(latex(variables[i+1]),latex(variables[0]),latex(reaction_terms[i])))            
     f.write("\\end{align*}\n\n")
     # Change name of the generator
     for i in range(len(x)):
