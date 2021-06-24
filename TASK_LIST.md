@@ -2,7 +2,7 @@
 - [x] Implement a linear algebra approach in the solution algorithm
 - [x] Add Loetka Volterra,
 - [x] Add all models listed below under the section "Biological models"
-- [x] Run symmetry calculations on all models under the seciton "Biological models"
+- [x] Run symmetry calculations on all models under the section "Biological models"
 - [x] Make sure code work for the general linear case,
 - [x] Make the code work for the DBH model,
 - [x] Add branches github,
@@ -15,11 +15,11 @@
 - [ ] Make sure that the code can run on Windows,
 - [ ] Make sure that the code can run on Mac,
 - [x] Find more system of ODEs with known symmetries from mathematical biology.
-- [ ] Fix error of "from sympy import *" where we need to import each part of sympy individually,
-- [ ] Fix so that the generator is saved with align instead of as equation,
-- [ ] Decide where to publish (see the second section below),
+- [x] Fix error of "from sympy import *" where we need to import each part of sympy individually,
+- [x] Fix so that the generator is saved with align instead of as equation,
+- [x] Decide where to publish (see the second section below),
 - [x] This is how you check a box! Just and an x in the box.
-- [ ] Calculate symmetries for LV-model
+- [x] Calculate symmetries for LV-model
 - [ ] Add charateristic to theory section
 - [ ] Split defs in theory section
 - [ ] Name parts of determining equations (currently "pseudo")
