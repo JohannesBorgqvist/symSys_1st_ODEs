@@ -25,7 +25,7 @@
 - [ ] Name type of anzats (currently "projective")
 - [ ] Change name of algebraic equations from solutionk of ODEs to "constraints"
 - [ ] Add block matrix derivation before algorithm
-- [ ] Rewrite algorithm section; polynomials, notation etc + structure
+- [ ] Re-write algorithm section; polynomials, notation etc + structure
 - [ ] Simpler model worked as detailed example
 - [ ] Move full calc of Hydon's model to supplementary
 - [ ] Include partial example Hydon's model in example section
