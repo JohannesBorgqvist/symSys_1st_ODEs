@@ -1,6 +1,9 @@
 # TASK LIST FOR THE SYM_SYS PROJECT
-- [ ] Make sure code work for the general linear case,
-- [ ] Make the code work for the DBH model,
+- [x] Implement a linear algebra approach in the solution algorithm
+- [x] Add Loetka Volterra,
+- [ ] 
+- [x] Make sure code work for the general linear case,
+- [x] Make the code work for the DBH model,
 - [x] Add branches github,
 - [ ] Fix sources for the Introduction,
 - [ ] Fix sources for the Discussion,
@@ -9,7 +12,7 @@
 - [ ] Calculate the most general ODE system from the Lie algebra of the DBH model,
 - [ ] Make sure that the code can run on Windows,
 - [ ] Make sure that the code can run on Mac,
-- [ ] Find more system of ODEs with known symmetries from mathematical biology.
+- [x] Find more system of ODEs with known symmetries from mathematical biology.
 - [ ] Fix error of "from sympy import *" where we need to import each part of sympy individually,
 - [ ] Fix so that the generator is saved with align instead of as equation,
 - [ ] Decide where to publish (see the second section below),
