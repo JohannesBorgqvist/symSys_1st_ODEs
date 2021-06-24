@@ -26,6 +26,7 @@ import pandas as pd
 # For symbolic calculations
 from symengine import *
 from sympy import *
+from sympy.abc import _clash1
 # To create a data folder
 import os
 # To get the date and time
@@ -104,11 +105,11 @@ def read_input_model(file_name):
                         # Do the substitution
                         exec("omega_list[reac_index] = omega_list[reac_index].replace(variables[var_index],'x_%d')"%(int(var_index)))
                 # Render these lists as symbolic objects
-                reaction_terms = [sympify(r) for r in reaction_terms]
+                reaction_terms = [sympify(r,_clash1) for r in reaction_terms]
                 omega_list = [sympify(r) for r in omega_list]
-                variables = [sympify(r) for r in variables]
+                variables = [sympify(r,_clash1) for r in variables]                
                 if len(parameters) != 0:
-                    parameters = [sympify(r) for r in parameters]                
+                    parameters = [sympify(r) for r in parameters]
                 # Check that we have the correct number of ODEs and that
                 # all parameters and states that are introduced are the only
                 # thing that occurs in the reaction terms
@@ -117,7 +118,7 @@ def read_input_model(file_name):
                 # Loop over reaction terms and find all symbols in them
                 for i in range(len(reaction_terms)):
                     list_reaction += [a for a in reaction_terms[i].atoms(Symbol)]
-                    list_reaction += [a for a in reaction_terms[i].atoms(Function)] 
+                    list_reaction += [a for a in reaction_terms[i].atoms(Function)]
                 # See if both these guys contains the same symbols and that the correct number of ODEs is provided.                    
                 if ( set(list_reaction).issubset(set(list_var_par)) ) and (len(reaction_terms) == (len(variables)-1) ):
                     model_reading_successful = True                       
