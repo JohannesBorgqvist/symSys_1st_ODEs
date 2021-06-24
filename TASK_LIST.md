@@ -24,7 +24,7 @@
 - [ ] Split defs in theory section
 - [ ] Name parts of determining equations (currently "pseudo")
 - [ ] Name type of anzats (currently "projective")
-- [ ] Change name of algebraic equations from solutionk of ODEs to "constraints"
+- [ ] Change name of algebraic equations from solution of ODEs to "constraints"
 - [ ] Add block matrix derivation before algorithm
 - [ ] Re-write algorithm section; polynomials, notation etc + structure
 - [ ] Simpler model worked as detailed example
@@ -37,7 +37,7 @@
 - [x] Compute SIR AIDS model (Murray p. 338)
 - [ ] Check calculations for Hydon's model derivation
 - [ ] Derive linear model from symmetries
-- [ ] Understand method of deriving ODEs from symmetries and invariant
+- [x] Understand method of deriving ODEs from symmetries and invariant
 
 
 
