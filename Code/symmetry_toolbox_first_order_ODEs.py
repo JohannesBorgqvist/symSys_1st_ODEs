@@ -18,6 +18,7 @@
 #=================================================================================
 #=================================================================================
 # Import SymPy
+from symengine import *
 from sympy import *
 from sympy.core.function import *
 # Other functionalities in sympy:
@@ -352,10 +353,8 @@ def sub_const(expr, char,coefficient_counter):
 # 2. The calculated generator of the symmetry which is stored in a string called "X".
 # It is common that a number of algebraic equations is returned as well. So the function attempts to solve these equations as well. In the end the function returns, the generator before the algebraic equations are solved, the generator after the algebraic equations are solved, the coefficient vectors before and after the the algebraic equations are solved, the algebraic equations and the solutions to the algebraic equation that the script finds.
 def solve_determining_equations(x,eta_list,c,det_eq,variables):
-    # Copy the original coefficient vector
-    c_original = c.copy() # The original parameters
     #------------------------------------------------------------------------------
-    # STEP 1 of 7: FORMULATE THE DETERMINING EQUATIONS ON MATRIX FORM A*dc/dt=B*c
+    # STEP 1 of 6: FORMULATE THE DETERMINING EQUATIONS ON MATRIX FORM A*dc/dt=B*c
     #-----------------------------------------------------------------------------
     # Allocate memory for the two matrices. 
     # We allocate them as lists because we can
@@ -383,7 +382,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     A = Matrix(num_of_rows,num_of_cols,A_mat) # Matrix A
     B = Matrix(num_of_rows,num_of_cols,B_mat) # Matrix B
     #------------------------------------------------------------------------------
-    # STEP 2 of 7: TRANSFER THE SYSTEM TO ONE MATRIX M=[A|-B] AND REDUCE THE NUMBER OF 
+    # STEP 2 of 6: TRANSFER THE SYSTEM TO ONE MATRIX M=[A|-B] AND REDUCE THE NUMBER OF 
     # EQUATIONS BY FINDING A BASIS FOR THE COLUMN SPACE OF M^T. FINISH BY SPLITTING
     # UP THE MATRIX INTO ITS COMPONENTS PART, I.E. A AND B RESPECTIVELY
     #-----------------------------------------------------------------------------
@@ -412,13 +411,16 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     for i in range(len(reduced_sys)):
         if i > 0:
             M_tilde = M_tilde.row_insert(i, reduced_sys[i].T)          
+    # Split the matrix into its component parts
+    A = M_tilde[:,0:(len(c))]
+    B = -M_tilde[:,len(c):(2*len(c))]    
     # Row-reduce the expanded matrix
     M_tilde = M_tilde.rref()[0]
     # Split the matrix into its component parts
     A = M_tilde[:,0:(len(c))]
-    B = -M_tilde[:,len(c):(2*len(c))]    
+    B = -M_tilde[:,len(c):(2*len(c))]
     #------------------------------------------------------------------------------
-    # STEP 3 of 7: FIND THE PURELY ALGEBRAIC EQUATIONS WHICH CORRESPONDS TO THE ZERO ROWS IN THE MATRIX A. THE SAME ROWS IN THE MATRIX B WILL BE FORMULATED INTO A NEW MATRIX B_algebraic WHICH CONTAINS ONLY THE ALGEBRAIC EQUATIONS
+    # STEP 3 of 6: FIND THE PURELY ALGEBRAIC EQUATIONS WHICH CORRESPONDS TO THE ZERO ROWS IN THE MATRIX A. THE SAME ROWS IN THE MATRIX B WILL BE FORMULATED INTO A NEW MATRIX B_algebraic WHICH CONTAINS ONLY THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
     # Remove the zero rows from A:
     # Calculate the dimensions 
@@ -434,7 +436,36 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     # Update B
     B = B[rows_nonzero,:]
     #------------------------------------------------------------------------------
-    # STEP 4 of 7: SOLVE THE ODE SYSTEM PROVIDED THAT IT IS QUADRATIC AND
+    # STEP 4 of 6: REMOVE (POTENTIAL) EXTRA COLUMNS 
+    #-----------------------------------------------------------------------------      # Find the dimensions of the matrix A
+    m, n = A.shape
+    # Create a set of all the columns
+    col_set = set(range(n))
+    # Find the pivot columns of A
+    pivot_columns = A.rref()[1]
+    # Calculate the non-pivot columns
+    non_pivot_columns = list(col_set.difference(set(pivot_columns)))
+    # Substitute the value zero for all non-pivot columns in the coefficient
+    # vector
+    # Loop over tangents
+    for tangent_number in range(len(eta_list)):
+        # Loop through all coefficients and replace them in all tangents
+        for index in non_pivot_columns:            
+            # Substitute coefficient in the tangents
+            eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](x[0]),0)
+    # Remove all non-pivot tangential coefficient
+    non_pivot_columns.sort(reverse=True)
+    # Loop over all non_pivot_columns and remove them from our three
+    # matrices A, B and B_algebraic and from the coefficient vector c
+    for index in range(len(non_pivot_columns)):
+        # Remove column matrices
+        A.col_del(non_pivot_columns[index])
+        B.col_del(non_pivot_columns[index])
+        B_algebraic.col_del(non_pivot_columns[index])
+        # Remove parameter coefficient vector
+        del c[non_pivot_columns[index]]
+    #------------------------------------------------------------------------------
+    # STEP 5 of 6: SOLVE THE ODE SYSTEM PROVIDED THAT IT IS QUADRATIC AND
     # SUBSTITUTE THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
     num_rows, num_cols = B.shape
@@ -465,8 +496,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
             J = J.exp()
             # Solve the system of ODEs
             c_mat = (P*J*P.inv())*c_mat
-            print("The solution to the ODE system")
-            print(c_mat)
             #----------------------------------------------
             # PART 2: SUBSTITUE ALGEBRAIC EQUATIONS
             #----------------------------------------------            
@@ -474,20 +503,70 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
             # B_algebraic
             B_algebraic = B_algebraic.rref()[0]
             pivot_elements = B_algebraic.rref()[1]
-            print("The pivot elements are:")
-            for pivot in pivot_elements:
-                print(constant_list[pivot])
             # Define the algebraic equations for the
             # coefficients
             c_alg = B_algebraic*c_mat
-            print("Accounting for the algebraic equations")
-            print(c_alg)
-            # Define our tangent vector
-            X = "Things are alright baby!"
-        
+            # Convert the matrix with the ODE coefficients into
+            # a list
+            c_list = list(c_mat)
+            # Loop through the algebraic equations and substitute
+            # the value in the solution to the ODE
+            for index in range(len(list(c_alg))):
+                # Solve the algebraic equation for the constant corresponding
+                # to the pivot element in B_algebraic
+                sol_temp = solve(c_alg[index],constant_list[pivot_elements[index]])
+                # Substitute the solution of the algebraic equation
+                # into the solution of the ODE for the tangential coefficients
+                for sub_index in range(len(c_list)):
+                    c_list[sub_index] = c_list[sub_index].subs(constant_list[pivot_elements[index]],sol_temp[0])
+            # See which constants that exists among the constants
+            constants_in_final_solution = []
+            # Loop over all coefficients in the constant list
+            for constant_index in range(len(constant_list)):
+                # See if the constant exists in the final solution
+                if c_list[constant_index].coeff(constant_list[constant_index]) != 0:
+                    # Add the constant
+                    constants_in_final_solution.append(constant_list[constant_index])
+                    # Move on
+                    continue
+            # Loop over tangents and substitute the calculated coefficients
+            # into these expressions
+            for tangent_number in range(len(eta_list)):
+                # Loop through all coefficients and replace them in all tangents
+                for index in range(len(c)):            
+                    # Substitute coefficient in the tangents
+                    eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](x[0]),c_list[index])
+                # Simplify the tangents
+                eta_list[tangent_number] = expand(eta_list[tangent_number])
+            # Define a counter for the generators
+            generator_counter = 0
+            # Define one generator per constant in the final solution
+            for constant in constants_in_final_solution:
+                # Increment the counter for the generator
+                generator_counter += 1
+                # Set the plus indicator to false
+                plus_indicator = False
+                # It is our first generator we begin align
+                if generator_counter == 1:
+                    # Define our generator
+                    X = "\\begin{align*}\nX_{" + str(generator_counter) + "}&="
+                else:
+                    # Define our generator
+                    X += ",\\\\\nX_{" + str(generator_counter) + "}&="                    
+                for tangent_number in range(len(eta_list)):
+                    # Add all non-trivial tangents to the generator    
+                    if eta_list[tangent_number].coeff(constant)!=0:
+                        if plus_indicator:
+                            X += "+\\left(" + str(latex(eta_list[tangent_number].coeff(constant))) + "\\right)" + "\partial x_{" + str(tangent_number) + "}"
+                        else:
+                            X += "\\left(" + str(latex(eta_list[tangent_number].coeff(constant))) + "\\right)" + "\partial x_{" + str(tangent_number) + "}"
+                            plus_indicator = True
+            # Add the final touch to the generator
+            X += "\\end{align*}"
+            X = X.replace("\\\\\n\\end{align*}", ".\\\\\n\\end{align*}")
     else:
         # Return that the matrix
-        X = "\\Huge\\textsf{Not a quadratic matrix}\normalsize\\[2cm]" 
+        X = "\\Huge\\textsf{Not a quadratic matrix}\\normalsize\\\\[2cm]" 
     # Return the solved coefficients and the generator
     return X 
 

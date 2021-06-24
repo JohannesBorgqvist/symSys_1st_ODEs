@@ -41,10 +41,12 @@ def create_summary_document():
     f.write("%s"%(str_temp))
     # Find all reports to include in the document
     r = list_subdirectories("../Output/")
+    print(r)
     # Loop over all files and include them
     for i in range(len(r)):
         # File name
         file_name = r[i]
+        print(file_name)
         # Add a chapter title
         chapter_name = file_name
         chapter_name = chapter_name.replace("../Output/","")
@@ -55,8 +57,8 @@ def create_summary_document():
         str_temp = "\\chapter{" + chapter_name + "}\n"
         # Add the input file
         str_temp += "\\input{" + file_name + "}\n\n"
-    # Now we can include all files
-    f.write("%s"%(str_temp))
+        # Now we can include all files
+        f.write("%s"%(str_temp))
     # The document ends
     str_temp = "\\end{document}" # The document ends
     f.write("%s"%(str_temp))    

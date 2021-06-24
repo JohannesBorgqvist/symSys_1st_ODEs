@@ -24,6 +24,7 @@
 # using pandas
 import pandas as pd
 # For symbolic calculations
+from symengine import *
 from sympy import *
 # To create a data folder
 import os
@@ -170,7 +171,7 @@ def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_ter
     for i in range(len(x)):
         exec("X = X.replace('x_{%d}',str(latex(variables[%d])))"%(int(i),int(i)))
     # Print the generator
-    f.write("The calculated generator is:\n\n")
+    f.write("\\noindent The calculated generators are:\n\n")
     f.write("%s\n"%(X))
     # Close the file
     f.close()    

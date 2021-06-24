@@ -14,7 +14,6 @@
 #=================================================================================
 import conduct_symmetry_calculations # Home-made
 import read_and_write_data # Home-made
-import symmetry_toolbox_first_order_ODEs_2 # Home-made
 # To read the input arguments defined by the user
 import sys
 #=================================================
