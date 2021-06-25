@@ -19,7 +19,15 @@
 #=================================================================================
 # Import SymPy
 from symengine import *
-from sympy import *
+#import sympy
+from sympy import simplify
+from sympy import fraction
+from sympy import powsimp
+from sympy import cancel
+from sympy import collect
+from sympy import Matrix
+from sympy import solve
+from sympy import latex
 from sympy.core.function import *
 # Other functionalities in sympy:
 # Finding monomials
@@ -34,9 +42,8 @@ from sympy import symbols, Eq, Function
 from math import *
 # To do the fancy iterations
 import itertools
-# For printing in the terminal
-from sympy.interactive.printing import init_printing
-init_printing(use_unicode=True)
+# To manipulate string
+import string
 #=================================================================================
 #=================================================================================
 # The Functions
@@ -532,12 +539,17 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
             # Loop over tangents and substitute the calculated coefficients
             # into these expressions
             for tangent_number in range(len(eta_list)):
+                # Expand the tangents
+                eta_list[tangent_number] = eta_list[tangent_number].expand()
+                # Loop over the variables and substitute them to their
+                # original names
+                for index in range(len(x)):
+                    # Substitute coefficient in the tangents
+                    eta_list[tangent_number] = eta_list[tangent_number].subs(x[index],variables[index])
                 # Loop through all coefficients and replace them in all tangents
                 for index in range(len(c)):            
                     # Substitute coefficient in the tangents
-                    eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](x[0]),c_list[index])
-                # Simplify the tangents
-                eta_list[tangent_number] = expand(eta_list[tangent_number])
+                    eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](variables[0]),c_list[index])
             # Define a counter for the generators
             generator_counter = 0
             # Define one generator per constant in the final solution
@@ -557,9 +569,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
                     # Add all non-trivial tangents to the generator    
                     if eta_list[tangent_number].coeff(constant)!=0:
                         if plus_indicator:
-                            X += "+\\left(" + str(latex(eta_list[tangent_number].coeff(constant))) + "\\right)" + "\partial x_{" + str(tangent_number) + "}"
+                            X += "+\\left( " + str(latex(eta_list[tangent_number].coeff(constant))) + " \\right)" + "\\partial " + str(latex(variables[tangent_number])) + ""
                         else:
-                            X += "\\left(" + str(latex(eta_list[tangent_number].coeff(constant))) + "\\right)" + "\partial x_{" + str(tangent_number) + "}"
+                            X += "\\left( " + str(latex(eta_list[tangent_number].coeff(constant))) + " \\right)" + "\\partial " + str(latex(variables[tangent_number])) + ""
                             plus_indicator = True
             # Add the final touch to the generator
             X += "\\end{align*}"

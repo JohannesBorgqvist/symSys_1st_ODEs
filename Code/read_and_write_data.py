@@ -23,18 +23,20 @@
 # For reading the data frame
 # using pandas
 import pandas as pd
+# For manipulating string
+#from string import *
 # For symbolic calculations
-from symengine import *
-from sympy import *
+#import sympy
+#from symengine import *
 from sympy.abc import _clash1
+from sympy import sympify
+from sympy import Symbol
+from sympy import Function
+from sympy import latex
 # To create a data folder
 import os
 # To get the date and time
 import datetime
-# To read and write binary files
-# in order to store all equations
-# from all runs
-import pickle
 #=================================================================================
 #=================================================================================
 # The Functions
@@ -170,7 +172,10 @@ def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_ter
     f.write("\\end{align*}\n\n")
     # Change name of the generator
     for i in range(len(x)):
-        exec("X = X.replace('x_{%d}',str(latex(variables[%d])))"%(int(i),int(i)))
+        # Change back to the old variable name
+        exec("X = X.replace('%s','%s')"%(str(latex(x[i])),str(latex(variables[i]))))
+    # For some reason it always messes up the time variable?
+    X = X.replace(latex(x[0]),latex(variables[0]))
     # Print the generator
     f.write("\\noindent The calculated generators are:\n\n")
     f.write("%s\n"%(X))

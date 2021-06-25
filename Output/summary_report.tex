@@ -1,0 +1,21 @@
+\documentclass{book}
+% General document formatting
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+% Related to math
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+% For writing derivatives easily
+\usepackage{physics}
+\begin{document}
+\title{\textbf{Summary of symmetry calculations}}
+\date{\today}
+\maketitle
+\tableofcontents
+\clearpage
+\chapter{\textsc{DBH\_model}}
+\input{../Output/DBH_model/out.tex}
+
+\chapter{\textsc{hydons\_model}}
+\input{../Output/hydons_model/out.tex}
+
+\end{document}

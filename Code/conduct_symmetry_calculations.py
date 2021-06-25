@@ -16,7 +16,6 @@
 import read_and_write_data # Home-made
 import symmetry_toolbox_first_order_ODEs # Home-made
 from symengine import *
-from sympy import *
 #=================================================================================
 #=================================================================================
 # The Function
@@ -59,7 +58,7 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         # Print to the user that we are calculating the determining equations
         print("\t\t\tStep 4 out of 6: Deriving the determining equations...")
         # Define the degree we want on our monomial
-        degree_monomial = 10
+        degree_monomial = 7
         # Step 4.3: Calculate our so called "determining equations"
         det_eq, monomials, lin_sym_eq_number = symmetry_toolbox_first_order_ODEs.determining_equations(x,lin_sym_list,degree_monomial)
         # Print that this is done
