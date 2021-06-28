@@ -69,9 +69,7 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         # Change the name of the variables
         for i in range(len(variables)):
             from_str = str(latex(x[i]))
-            #print("\t\t\tFrom:\t%s"%(from_str))
             to_str = str(latex(variables[i]))
-            #print("\t\t\tTo:\t%s"%(to_str))
             X = X.replace(from_str,to_str)
         # Print that this is done
         print("\t\t\t\tDone!")

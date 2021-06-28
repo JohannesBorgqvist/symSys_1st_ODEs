@@ -22,7 +22,7 @@ echo "Output"
 echo "============================================================"
 echo " "
 echo ""
-python3 launch_symmetry_calculations.py DBH_model 1
+python3 launch_symmetry_calculations.py DBH_model 2
 echo "============================================================"
 echo "RUNNING SCRIPT 3 OUT OF 13"
 echo ""
