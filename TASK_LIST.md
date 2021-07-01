@@ -76,3 +76,10 @@ The following models have been added to the input folder:
 12. SIR.xlsx 
 
 A large run of symmetry calculation was started Thursday the 21st of June, and we will see how long it takes for these calculations to be finished. 
+
+
+## List of computers at Oxford
+
+1. https://www.maths.ox.ac.uk/members/it/remote-access 
+2. https://www.maths.ox.ac.uk/members/it/machines 
+3. https://www.maths.ox.ac.uk/members/it/faqs/connection
