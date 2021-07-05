@@ -15,7 +15,9 @@
 #=================================================================================
 import read_and_write_data # Home-made
 import symmetry_toolbox_first_order_ODEs # Home-made
-from symengine import *
+# For printing with latex
+from sympy import latex
+#from symengine import *
 #=================================================================================
 #=================================================================================
 # The Function

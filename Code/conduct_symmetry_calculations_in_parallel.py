@@ -17,8 +17,11 @@
 #=================================================================================
 import read_and_write_data # Home-made
 import conduct_symmetry_calculations # Home-made
-from symengine import *
+#from symengine import *
 import multiprocessing as mp # For parallelisation over the CPUs
+#from multiprocessing import Process # Import processes
+import time
+from timeit import default_timer as timer
 #=================================================================================
 #=================================================================================
 # The Function
@@ -78,6 +81,7 @@ def calculate_symmetries_ODEs_in_paralell(i):
         tangent_degree = 3        
     # Conduct the symmetry calculations 
     conduct_symmetry_calculations.calculate_symmetries_ODEs(file_name,tangent_degree)
+    return i
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # RUN THE SIMULATIONS IN PARALELL 
@@ -85,13 +89,48 @@ def calculate_symmetries_ODEs_in_paralell(i):
 #----------------------------------------------------------------------------------
 #Define the number of CPUs, as the number of available minus one.
 num_of_CPUs = mp.cpu_count()-1
+#num_of_CPUs = 3
 # Launch symmetry calculations in parallel:
 # Set up a pool of workerks
-pool = mp.Pool(num_of_CPUs)
-# Run the calculations in parallel
-pool.apply(calculate_symmetries_ODEs_in_paralell, args=(i)) for i in range(1,14)
-# Step 8.8: Close and join the pool to stop parallelisation
-pool.close()
-pool.join()
-    
-    
+#pool = mp.Pool(num_of_CPUs)
+#----------------------------------------------------------------------------------
+# ATTEMPT USING PROCESSES
+#----------------------------------------------------------------------------------
+#if __name__ == "__main__":  # confirms that the code is under main function
+#    procs = []
+#    proc = Process(target=calculate_symmetries_ODEs_in_paralell)  # instantiating without any argument
+#    procs.append(proc)
+#    proc.start()
+
+    # instantiating process with arguments
+#    for i in range(1,14):
+        # print(name)
+#        proc = Process(target=calculate_symmetries_ODEs_in_paralell, args=(i,))
+#        procs.append(proc)
+#        proc.start()
+
+    # complete the processes
+#    for proc in procs:
+#        proc.join()
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# ATTEMPT USING A POOL
+#----------------------------------------------------------------------------------    
+def main():
+
+    start = timer()
+
+    print(f'starting computations on {num_of_CPUs} cores')
+
+    values = range(1,14)
+
+    with mp.Pool(num_of_CPUs) as pool:
+        res = pool.map(calculate_symmetries_ODEs_in_paralell, values)
+        print(res)
+
+    end = timer()
+    print(f'elapsed time: {end - start}')
+
+if __name__ == '__main__':
+    main()

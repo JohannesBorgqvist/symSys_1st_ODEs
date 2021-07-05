@@ -18,7 +18,7 @@
 #=================================================================================
 #=================================================================================
 # Import SymPy
-from symengine import *
+#from symengine import *
 #import sympy
 from sympy import simplify
 from sympy import fraction
@@ -38,6 +38,10 @@ from sympy.polys.orderings import monomial_key
 from sympy.abc import x, y
 # To solve ODE systems
 from sympy import symbols, Eq, Function
+# Import all matrix stuff
+from sympy.matrices import Matrix, eye, zeros, ones, diag, GramSchmidt
+# For printing with latex
+from sympy import latex
 # Import math for combinatorials
 from math import *
 # To do the fancy iterations
