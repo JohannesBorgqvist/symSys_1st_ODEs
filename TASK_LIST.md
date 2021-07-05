@@ -38,7 +38,7 @@
 - [ ] Check calculations for Hydon's model derivation
 - [ ] Derive linear model from symmetries
 - [x] Understand method of deriving ODEs from symmetries and invariant
-- [ ] Parallelise code using MPIs (each model takes up one core each, so we can compute the symmetries using sympy in parallel)
+- [x] Parallelise code using MPIs (each model takes up one core each, so we can compute the symmetries using sympy in parallel)
 - [ ] Access the computers at the office using ssh, and set up the github project there
 - [ ] Launch the simulations on the work computers 
 - [ ] Transferring code to Julia: Read in models using Julia
