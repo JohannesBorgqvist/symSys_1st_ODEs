@@ -101,9 +101,9 @@ I am confident that we can implement our current Python code in Julia entirely. 
 ## Working in Julia
 One crucial tip when working in Julia is to load julia once and then include each script as oppose to compile the script you are developing every time. 
 
-Traditionally, I have been compiling each script every time. This is done as follows:
-julia read\_and\_write\_data.jl
-However, this is super slow and if one does this julia has to be re-loaded each time which takes *a lot of time*. So the best solution is instead to activate julia by typing
-julia 
-and then the script is run by the include command
-include{"./read\_and\_write\_data.jl"}
+Traditionally, I have been compiling each script every time. This is done as follows:<br>
+julia read\_and\_write\_data.jl<br>
+However, this is super slow and if one does this julia has to be re-loaded each time which takes *a lot of time*. So the best solution is instead to activate julia by typing<br>
+julia<br> 
+and then the script is run by the include command:<br>
+include("./read\_and\_write\_data.jl")
