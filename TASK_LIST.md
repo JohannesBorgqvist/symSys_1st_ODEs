@@ -96,3 +96,14 @@ conveniently but it is very slow as it is written purely in Python. However, Sym
 In particular, there is one step of the algorithm which I think constitutes the bottleneck. This step involves computing the matrix exponential of the matrix B, and here there is actually *another* Julia implementation called [ExponentialUtilities.jl](https://github.com/SciML/ExponentialUtilities.jl ) and it is specialised at calculating (among other things) the matrix exponential. I am not sure that this latter package can be combined with the *Symbolic.jl* framework but what gives me hope on this front is that one of the developers of *ExponentialUtilities.jl* was also involved in developing *Symbolic.jl* so hopefully they can be combined. 
 
 I am confident that we can implement our current Python code in Julia entirely. This is on account of the fact that Sympy exists in Julia as well (although it is still written in Python and therefore slow). However, we would like to avoid to use sympy as much as possible as we would like to ramp up the performance as much as possible. 
+
+
+## Working in Julia
+One crucial tip when working in Julia is to load julia once and then include each script as oppose to compile the script you are developing every time. 
+
+Traditionally, I have been compiling each script every time. This is done as follows:
+julia read\_and\_write\_data.jl
+However, this is super slow and if one does this julia has to be re-loaded each time which takes *a lot of time*. So the best solution is instead to activate julia by typing
+julia 
+and then the script is run by the include command
+include{"./read\_and\_write\_data.jl"}
