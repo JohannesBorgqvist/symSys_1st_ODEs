@@ -1,0 +1,206 @@
+#=
+=================================================================================
+=================================================================================
+ Script:"read_and_write_data"
+ Date: 2021-07-06
+ Implemented by: Johannes Borgqvist
+ Description:
+ The script contains two functions which
+ reads a certain model as input from
+ a pre-defined file and then it writes
+ the results of the symmetry calculations
+ to a folder which it also creates. It
+ also contains a help function which
+ translates the names of all variables
+ from the ones used during the symmetry
+ calculations (e.g. (x_0,x_1,...)) to
+ the variable names provided in the
+ data file. 
+=================================================================================
+=================================================================================
+ Import Libraries
+=================================================================================
+=================================================================================
+=#
+using DataFrames, XLSX # For reading the models from a data file
+using Symbolics # For doing the calculations
+using ModelingToolkit # For some of the variables
+#using SparseArrays
+#using StaticArrays
+#Symbolics.@variables — Macro
+#=
+=================================================================================
+=================================================================================
+ Run the code
+=================================================================================
+=================================================================================
+=#
+#print("Hello World\n")
+
+# Read the file
+file_str = "../Input/ODE_models.xlsx"
+xf = XLSX.readxlsx(file_str)
+# Extract the first sheet name
+sheet_names = XLSX.sheetnames(xf)
+sheet_name = sheet_names[1,1]
+# Load the sheet as a data frame instead
+df = DataFrame(XLSX.readtable(file_str, sheet_name)...)
+#df = df[completecases(df), :]
+#disallowmissing!(df)
+print("We loaded a data frame")
+print(df)
+num_rows = size(df,1)
+num_cols = size(df,2)
+print("\n\n\tThe number of rows:\t$num_rows\n")
+#print(size(df,1))
+print("\n\tThe number of columns:\t$num_cols\n\n")
+names_df = names(df)
+print("\nNames in data frame:\t$names_df")
+
+if num_cols == 5 && names_df[1] == "Model name" && names_df[2] == "Variable" && names_df[3] == "States" && names_df[4] == "Parameters" && names_df[5] == "Reaction terms"
+    # Allocate memory for some symbolic arrays
+    variables_symbolic = []
+    parameters_symbolic = []
+    reaction_terms_symbolic = []
+    x_sym = []
+    omega_list = []    
+    number = 1
+    # Define all symbolic parameters
+    print("\n\tThe provided data frame has the correct number of columns and the correct names\n\n")
+    # Save the variable
+    variable = df[:,2]    
+    print("\t\tvariable:\t$variable\n")
+    print("\n\t\tPrint each variable and its index:\n\n")
+    deleteat!(variable, findall(x->typeof(x)==Missing,variable))
+    for (index, value) in enumerate(variable)
+        temp = @variables $(value)
+        temp_temp = temp[1]
+        type_value = typeof(temp)
+        println("\t\t\t$index $temp_temp $type_value\n")
+        #@eval append!(variables_symbolic,[$(value)])
+        #@eval append!(x_sym,[Symbol(x_$index)])
+    end
+    # Save all states
+    #states = df[:,3]
+    #print("\t\tstates:\t$states\n")
+    #print("\n\t\tPrint each state and its index:\n\n")
+    #deleteat!(states, findall(x->typeof(x)==Missing,states))
+    #for (index, value) in enumerate(states)
+        #println("\t\t\t$index $value\n")
+        #@eval @variables $(value)
+        #@eval append!(variables_symbolic,[$(value)])        
+    #end    
+    # Save all parameters
+    #parameters = df[:,4]
+    #print("\t\tparameters:\t$parameters\n")
+    #print("\n\t\tPrint each parameter and its index:\n\n")
+    #deleteat!(parameters, findall(x->typeof(x)==Missing,parameters))
+    #for (index, value) in enumerate(parameters)
+        #println("\t\t\t$index $value\n")
+        #@eval @variables temp = :($(value))
+        #@eval append!(parameters_symbolic,[$(temp)])                
+    #end    
+    # Save all reaction terms
+    #reaction_terms = df[:,5]
+    #print("\t\treaction_terms:\t$reaction_terms\n")
+    #print("\n\t\tPrint each reaction term and its index:\n\n")
+    #deleteat!(reaction_terms, findall(x->typeof(x)==Missing,reaction_terms))
+    #for (index, value) in enumerate(reaction_terms)
+        #println("\t\t\t$index $value\n")
+        #@eval temp = $(value)
+        #append!(reaction_terms_symbolic,[$(value)])                
+    #end
+    print("\n\t\t\tAll symbolic variables:\n")
+    for (index, value) in enumerate(variables_symbolic)
+        temp_type = typeof(value)
+        println("\t\t\t$value\t$temp_type\n")
+    end
+    #print("\n\t\t\tAll symbolic parameters:\n")
+    #for (index, value) in enumerate(parameters_symbolic)
+        #temp_type = typeof(value)
+        #println("\t\t\t$value\t$temp_type\n")
+    #end
+    # Lastly, define our beloved reaction terms
+    #print("\n\t\t\tAll symbolic reaction terms:\n")
+    #for (index, value) in enumerate(reaction_terms_symbolic)
+        #println("\t\t\t$value\n")
+    #end
+    # Let's find the number of variables
+    #num_var = size(variables_symbolic,1)
+    #print("\n\t\tThe number of symbolic variables is:\t$num_var\n")
+    #@eval @variables x[1:$(num_var)]
+    #@eval temp_reaction = reaction_terms_symbolic[1]
+    #print("\t\tTemporary reaction:\t$temp_reaction\n")
+    #new_reaction = substitute(temp_reaction,Dict(t=>x[1]))
+    #print("\t\tReaction after substitution:\t$new_reaction\n")
+    #print("\t\tThe new variables are:$x\n")
+    #print("\t\tThe type is:")
+    #print(typeof(x[1]))
+    #print("\n")
+    #sub_list = []
+    #for (index, value) in enumerate(x)
+    #    append!(sub_list,[variables_symbolic[index]=>value])
+    #end
+    #subs = Dict(sub_list)
+    #print("\t\tThe substitution rules are:\t$subs\n")
+    # Loop over the old variables and substitute with
+    # the new ones
+    #for (reaction_index, reaction_value) in enumerate(reaction_terms_symbolic)
+        #print("\t\t")
+        #print(typeof(reaction_value))
+        #print(typeof(reaction_terms_symbolic[reaction_index]))
+        #print("\n")
+        #@eval temp = substitute($(Symbol(reaction_terms_symbolic[reaction_index])), subs)
+        #append!(omega_list,[temp])
+    #end
+      #  print("\t\t$temp\n")
+     #   for (index, value) in enumerate(variables_symbolic)
+    #        hello = $(Symbol(x[index]))
+   #         print("\t\t\tSubstitute:\t$value\twith\t$hello\n")
+                #substitute.(temp, (Dict($(Symbol(value)) => x[$(index)]),))
+  #      end
+ #       print("\t\t$temp\n\n")
+#        append!(omega_list,[temp])                    
+    #end
+    #print("\t\tThe omega list is:\n\t\t$omega_list")
+else
+    print("\n\tERROR: INCORRECT MODEL FILE\n")
+    print("\tThe data file must have five columns with the following names:\n\n")
+    print("\t\t1. Model name\n\t\t2. Variable\n\t\t3. States\n\t\t4. Parameters\n\t\t5. Reaction terms\n\n")
+    print("Aborting...\n")
+end
+
+
+# Method 1 - print names without semicolon (produces printed names and 20-element Array{Nothing, 1})
+#[print(string(":", x, ", ")) for x in names(df)]
+# Access the first sheet name
+#sh = xf[sheet_name]
+#print("\nOur current sheet:\n")
+#print(sh)
+#print("\nAll data in the work sheet:\n")
+#print(sh[:])
+# Test a for loop
+#print("\nLooping over the sheets?\n")
+#for (index, value) in enumerate(sh)
+#    println("$index $value\n")
+#end
+#print("\n\n\t\tNEW ATTEMPT!\n\n\n")
+
+#xf = XLSX.readxlsx("../Input/ODE_models.xlsx")
+#sheet_names = XLSX.sheetnames(xf)
+#sheet_name = sheet_names[1,1]
+#sheet = xf[sheet_name]
+#for r in XLSX.eachcolumn(sheet)
+    # r is a `SheetRow`, values are read using column references
+#    rn = XLSX.column_number(r) # `SheetRow` row number
+#    v1 = r[1]    # will read value at column 1
+#    v2 = r["B"]  # will read value at column 2
+    
+#    println("v1=$v1, v2=$v2")
+#end
+    #sheet = f[1,1]
+   
+
+
+    
+

@@ -1,0 +1,17 @@
+#=================================================================================
+#=================================================================================
+# Script:"conduct_symmetry_calculations"
+# Date: 2021-07-07
+# Implemented by: Johannes Borgqvist
+# Description:
+# The script conducts all the symmetry calculations using functions that are
+# stored in the script "symmetry_toolbox_first_order_ODEs.jl". This script
+# contains merely one function called "calculate_symmetries_ODEs" which reads a
+# model from a given data file and attempts to calculate the symmetries.
+#=================================================================================
+#=================================================================================
+# Import Libraries
+#=================================================================================
+#=================================================================================
+
+
