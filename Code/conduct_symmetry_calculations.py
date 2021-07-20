@@ -19,6 +19,8 @@ import symmetry_toolbox_first_order_ODEs # Home-made
 from sympy import latex
 # To time each part of the program
 import time
+# Import matrices
+from sympy import Matrix
 #=================================================================================
 #=================================================================================
 # The Function
@@ -69,6 +71,19 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         # Calculate the linearised symmetry conditions
         t0 = time.time()
         lin_sym_list = symmetry_toolbox_first_order_ODEs.lin_sym_cond(x,eta_list,omega_list)
+        print("\\begin{align*}")
+        for tangent_index in range(len(eta_list)):
+            str_tangent = str(eta_list[tangent_index])
+            for state_index in range(len(x)):
+                str_tangent = str_tangent.replace(str(x[state_index]),str(variables[state_index]))
+            str_tangent = str_tangent.replace("_","\_")
+            if tangent_index == 0:
+                print("\\xi&=%s\\\\"%(latex(str_tangent)))
+            else:
+                print("\\eta_{%d}&=%s\\\\"%(int(tangent_index),latex(str_tangent)))
+            str_tangent = ""
+        print("\\end{align*}")
+        
         t1 = time.time()
         print("\t\t\tTime elapsed:\t%0.5f\tseconds"%(t1-t0))        
         # Print that this is done
@@ -89,7 +104,24 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         t0 = time.time()
         X = symmetry_toolbox_first_order_ODEs.solve_determining_equations(x,eta_list,c,det_eq,variables)
         t1 = time.time()
-        print("\t\t\tTime elapsed:\t%0.5f\tseconds"%(t1-t0))        
+        print("\t\t\tTime elapsed:\t%0.5f\tseconds"%(t1-t0))
+        c_temp = [str(i) for i in c]
+        for c_index in range(len(c_temp)):
+            for state_index in range(len(x)):
+                c_temp[c_index] = c_temp[c_index].replace(str(x[state_index]),str(variables[state_index]))
+        print("\\begin{equation*}\n\\mathbf{c}=%s\n\\end{equation*}"%(str(latex(Matrix(len(c_temp),1,c_temp)))))
+
+        print("We have %d determining equations!"%(int(len(det_eq))))
+        print("\\begin{align*}")
+        for eq in det_eq:
+            eq_temp = eq
+            for state_index in range(len(x)):
+                eq_temp = eq_temp.subs(x[state_index],variables[state_index])
+            print("%s&=0\\\\"%(str(latex(eq_temp))))
+        print("\\end{align*}")
+            #rint("### Equation %d out of %d:\n"%(int(eq_index),int(len(det_eq)-1)))
+            
+        
         # Change the name of the variables
         for i in range(len(variables)):
             from_str = str(latex(x[i]))

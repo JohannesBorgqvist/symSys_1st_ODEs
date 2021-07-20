@@ -397,6 +397,17 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     num_of_cols = len(c) # Number of columns
     A = Matrix(num_of_rows,num_of_cols,A_mat) # Matrix A
     B = Matrix(num_of_rows,num_of_cols,B_mat) # Matrix B
+    # For printing the matrices
+    A_str = str(latex(A))
+    B_str = str(latex(B))
+    print("Dimensions of A:\t%s"%(str(A.shape)))
+    print("Dimensions of B:\t%s"%(str(B.shape)))    
+    for var_index in range(len(x)):
+        A_str = A_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+        B_str = B_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+    print("\\begin{equation*}\nA=%s\n\\end{equation*}"%(A_str))
+    print("\\begin{equation*}\nB=%s\n\\end{equation*}"%(B_str))
+    
     # Take time again
     t1_matrix = time.time()
     print("\t\t\t\t\tMatrix formulation:\t%0.5f\tseconds"%(t1_matrix-t0_matrix))
@@ -439,6 +450,15 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     # Split the matrix into its component parts
     A = M_tilde[:,0:(len(c))]
     B = -M_tilde[:,len(c):(2*len(c))]
+    A_str = str(latex(A))
+    B_str = str(latex(B))    
+    print("Dimensions of A:\t%s"%(str(A.shape)))
+    print("Dimensions of B:\t%s"%(str(B.shape)))    
+    for var_index in range(len(x)):
+        A_str = A_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+        B_str = B_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+    print("\\begin{equation*}\nA=%s\n\\end{equation*}"%(A_str))
+    print("\\begin{equation*}\nB=%s\n\\end{equation*}"%(B_str))    
     # Take time again
     t1_cs = time.time()
     print("\t\t\t\t\tColumn space:\t%0.5f\tseconds"%(t1_cs-t0_cs))    
@@ -489,6 +509,19 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
         B_algebraic.col_del(non_pivot_columns[index])
         # Remove parameter coefficient vector
         del c[non_pivot_columns[index]]
+    A_str = str(latex(A))
+    B_str = str(latex(B))
+    Balg_str = str(latex(B_algebraic))    
+    print("Dimensions of A:\t%s"%(str(A.shape)))
+    print("Dimensions of B:\t%s"%(str(B.shape)))
+    print("Dimensions of B_algebraic:\t%s"%(str(B_algebraic.shape)))        
+    for var_index in range(len(x)):
+        A_str = A_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+        B_str = B_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+        Balg_str = Balg_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))        
+    print("\\begin{equation*}\nA=%s\n\\end{equation*}"%(A_str))
+    print("\\begin{equation*}\nB=%s\n\\end{equation*}"%(B_str))
+    print("\\begin{equation*}\nB_{\\mathrm{algebraic}}=%s\n\\end{equation*}"%(Balg_str))    
     # Take time again
     t1_rc = time.time()
     print("\t\t\t\t\tMatrix remove columns:\t%0.5f\tseconds"%(t1_rc-t0_rc))
@@ -520,17 +553,36 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
             P,J = B.jordan_form()
             t1_jordan = time.time()
             print("\t\t\t\t\tJordan form:\t%0.5f\tseconds"%(t1_jordan-t0_jordan))
+            J_str = str(latex(J))
+            print("Dimensions of J:\t%s"%(str(J.shape)))
+            for var_index in range(len(x)):
+                J_str = J_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+            print("\\begin{equation*}\nJ=%s\n\\end{equation*}"%(J_str))
             # Re-define our matrix J by scaling it by the
             # independent variable x[0]
             J = x[0]*J
-            
+            J_str = str(latex(J))
+            print("Dimensions of J:\t%s"%(str(J.shape)))
+            for var_index in range(len(x)):
+                J_str = J_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+            print("\\begin{equation*}\nt\cdot J=%s\n\\end{equation*}"%(J_str))            
             # Re-define J by taking the matrix exponential
             t0_exp = time.time()
             J = J.exp()
             t1_exp = time.time()
-            print("\t\t\t\t\tExponential matrix:\t%0.5f\tseconds"%(t1_exp-t0_exp))            
+            print("\t\t\t\t\tExponential matrix:\t%0.5f\tseconds"%(t1_exp-t0_exp))
+            J_str = str(latex(J))
+            print("Dimensions of J:\t%s"%(str(J.shape)))
+            for var_index in range(len(x)):
+                J_str = J_str.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+            print("\\begin{equation*}\n\\exp\\left(t\cdot J\\right)=%s\n\\end{equation*}"%(J_str))                        
             # Solve the system of ODEs
             c_mat = (P*J*P.inv())*c_mat
+            sol = str(latex(c_mat))
+            print("Dimensions of sol:\t%s"%(str(c_mat.shape)))
+            for var_index in range(len(x)):
+                sol = sol.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+            print("\\begin{equation*}\nc=%s\n\\end{equation*}"%(sol))            
             #----------------------------------------------
             # PART 2: SUBSTITUE ALGEBRAIC EQUATIONS
             #----------------------------------------------            
@@ -541,6 +593,14 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
             # Define the algebraic equations for the
             # coefficients
             c_alg = B_algebraic*c_mat
+            print("Number of algebraic equations:\t%s"%(str(c_alg.shape)))
+            print("\\begin{align*}")
+            for eq in c_alg:
+                sol = str(latex(eq))                
+                for var_index in range(len(x)):
+                    sol = sol.replace(str(latex(x[var_index])),str(latex(variables[var_index])))
+                print("%s&=0\\\\"%(sol))
+            print("\\end{align*}")                
             # Convert the matrix with the ODE coefficients into
             # a list
             c_list = list(c_mat)
@@ -554,6 +614,12 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
                 # into the solution of the ODE for the tangential coefficients
                 for sub_index in range(len(c_list)):
                     c_list[sub_index] = c_list[sub_index].subs(constant_list[pivot_elements[index]],sol_temp[0])
+                    c_list[sub_index] = c_list[sub_index].expand()
+                    for state_index in range(len(x)):
+                        c_list[sub_index] = c_list[sub_index].subs(x[state_index],variables[state_index])
+
+            print("Solution after subsitution:")
+            print("\\begin{equation*}\nc=%s\n\\end{equation*}"%(str(latex(Matrix(len(c_list),1,c_list)))))
             # See which constants that exists among the constants
             constants_in_final_solution = []
             # Loop over all coefficients in the constant list
@@ -564,6 +630,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
                     constants_in_final_solution.append(constant_list[constant_index])
                     # Move on
                     continue
+            print("Arbitrary constants in final solution:")
+            print("\\begin{equation*}\n\\vec{C}=%s\n\\end{equation*}"%(str(latex(Matrix(len(constants_in_final_solution),1,constants_in_final_solution)))))
             # Loop over tangents and substitute the calculated coefficients
             # into these expressions
             for tangent_number in range(len(eta_list)):
@@ -578,6 +646,20 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
                 for index in range(len(c)):            
                     # Substitute coefficient in the tangents
                     eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](variables[0]),c_list[index])
+                    eta_list[tangent_number] = eta_list[tangent_number].expand()                    
+            print("Tangents after substitution:\n")       
+            print("\\begin{align*}")
+            for tangent_index in range(len(eta_list)):
+                str_tangent = str(latex(eta_list[tangent_index]))
+                for state_index in range(len(x)):
+                    str_tangent = str_tangent.replace(str(latex(x[state_index])),str(latex(variables[state_index])))
+                if tangent_index == 0:
+                    print("\\xi&=%s\\\\"%(str_tangent))
+                else:
+                    print("\\eta_{%d}&=%s\\\\"%(int(tangent_index),str_tangent))
+                str_tangent = ""
+            print("\\end{align*}")
+                    
             # Define a counter for the generators
             generator_counter = 0
             # Define one generator per constant in the final solution
