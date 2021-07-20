@@ -48,6 +48,8 @@ from math import *
 import itertools
 # To manipulate string
 import string
+# To time each part of the program
+import time
 #=================================================================================
 #=================================================================================
 # The Functions
@@ -367,6 +369,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     #------------------------------------------------------------------------------
     # STEP 1 of 6: FORMULATE THE DETERMINING EQUATIONS ON MATRIX FORM A*dc/dt=B*c
     #-----------------------------------------------------------------------------
+    # Start taking time
+    t0_total = time.time()
+    t0_matrix = time.time()
     # Allocate memory for the two matrices. 
     # We allocate them as lists because we can
     # easily generate matrices from a list where
@@ -392,11 +397,15 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     num_of_cols = len(c) # Number of columns
     A = Matrix(num_of_rows,num_of_cols,A_mat) # Matrix A
     B = Matrix(num_of_rows,num_of_cols,B_mat) # Matrix B
+    # Take time again
+    t1_matrix = time.time()
+    print("\t\t\t\t\tMatrix formulation:\t%0.5f\tseconds"%(t1_matrix-t0_matrix))
     #------------------------------------------------------------------------------
     # STEP 2 of 6: TRANSFER THE SYSTEM TO ONE MATRIX M=[A|-B] AND REDUCE THE NUMBER OF 
     # EQUATIONS BY FINDING A BASIS FOR THE COLUMN SPACE OF M^T. FINISH BY SPLITTING
     # UP THE MATRIX INTO ITS COMPONENTS PART, I.E. A AND B RESPECTIVELY
     #-----------------------------------------------------------------------------
+    t0_cs = time.time()
     # Find the dimensions of the matrix A
     num_of_eq, n = A.shape        
     # FIRST ROW OF M
@@ -430,9 +439,13 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     # Split the matrix into its component parts
     A = M_tilde[:,0:(len(c))]
     B = -M_tilde[:,len(c):(2*len(c))]
+    # Take time again
+    t1_cs = time.time()
+    print("\t\t\t\t\tColumn space:\t%0.5f\tseconds"%(t1_cs-t0_cs))    
     #------------------------------------------------------------------------------
     # STEP 3 of 6: FIND THE PURELY ALGEBRAIC EQUATIONS WHICH CORRESPONDS TO THE ZERO ROWS IN THE MATRIX A. THE SAME ROWS IN THE MATRIX B WILL BE FORMULATED INTO A NEW MATRIX B_algebraic WHICH CONTAINS ONLY THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
+    t1_rc = time.time()
     # Remove the zero rows from A:
     # Calculate the dimensions 
     m, n = A.shape
@@ -449,6 +462,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
     #------------------------------------------------------------------------------
     # STEP 4 of 6: REMOVE (POTENTIAL) EXTRA COLUMNS 
     #-----------------------------------------------------------------------------      # Find the dimensions of the matrix A
+    t0_rc = time.time()
     m, n = A.shape
     # Create a set of all the columns
     col_set = set(range(n))
@@ -475,6 +489,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
         B_algebraic.col_del(non_pivot_columns[index])
         # Remove parameter coefficient vector
         del c[non_pivot_columns[index]]
+    # Take time again
+    t1_rc = time.time()
+    print("\t\t\t\t\tMatrix remove columns:\t%0.5f\tseconds"%(t1_rc-t0_rc))
     #------------------------------------------------------------------------------
     # STEP 5 of 6: SOLVE THE ODE SYSTEM PROVIDED THAT IT IS QUADRATIC AND
     # SUBSTITUTE THE ALGEBRAIC EQUATIONS
@@ -498,13 +515,20 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables):
                 exec("constant_list.append(C%d)"%(int(i+1)))
             # Define a coefficient matrix
             c_mat = Matrix(len(constant_list),1,constant_list)
+            t0_jordan = time.time()
             # Calculate the Jordan form of the matrix B
             P,J = B.jordan_form()
+            t1_jordan = time.time()
+            print("\t\t\t\t\tJordan form:\t%0.5f\tseconds"%(t1_jordan-t0_jordan))
             # Re-define our matrix J by scaling it by the
             # independent variable x[0]
             J = x[0]*J
+            
             # Re-define J by taking the matrix exponential
+            t0_exp = time.time()
             J = J.exp()
+            t1_exp = time.time()
+            print("\t\t\t\t\tExponential matrix:\t%0.5f\tseconds"%(t1_exp-t0_exp))            
             # Solve the system of ODEs
             c_mat = (P*J*P.inv())*c_mat
             #----------------------------------------------
