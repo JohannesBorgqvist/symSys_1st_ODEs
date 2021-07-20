@@ -33,6 +33,7 @@ using ModelingToolkit # For some of the variables
 =================================================================================
 =#
 #=
+ Function 1: "read_input_model"
  The function takes the name of the model file (which is a string) as input and
  then it looks for an xlsx-files with that name stored in the folder "../Input".
  It has four outputs: a logical variable telling whether or not the reading of the model was successful, the list "variables" which contains the original variables
@@ -45,12 +46,12 @@ using ModelingToolkit # For some of the variables
 =#
 function read_input_model(file_name,sheet_number,variables_symbolic, parameters_symbolic,reaction_terms_symbolic,omega_list)
     # Read the file
-    xf = XLSX.readxlsx(file_str)
+    xf = XLSX.readxlsx(file_name)
     # Extract the first sheet name
     sheet_names = XLSX.sheetnames(xf)
     sheet_name = sheet_names[sheet_number,1]
     # Load the sheet as a data frame instead
-    df = DataFrame(XLSX.readtable(file_str, sheet_name)...)
+    df = DataFrame(XLSX.readtable(file_name, sheet_name)...)
     # Calculate the dimensions of the data frame
     num_rows = size(df,1)
     num_cols = size(df,2)

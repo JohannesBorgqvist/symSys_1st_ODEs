@@ -15,7 +15,10 @@
 =================================================================================
 =================================================================================
 =#
+# READ AND WRITE DATA
 include("read_and_write_data.jl")
+# ALL RELEVANT SYMMETRY CALCULATIONS
+include("symmetry_toolbox_first_order_ODEs.jl")
 #=
 =================================================================================
 =================================================================================
@@ -23,6 +26,8 @@ include("read_and_write_data.jl")
 =================================================================================
 =================================================================================
 =#
+# STEP 1: READ THE MODEL
+print("\tSTEP 1: READ THE MODEL\n\n")
 # Give the file name
 file_name = "../Input/ODE_models.xlsx"
 # Give the name of the sheet
@@ -61,7 +66,14 @@ for (index, value) in enumerate(omega_list)
     print("\t\t\t$value\n")
 end
 # Print the model name
-print("\t\tThe name of the model is:\t$model_name")
-
+print("\t\tThe name of the model is:\t$model_name\n\n")
+# STEP 2: GENERATE THE POLYNOMIAL ANSÄTZE
+print("\tSTEP 2: GENERATE THE POLYNOMIAL ANSÄTZE\n\n")
+# Define the number of variables
+num_of_variables = 1
+# Define the degree of the polynomial in the ansätze
+degree_polynomial = 1
+# Formulate the ansätze
+c, eta_list = create_tangent_ansatze(x,num_of_variables,degree_polynomial)
 
 
