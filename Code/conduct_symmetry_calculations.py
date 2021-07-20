@@ -54,6 +54,14 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         x, c, eta_list = symmetry_toolbox_first_order_ODEs.create_tangent_ansatze(num_of_variables,num_of_states,tangent_degree)
         t1 = time.time()
         print("\t\t\tTime elapsed:\t%0.5f\tseconds"%(t1-t0))
+        # Print the model for the viewers pleasure
+        print("\\begin{align*}")
+        for reaction_index in range(len(omega_list)):
+            str_reac = str(omega_list[reaction_index])
+            for state_index in range(len(x)):
+                str_reac = str_reac.replace(str(x[state_index]),str(variables[state_index]))
+            print("\\dfrac{\mathrm{d}%s}{\mathrm{d}%s}&=%s\\\\"%(latex(variables[reaction_index+1]),latex(variables[0]),latex(str_reac)))
+        print("\\end{align*}")
         # Print that this is done
         print("\t\t\t\tDone!")
         # Print to the user that we are calculating the linearised symmetry conditions
