@@ -132,7 +132,7 @@ def calculate_symmetries_ODEs(file_name,tangent_degree):
         # Print to the user that we are solving the determining equations
         print("\t\t\tStep 6 out of 6: Saving the data...")    
         # Print that we are saving the data
-        read_and_write_data.write_output_generator(tangent_degree,file_name,variables,x,X,reaction_terms,omega_list)
+        #read_and_write_data.write_output_generator(tangent_degree,file_name,variables,x,X,reaction_terms,omega_list)
         print("\t\t\t\tDone!\n")
         t1_total = time.time()
         print("\t\t\tTotal time elapsed:\t%0.5f\tseconds\n"%(t1_total-t0_total))

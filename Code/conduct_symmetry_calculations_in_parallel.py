@@ -41,15 +41,40 @@ def calculate_symmetries_ODEs_in_paralell(i):
     # Define the name of the files and the
     # degree in the tangent ansätze
     if i == 1:
+        file_name = "Lotka_Volterra"
+        tangent_degree = 1
+    elif i == 2:
+        file_name = "Lotka_Volterra"
+        tangent_degree = 2
+    elif i == 3:
+        file_name = "Lotka_Volterra"
+        tangent_degree = 3
+    elif i == 4:
+        file_name = "Lotka_Volterra_realistic"
+        tangent_degree = 1
+    elif i == 5:
+        file_name = "Lotka_Volterra_realistic"
+        tangent_degree = 2
+    elif i == 6:
+        file_name = "Lotka_Volterra_realistic"
+        tangent_degree = 3        
+    
+    """
+    if i == 1:
         file_name = "hydons_model"
         tangent_degree = 1
     elif i == 2:
         file_name = "DBH_model"
-        tangent_degree = 2
+        tangent_degree = 1
     elif i == 3:
         file_name = "DBH_model"
-        tangent_degree = 3
+        tangent_degree = 2
     elif i == 4:
+        file_name = "DBH_model"
+        tangent_degree = 3        
+    """
+
+    """elif i == 4:
         file_name = "BZ_model"
         tangent_degree = 3
     elif i == 5:
@@ -78,7 +103,7 @@ def calculate_symmetries_ODEs_in_paralell(i):
         tangent_degree = 3
     elif i == 13:
         file_name = "AIDS_epidemic"
-        tangent_degree = 3        
+        tangent_degree = 3"""        
     # Conduct the symmetry calculations 
     conduct_symmetry_calculations.calculate_symmetries_ODEs(file_name,tangent_degree)
     return i
@@ -88,10 +113,10 @@ def calculate_symmetries_ODEs_in_paralell(i):
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 #Define the number of CPUs, as the number of available minus one.
-num_of_CPUs = mp.cpu_count()-1
-#num_of_CPUs = 3
+#num_of_CPUs = mp.cpu_count()-1
+num_of_CPUs = 6
 # Launch symmetry calculations in parallel:
-# Set up a pool of workerks
+# Set up a pool of workers
 #pool = mp.Pool(num_of_CPUs)
 #----------------------------------------------------------------------------------
 # ATTEMPT USING PROCESSES
@@ -123,7 +148,8 @@ def main():
 
     print(f'starting computations on {num_of_CPUs} cores')
 
-    values = range(1,14)
+    #values = range(1,14)
+    values = range(1,7)
 
     with mp.Pool(num_of_CPUs) as pool:
         res = pool.map(calculate_symmetries_ODEs_in_paralell, values)
