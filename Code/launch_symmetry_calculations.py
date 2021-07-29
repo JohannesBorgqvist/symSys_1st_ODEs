@@ -12,7 +12,8 @@
 # Import Libraries
 #=================================================================================
 #=================================================================================
-import conduct_symmetry_calculations_fake # Home-made
+#import conduct_symmetry_calculations_fake # Home-made
+import conduct_symmetry_calculations # Home-made
 import read_and_write_data # Home-made
 # To read the input arguments defined by the user
 import sys
@@ -64,7 +65,7 @@ elif ((len(sys.argv)==3)):# Correct number of inputs
             print("==========================================================================================================")            
             print("INITIATING CALCULATIONS WITH INPUT:\n\tmodel\t\t=\t%s,\n\ttangent degree\t=\t%d.\n\n"%(file_name,tangent_degree))
             # Conduct simulations!
-            conduct_symmetry_calculations_fake.calculate_symmetries_ODEs(file_name,tangent_degree)
+            conduct_symmetry_calculations.calculate_symmetries_ODEs(file_name,tangent_degree)
             print("==========================================================================================================")            
 
 

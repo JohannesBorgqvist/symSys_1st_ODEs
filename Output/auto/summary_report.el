@@ -5,8 +5,6 @@
                      '(("geometry" "margin=1in") ("inputenc" "utf8")))
    (TeX-run-style-hooks
     "latex2e"
-    "../Output/DBH_model/out"
-    "../Output/Lotka_Volterra_realistic/out"
     "../Output/hydons_model/out"
     "../Output/Lotka_Volterra/out"
     "book"
