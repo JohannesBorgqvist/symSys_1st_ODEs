@@ -15,12 +15,14 @@
 # =================================================================================
 import read_and_write_data  # Home-made
 import symmetry_toolbox_first_order_ODEs  # Home-made
+import sympy
 # For printing with latex
 from sympy import latex
 # To time each part of the program
 import time
 # Import matrices
 from sympy import Matrix
+
 # =================================================================================
 # =================================================================================
 # The Function
@@ -57,6 +59,24 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         # Calculate our new tangents and the variables
         x, c, eta_list = symmetry_toolbox_first_order_ODEs.create_tangent_ansatze(
             num_of_variables, num_of_states, tangent_degree)
+        print("# Defining the tangents")
+        eta_temp = eta_list
+        print("The tangents are:<br>")
+        print("\\begin{align*}")
+        tangent_counter = 1
+        for eta in eta_temp:
+            for index in range(len(x)):
+                eta = eta.subs(x[index],variables[index])
+            if tangent_counter == 1:
+                print("\\xi&=%s\\\\"%(str(latex(eta))))
+            else:
+                print("\\eta_%d&=%s\\\\"%(tangent_counter-1,str(latex(eta))))                
+                #print(eta.atoms(sympy.Mul))
+            #print(eta.args)
+            tangent_counter+=1
+        print("\\end{align*}")
+        print("The unknown coefficients:<br>")
+        print("\\begin{equation}\n\\mathbf{c}=%s\n\\end{equation}"%(latex(Matrix(len(c),1,c))))
         # Print that this is done
         print("\t\t\t\tDone!")
         # Print to the user that we are calculating the linearised symmetry conditions
@@ -64,6 +84,29 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         # Calculate the linearised symmetry conditions
         lin_sym_list = symmetry_toolbox_first_order_ODEs.lin_sym_cond(
             x, eta_list, omega_list)
+        print("# The linearised symmetry conditions")
+        lin_sym_counter = 1
+        for lin_sym in lin_sym_list:
+            print("Linearised symmetry condition\t%d:<br>"%(lin_sym_counter))
+            print("\\begin{align*}")
+            temp_str = "0&="
+            help_counter = 1
+            for index in range(len(lin_sym.args)):
+                term = lin_sym.args[index]
+                for index in range(len(x)):
+                    term = term.subs(x[index],variables[index]) 
+                temp_str += str("\\left(" + latex(term) + "\\right)")
+                if help_counter<6:
+                    temp_str += "+"
+                else:
+                    temp_str += "\\\\"
+                    print("%s"%(temp_str))
+                    help_counter = 1
+                    temp_str = "&+"
+                help_counter += 1
+                
+            print("\\end{align*}")
+            lin_sym_counter+=1        
         # Print that this is done
         print("\t\t\t\tDone!")
         # Print to the user that we are calculating the determining equations
@@ -73,6 +116,41 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         # Step 4.3: Calculate our so called "determining equations"
         det_eq, monomials, lin_sym_eq_number = symmetry_toolbox_first_order_ODEs.determining_equations(
             x, lin_sym_list, degree_monomial)
+        
+        print(lin_sym_eq_number)
+        print("# The determining equations")
+
+        print("Determining equations from linearised symmetry condition\t%d:<br>"%(1))
+        print("\\begin{align*}")
+        condition_counter = 2
+        for det_eq_index in range(len(det_eq)):
+            mon = monomials[det_eq_index]
+            temp_mon = ""
+            for var_index in range(len(variables)-1):
+                power = mon[var_index]
+                variable = variables[var_index+1]
+                temp_mon += latex(variable) + "^{" + latex(power) + "}"
+            temp_det = det_eq[det_eq_index]
+            for index in range(len(x)):
+                temp_det = temp_det.subs(x[index],variables[index])            
+            temp_str = temp_mon + ": 0&=" + latex(temp_det) + "\\\\"                        
+            print("%s"%(temp_str))
+            temp_str = ""
+            if det_eq_index >0:
+                if det_eq_index==(len(det_eq)-1):
+                    print("\\end{align*}")                    
+                elif lin_sym_eq_number[det_eq_index]<lin_sym_eq_number[det_eq_index+1]:
+                    print("\\end{align*}")
+                    print("Determining equations from linearised symmetry condition\t%d:<br>"%(condition_counter))
+                    condition_counter += 1
+                    print("\\begin{align*}")
+                
+                
+
+            
+        #print("\\end{align*}")
+        #lin_sym_counter+=1
+        
         # Print that this is done
         print("\t\t\t\tDone!")
         # Print to the user that we are solving the determining equations
