@@ -433,8 +433,10 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     # Row-reduce the expanded matrix
     M_tilde = M_tilde.rref()[0]
     # Split the matrix into its component parts
-    A = -M_tilde[:,0:(len(c))]
-    B = M_tilde[:,len(c):(2*len(c))]
+    #A = -M_tilde[:,0:(len(c))]
+    #B = M_tilde[:,len(c):(2*len(c))]
+    A = M_tilde[:,0:(len(c))]
+    B = -M_tilde[:,len(c):(2*len(c))]    
     print("## Step 2 of 6: the reduced based on col(M^T) where M=[-A|B]<br>")
     r_temp, c_temp = A.shape
     print("Dimension of matrices:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
@@ -592,8 +594,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     print("Dimensions of B:\t%dX%d<br>"%(num_rows,num_cols))
     if num_rows == num_cols:
         # Check that the matrix A is an identity matrix
-        if A != -eye(num_rows):
+        #if A != -eye(num_rows):
         #if abs(A) != eye(num_rows):
+        if A != eye(num_rows):
             X = "\\Huge\\textsf{$A$ is quadratic but not an identity matrix!}\normalsize\\[2cm]" 
         else: # A is an identity matrix
             #----------------------------------------------
@@ -633,14 +636,14 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             print("Initial conditions for $\\mathbf{c}$ denoted by $\mathbf{c}_0$ in terms of arbitrary integration constants:")
             print("\\begin{equation}\n\mathbf{c}_{0}=%s=%s\n\\end{equation}"%(latex(Matrix(len(c),1,c)),latex(c_mat)))
             # Calculate the Jordan form of the matrix B
-            #P,J = B.jordan_form()
-            P,J = (-B).jordan_form()
+            P,J = B.jordan_form()
+            #P,J = (-B).jordan_form()
             print("Jordan form:<br>")
             J_temp = J
             P_temp = P
             for index in range(len(x)):
                 J_temp = J_temp.subs(x[index],variables[index])
-                P_temp = B_temp.subs(x[index],variables[index])
+                P_temp = P_temp.subs(x[index],variables[index])
             print("\\begin{equation}\nP=%s\n\\end{equation}"%(latex(P_temp)))
             print("\\begin{equation}\nJ=%s\n\\end{equation}"%(latex(J_temp)))                            
             # Re-define our matrix J by scaling it by the
