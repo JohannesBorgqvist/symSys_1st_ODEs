@@ -1,7 +1,7 @@
 #=================================================================================
 #=================================================================================
 # Script:"symmetry_toolbox_first_order_ODEs"
-# Date: 2021-06-01
+# Date: 2021-09-28
 # Implemented by: Johannes Borgqvist
 # Description:
 # The script contains all the function that are necessary in order to
@@ -21,6 +21,7 @@
 #from symengine import *
 #import sympy
 from sympy import *
+from sympy.core.function import *
 #from sympy import simplify
 #from sympy import fraction
 #from sympy import powsimp
@@ -325,7 +326,152 @@ def determining_equations(x,lin_sym_list,degree_monomial):
     return det_eq, monomials, lin_sym_eq_number
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 6: "solve_determining_equations"
+# FUNCTION 6: "identify_basis_functions"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# The function takes two inputs which are the following:
+# 1. An arbitrary expression being a linear combination of functions stored in the variable "expr",
+# 2. A list of all arbitrary integration coefficients stored in "coeff_list",
+# The script returns two outputs:
+# 1. A list of arbitrary functions stored in "arbitrary_functions",
+# 2. A list of all basis functions stored in "basis_functions".
+def identify_basis_functions(expr,coeff_list):
+    # Define the arbitrary functions
+    arbitrary_functions = list(expr.atoms(AppliedUndef))
+    # Allocate memory an empty list for the basis functions
+    basis_functions = []
+    # Define a list with all arguments
+    arguments = list(expr.args)
+    # Loop through all arguments
+    for argument in arguments:
+        # Loop through all coefficients 
+        for coefficient in coeff_list:
+            # Save all basis functions provided that
+            # the exist as a linear combination of the
+            # coefficients in coeff_list
+            if argument.coeff(coefficient) != 0: 
+                basis_functions.append(argument.coeff(coefficient))
+    # Lastly, we only want unique basis functions so we take the
+    # set of these functions
+    basis_functions = list(set(basis_functions).difference(set(arbitrary_functions)))
+    # We also need to remove doublettes. Start with the constants
+    constant_basis_list = []
+    for base_index in range(len(basis_functions)):
+        if len(basis_functions[base_index].atoms(Symbol))==0:
+            constant_basis_list.append(base_index)
+    # Make sure that the constant correspond to the basis element 1
+    basis_functions[constant_basis_list[0]] = basis_functions[constant_basis_list[0]]/basis_functions[constant_basis_list[0]]
+    # Remove the zeroth element
+    del constant_basis_list[0]
+    # Sort in reverse order
+    constant_basis_list.sort(reverse=True)
+    # Remove all these constants from the basis list
+    for index in constant_basis_list:
+        del basis_functions[index]
+        
+    # Lastly, save only unique values
+    unique_values = []
+    # Save the first element
+    unique_values.append(basis_functions[0])
+    # Loop over all basis functions and save the unique ones
+    for base in basis_functions:
+        # Skip the first one
+        if base != basis_functions[0]:
+            # Allocate a temp sum
+            temp_sum = 0
+            # Loop over all unique values and see if we append
+            # the value or not
+            for unique_value in unique_values:
+                # We only care about non-constant functions
+                if len(unique_value.atoms(Symbol))!=0:
+                    if len(simplify(base/unique_value).atoms(Symbol))==0:
+                        # Add term to the temp sum
+                        temp_sum += 1
+            # If no terms were added then we have a unique value
+            if temp_sum == 0:
+                divide_by_this = factor_list(base)[0]
+                unique_values.append(simplify(base/divide_by_this))
+    # Finally, we assign the unique values to the basis functions
+    basis_functions = unique_values        
+    # Return the output
+    return arbitrary_functions, basis_functions
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# FUNCTION 7: "solve_algebraic_equation"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# The function takes two inputs which are the following:
+# 1. An arbitrary expression being a linear combination of functions stored in the variable "expr",
+# 2. A list of all arbitrary integration coefficients stored in "coeff_list",
+# The script returns two outputs:
+# 1. A list of the LHSs being the solutions stored in "LHS",
+# 2. A list of the RHSs being the expressions stored in "RHS".
+# The function uses the previous function (i.e. Function 6) called "identify_basis_functions" in
+# order to find the basis functions and the arbitrary functions in the expression at hand.
+def solve_algebraic_equation(expr,coeff_list):
+    # Find all basis functions and arbitrary functions in the expression at hand
+    arbitrary_functions,basis_functions = identify_basis_functions(expr,coeff_list)
+    # Allocate memory for the LHS being the solutions to the equations
+    # stemming from the expression at hand and the RHS being the
+    # corresponding expressions for the solutions
+    LHS = []
+    RHS = []
+    # If we have an arbitrary function then we solve the equation
+    # for that, otherwise we solve for each coefficient
+    if len(arbitrary_functions)!=0: # Arbitrary functions
+        # Solve the equation for the arbitrary function
+        sol_temp = solve(expr,arbitrary_functions[0])
+        # Save the solution and the equation
+        LHS.append(arbitrary_functions[0])
+        RHS.append(sol_temp[0])        
+    else: # No arbitrary functions
+        # Create a temporary sum in order to define the
+        # equation stemming from the constant if such
+        # a constant exist among the basis functions
+        temp_sum = 0
+        # Loop through the basis functions and save
+        # the solution and its corresponding expression
+        for func_temp in basis_functions:
+            # We ignore the constant basis function
+            if func_temp != 1:
+                # We define the equation which is the constant
+                # in front of the basis function
+                eq_temp = expr.coeff(func_temp)
+                # Find the coefficient which we solve for
+                LHS_temp = 0
+                for koeff in coeff_list:
+                    if eq_temp.coeff(koeff)!=0:
+                        #LHS_temp = eq_temp.coeff(koeff)*koeff
+                        LHS_temp = koeff
+                        break
+                # Solve the equation for this coefficient
+                RHS_temp = solve(eq_temp,LHS_temp)[0]
+                #print("\t\t\tSolve\t%s\tfor\t%s\tyields\t%s"%(str(eq_temp),str(LHS_temp),str(RHS_temp)))
+                # Append both the LHS and the RHS
+                LHS.append(LHS_temp)
+                RHS.append(RHS_temp)                
+                # Increase the temporary sum
+                temp_sum += eq_temp*func_temp
+        # Define the zeroth equation
+        eq_zero = simplify(cancel(expand(expr - temp_sum)))
+        # Find the coefficient which we solve for
+        LHS_temp = 0
+        for koeff in coeff_list:
+            if eq_zero.coeff(koeff)!=0:
+                #LHS_temp = eq_zero.coeff(koeff)*koeff
+                LHS_temp = koeff
+                break
+        # Solve the equation for this coefficient
+        RHS_temp = solve(eq_zero,LHS_temp)[0]
+        #print("\t\t\tSolve\t%s\tfor\t%s\tyields\t%s"%(str(eq_zero),str(LHS_temp),str(RHS_temp)))
+        # Append both the LHS and the RHS
+        LHS.append(LHS_temp)
+        RHS.append(RHS_temp)                        
+    # Lastly, return the LHS and the RHS
+    return LHS, RHS
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# FUNCTION 7: "solve_determining_equations"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes four inputs which are the following:
@@ -333,10 +479,8 @@ def determining_equations(x,lin_sym_list,degree_monomial):
 # 2. The tangent vector called "eta_list",
 # 3. The coefficients in the tangents called "c"
 # 4. The list of the determining equations called "det_eq".
-# The script returns two outputs:
-# 1. the coefficients in the tangent ansätze stored in a vector "c",
-# 2. The calculated generator of the symmetry which is stored in a string called "X".
-# It is common that a number of algebraic equations is returned as well. So the function attempts to solve these equations as well. In the end the function returns, the generator before the algebraic equations are solved, the generator after the algebraic equations are solved, the coefficient vectors before and after the the algebraic equations are solved, the algebraic equations and the solutions to the algebraic equation that the script finds.
+# The script return the following output:
+# 1. The calculated generator of the symmetry which is stored in a string called "X".
 def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     print("# Solving the determining equations")
     #------------------------------------------------------------------------------
@@ -710,10 +854,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                 c_alg_temp = c_alg_temp.subs(x[index],variables[index])                        
             print("Algebraic equations after substitution of the solution to the ODE system:<br>")
             print("\\begin{equation}\n%s%s=%s=%s\n\\end{equation}"%(str(latex(B_alg_temp)),str(latex(homo_sol_temp)),str(latex(c_alg_temp)),latex(zeros(m,1))))
-
-
-
-
             # Define a list of remaining constants
             const_remaining = []
             # Define the rows in c_alg
@@ -727,73 +867,38 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                     if c_alg[eq_index,0].coeff(constant) != 0:
                         const_remaining.append(constant)
                         break
-            # Define a vector based on this
-            c_r = Matrix(len(const_remaining),1,const_remaining)
-            # Now, we rewrite c_alg as a matrix muliplication
-            # according to c_alg = alg_mat*c_r
-            alg_mat_list = []
-            # Loop over the algebraic equations 
-            for eq_index in range(alg_row):
-                for const in const_remaining:
-                    # Extract temporary equation
-                    eq_temp = c_alg[eq_index,0]
-                    # Append the coefficient
-                    alg_mat_list.append(eq_temp.coeff(const))
-            # Now we define a matrix, hey?
-            alg_mat = Matrix(alg_row,len(const_remaining),alg_mat_list)
-            # Consistency check to see if the two matrices are equal
-            #if c_alg == alg_mat*c_r:
-                #print("The algebraic equations:<br>")
-                #print("\\begin{equation}\n%s=%s%s\n\\end{equation}"%(str(latex(c_alg)),str(latex(alg_mat)),str(latex(c_r))))
-
-            # Define a right hand side
-            if non_homogeneous:
-                RHS = -B_algebraic*part_sol + source_alg # The non-homogeneities
-            else:
-                RHS = zeros(r_algebraic,1) # Zeros as the right hand side
-            # Now, we define an extended matrix, row reduce it and split
-            # it back up to its component parts!
-            # Create the extendent matrix by adding the RHS
-            # to alg_mat
-            extended_mat = alg_mat
-            rows_alg, cols_alg = alg_mat.shape
-            extended_mat = extended_mat.col_insert(cols_alg,RHS)
-            # Row reduce this matrix
-            extended_mat = extended_mat.rref()[0]
-            pivot_elements_2 = extended_mat.rref()[1]
-            # Split it back up into its component parts
-            alg_mat = extended_mat[:,0:cols_alg]
-            RHS = extended_mat[:,-1]
-            # Update algebraic equations
-            c_alg = alg_mat*c_r - RHS            
-            # Loop through the algebraic equations and substitute
-            # the value in the solution to the ODE
-            for index in range(len(list(c_alg))):
-                # Solve the algebraic equation for the constant corresponding to the pivot element in B_algebraic
-                sol_temp = solve(c_alg[index],const_remaining[pivot_elements_2[index]])
-                # Save temporary variables that we can print in a nice fashion
-                eq_temp_temp = c_alg[index]
-                const_temp = const_remaining[pivot_elements_2[index]]
-                sol_temp_temp = sol_temp[0]
-                # Substitute to the original variables
-                for temp_index in range(len(x)):
-                    eq_temp_temp = eq_temp_temp.subs(x[temp_index],variables[temp_index])
-                    const_temp = const_temp.subs(x[temp_index],variables[temp_index])
-                    sol_temp_temp = sol_temp_temp.subs(x[temp_index],variables[temp_index])
-                # Print for the viewer's pleasure 
-                print("Equation:\t$%s=0$\t,\tSolution:\t$%s=%s$<br>"%(str(latex(eq_temp_temp)),str(latex(const_temp)),str(latex(sol_temp_temp))))          
+            print("<br>*Solving the algebraic equations:*<br>")
+            # Loop through the algebraic equations and solve them
+            for eq_temp in list(c_alg):
+                # Solve the corresponding equations given by the current
+                # algebraic equations
+                eq_print = eq_temp
+                for index in range(len(x)):
+                    eq_print = eq_print.subs(x[index],variables[index])
+                print("Equation:<br>\n\\begin{equation}\n%s=0\n\\end{equation}"%(latex(eq_print)))
+                LHS_list,RHS_list = solve_algebraic_equation(eq_temp,const_remaining)
+                print("Solutions:<br>\n\\begin{align*}")
+                for index in range(len(LHS_list)):
+                    LHS_print = LHS_list[index]
+                    RHS_print = RHS_list[index]
+                    for index in range(len(x)):
+                        LHS_print = LHS_print.subs(x[index],variables[index])
+                        RHS_print = RHS_print.subs(x[index],variables[index])                                            
+                    print("%s&=%s\\\\"%(latex(LHS_print),latex(RHS_print)))
+                print("\\end{align*}")
                 # Substitute the solution of the algebraic equation
                 # into the solution of the ODE for the tangential coefficients
                 for sub_index in range(len(c_mat)):
-                    c_mat[sub_index] = c_mat[sub_index].subs(const_remaining[pivot_elements_2[index]],sol_temp[0])
-                    c_mat[sub_index] = expand(cancel(c_mat[sub_index]))
+                    for index in range(len(LHS_list)):                    
+                        c_mat[sub_index] = c_mat[sub_index].subs(LHS_list[index],RHS_list[index])
+                        c_mat[sub_index] = expand(cancel(c_mat[sub_index]))
             # Create a readable version in original variables
             c_mat_temp = c_mat
             # Substitute to the original variables
             for index in range(len(x)):
                 c_mat_temp = c_mat_temp.subs(x[index],variables[index])            
             print("Solution *after* algebraic substitution:<br>")
-            print("\\begin{equation*}\n\mathbf{c}=%s\n\\end{equation*}"%(latex(c_mat_temp)))
+            print("\\begin{equation*}\n\mathbf{c}=%s\n\\end{equation*}"%(latex(c_mat_temp)))                
             #----------------------------------------------
             # PART 4: Substitute the solution into the tangents
             # and each sub-generator
@@ -945,6 +1050,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             # Add the final touch to the generator
             X += "\\end{align*}"
             X = X.replace(",\\\\\n\\end{align*}", ".\\\\\n\\end{align*}")
+            
+            
+            #X = "Now, we are close man..."
     else:
         # Return that the matrix
         X = "\\Huge\\textsf{Not a quadratic matrix}\\normalsize\\\\[2cm]" 
