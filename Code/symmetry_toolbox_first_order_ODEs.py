@@ -646,11 +646,11 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     # Substitute the value zero for all non-pivot columns in the coefficient
     # vector
     # Loop over tangents
-    for tangent_number in range(len(eta_list)):
+    #for tangent_number in range(len(eta_list)):
         # Loop through all coefficients and replace them in all tangents
-        for index in non_pivot_columns:            
+        #for index in non_pivot_columns:            
             # Substitute coefficient in the tangents
-            eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](x[0]),0)
+            #eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](x[0]),0)
     # We assume that we have a homogeneous system
     non_homogeneous = False
     # Check if we have non-pivot columns, that is we have
@@ -688,7 +688,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             # Loop over the non-pivot columns and perform
             # the matrix multiplication
             for pC in non_pivot_columns:
-                temp_source_alg += -B_algebraic[r,pC]*c[pC](x[0])
+                temp_source_alg += B_algebraic[r,pC]*c[pC](x[0])
             # Append the non-homogeneous source 
             source_algebraic.append(temp_source_alg)
         # Print the matrix
@@ -703,7 +703,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
         print("Dimensions:<br>")
         print(source_alg.shape)
     # Remove all non-pivot tangential coefficient
-    
     non_pivot_columns.sort(reverse=True)
     # Loop over all non_pivot_columns and remove them from our three
     # matrices A, B and B_algebraic and from the coefficient vector c
@@ -848,7 +847,10 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             print("\\begin{equation}\nB_{\\textrm{algebraic}}=%s\n\\end{equation}"%(latex(B_alg_temp)))
             print("Algebraic equations:<br>")
             print("\\begin{equation}\n%s%s=%s\n\\end{equation}"%(latex(B_alg_temp),latex(Matrix(len(c),1,c)),latex(zeros(len(c),1))))
-            c_alg = B_algebraic*homo_sol
+            if non_homogeneous:
+                c_alg = B_algebraic*c_mat + source_alg
+            else:
+                c_alg = B_algebraic*c_mat
             c_alg_temp = c_alg
             for index in range(len(x)):
                 c_alg_temp = c_alg_temp.subs(x[index],variables[index])                        
