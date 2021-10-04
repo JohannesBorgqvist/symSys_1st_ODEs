@@ -471,7 +471,63 @@ def solve_algebraic_equation(expr,coeff_list):
     return LHS, RHS
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 7: "solve_determining_equations"
+# FUNCTION 8: "integration_by_parts"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# This function conduct the integration by parts necessary to simplify all
+# non-homogeneous terms in case there are non-pivot columns in the ODE system.
+# The inputs are:
+# 1. The "function_list" being a list of all involved arbitrary unknown functions,
+# 2. The "constant_list" being a list of all arbitrary integration constants
+# stemming from the integration by parts where the arbitrary functions are evaluated
+# at zero,
+# 3. The "integrand_list" being a list of all integrands,
+# 4. The "variable" which in this setting is just x[0] being the independent variable.
+# The output is:
+# 1. The "integral_list" being a list of all integrals.
+def integration_by_parts(function_list,constant_list,integrand_list,variable):
+    # At the end, we want to return the correct integrals
+    integral_list = []
+    # Loop through the integrands
+    for integrand in integrand_list:
+        # Allocate a temporary integral
+        temp_int = 0
+        # Split this into further parts and solve these
+        for sub_integrand in integrand.args:
+            # Now, firstly we isolate the factors
+            factors_in_subintegrand = sub_integrand.factor().args
+            # The derivative term
+            derivative_term = 0
+            # Loop over our factors in the integrand 
+            # and see if any of them contain a derivative 
+            for factor in factors_in_subintegrand:
+                # Find the arbitrary functions
+                a_f = list(factor.atoms(AppliedUndef))
+                if len(a_f)>0:
+                    derivative_term = factor
+            # The other func is the coefficient of the derivative term
+            other_func = sub_integrand.coeff(derivative_term)
+            # Calculate the primitive function
+            primitive_function = Integral(derivative_term,variable).doit()
+            # Let's add the three terms to our temporary integral
+            temp_int += primitive_function*other_func
+            # Loop over integration constants as well
+            for f_i in range(len(function_list)):
+                if function_list[f_i](variable)==primitive_function:
+                    temp_int += -constant_list[f_i]*other_func.subs(variable,0)
+            # Lastly, we add the integral term
+            new_integrand = primitive_function*Derivative(other_func,variable).doit()
+            temp_int += -Integral(new_integrand,(variable,0,variable))
+        # Make sure that the integral is evaluated 
+        if temp_int != 0:
+            temp_int = temp_int.doit()
+        # Add the evaluated integrals to our integral list
+        integral_list.append(temp_int)
+    # Return the integral list
+    return integral_list
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# FUNCTION 9: "solve_determining_equations"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes four inputs which are the following:
@@ -482,11 +538,11 @@ def solve_algebraic_equation(expr,coeff_list):
 # The script return the following output:
 # 1. The calculated generator of the symmetry which is stored in a string called "X".
 def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
-    print("# Solving the determining equations")
+    #print("# Solving the determining equations")
     #------------------------------------------------------------------------------
     # STEP 1 of 6: FORMULATE THE DETERMINING EQUATIONS ON MATRIX FORM A*dc/dt=B*c
     #-----------------------------------------------------------------------------
-    print("## Step 0 of 6: Defining the matrices from the determining equations")
+    #print("## Step 0 of 6: Defining the matrices from the determining equations")
     # Allocate memory for the two matrices. 
     # We allocate them as lists because we can
     # easily generate matrices from a list where
@@ -502,47 +558,47 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     for isolated_eq in det_eq:
         # Expand the equation at hand
         eq_temp = expand(isolated_eq)
-        print("### Determining equation %d out of %d"%(help_counter,len(det_eq)))
-        help_counter+=1
-        eq_temp_copy = eq_temp
-        for index in range(len(x)):
-            eq_temp_copy = eq_temp_copy.subs(x[index],variables[index])
-        print("\\begin{equation}\n%s=0\n\\end{equation}"%(latex(eq_temp_copy)))
+        #print("### Determining equation %d out of %d"%(help_counter,len(det_eq)))
+        #help_counter+=1
+        #eq_temp_copy = eq_temp
+        #for index in range(len(x)):
+            #eq_temp_copy = eq_temp_copy.subs(x[index],variables[index])
+        #print("\\begin{equation}\n%s=0\n\\end{equation}"%(latex(eq_temp_copy)))
         
         # Loop over all coefficients in the tangential ansätze
         # and define our matrices
         for koeff in c:
             # Save the derivative of the A coefficient
             A_mat.append(-eq_temp.coeff(Derivative(koeff(x[0]),x[0])))
-            A_row.append(-eq_temp.coeff(Derivative(koeff(x[0]),x[0])))
+            #A_row.append(-eq_temp.coeff(Derivative(koeff(x[0]),x[0])))
             # Save the coefficient of the coefficient in the tangential
             # ansätze
             B_mat.append(eq_temp.coeff(koeff(x[0])))
-            B_row.append(eq_temp.coeff(koeff(x[0])))
-        A_row = Matrix(1,len(c),A_row)
-        B_row = Matrix(1,len(c),B_row)            
-        for index in range(len(x)):
-            A_row = A_row.subs(x[index],variables[index])
-            B_row = B_row.subs(x[index],variables[index])
-        print("\\begin{equation}\n%s\\dfrac{\\mathrm{d}}{\\mathrm{d}t}%s=%s%s\n\\end{equation}"%(latex(A_row),latex(Matrix(len(c),1,c)),latex(B_row),latex(Matrix(len(c),1,c))))
-        A_row = []
-        B_row = []
+            #B_row.append(eq_temp.coeff(koeff(x[0])))
+        #A_row = Matrix(1,len(c),A_row)
+        #B_row = Matrix(1,len(c),B_row)            
+        #for index in range(len(x)):
+            #A_row = A_row.subs(x[index],variables[index])
+            #B_row = B_row.subs(x[index],variables[index])
+        #print("\\begin{equation}\n%s\\dfrac{\\mathrm{d}}{\\mathrm{d}t}%s=%s%s\n\\end{equation}"%(latex(A_row),latex(Matrix(len(c),1,c)),latex(B_row),latex(Matrix(len(c),1,c))))
+        #A_row = []
+        #B_row = []
     # Finally we generate the matrices from our lists A_mat and B_mat
     num_of_rows = len(det_eq) # Number of rows
     num_of_cols = len(c) # Number of columns
     A = Matrix(num_of_rows,num_of_cols,A_mat) # Matrix A
     B = Matrix(num_of_rows,num_of_cols,B_mat) # Matrix B
-    print("## Step 1 of 6: the initial matrices")
-    print("Dimension of matrices:\t%dX%d<br>"%(int(num_of_rows),int(num_of_cols)))
-    print("Matrix A<br>")
-    A_temp = A
-    print("Matrix B<br>")
-    B_temp = B
-    for index in range(len(x)):
-        A_temp = A_temp.subs(x[index],variables[index])
-        B_temp = B_temp.subs(x[index],variables[index])
-    print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
-    print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))    
+    #print("## Step 1 of 6: the initial matrices")
+    #print("Dimension of matrices:\t%dX%d<br>"%(int(num_of_rows),int(num_of_cols)))
+    #print("Matrix A<br>")
+    #A_temp = A
+    #print("Matrix B<br>")
+    #B_temp = B
+    #for index in range(len(x)):
+        #A_temp = A_temp.subs(x[index],variables[index])
+        #B_temp = B_temp.subs(x[index],variables[index])
+    #print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
+    #print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))    
     
     #------------------------------------------------------------------------------
     # STEP 2 of 6: TRANSFER THE SYSTEM TO ONE MATRIX M=[-A|B] AND REDUCE THE NUMBER OF 
@@ -581,18 +637,18 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     #B = M_tilde[:,len(c):(2*len(c))]
     A = M_tilde[:,0:(len(c))]
     B = -M_tilde[:,len(c):(2*len(c))]    
-    print("## Step 2 of 6: the reduced based on col(M^T) where M=[-A|B]<br>")
-    r_temp, c_temp = A.shape
-    print("Dimension of matrices:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
-    A_temp = A
-    B_temp = B
-    for index in range(len(x)):
-        A_temp = A_temp.subs(x[index],variables[index])
-        B_temp = B_temp.subs(x[index],variables[index])
-    print("Matrix A<br>")        
-    print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
-    print("Matrix B<br>")
-    print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))     
+    #print("## Step 2 of 6: the reduced based on col(M^T) where M=[-A|B]<br>")
+    #r_temp, c_temp = A.shape
+    #print("Dimension of matrices:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
+    #A_temp = A
+    #B_temp = B
+    #for index in range(len(x)):
+        #A_temp = A_temp.subs(x[index],variables[index])
+        #B_temp = B_temp.subs(x[index],variables[index])
+    #print("Matrix A<br>")        
+    #print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
+    #print("Matrix B<br>")
+    #print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))     
     #------------------------------------------------------------------------------
     # STEP 3 of 6: FIND THE PURELY ALGEBRAIC EQUATIONS WHICH CORRESPONDS TO THE ZERO ROWS IN THE MATRIX A. THE SAME ROWS IN THE MATRIX B WILL BE FORMULATED INTO A NEW MATRIX B_algebraic WHICH CONTAINS ONLY THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
@@ -609,34 +665,34 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     B_algebraic = B[rows_zero,:]
     # Update B
     B = B[rows_nonzero,:]
-    print("## Step 3 of 6: Splitting up to A, B and B_algebraic")
-    r_temp, c_temp = A.shape
-    r_temp_2, c_temp_2 = B_algebraic.shape    
-    print("Dimension of matrices A and B:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
-    print("Dimension of matrices B_algebraic:\t%dX%d<br>"%(int(r_temp_2),int(c_temp_2)))    
-    A_temp = A
-    B_temp = B
-    B_alg_temp = B_algebraic
-    for index in range(len(x)):
-        A_temp = A_temp.subs(x[index],variables[index])
-        B_temp = B_temp.subs(x[index],variables[index])
-        B_alg_temp = B_alg_temp.subs(x[index],variables[index])        
-    print("Matrix A<br>")        
-    print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
-    print("Matrix B<br>")
-    print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))
-    print("Matrix B_algebraic<br>")
-    print("\\begin{equation}\nB_{\\textrm{algebraic}}=%s\n\\end{equation}"%(latex(B_alg_temp)))
-    print("Coefficient matrix c:")
-    print("\\begin{equation}\n\\mathbf{c}=%s\n\\end{equation}"%(latex(Matrix(len(c),1,c))))
+    #print("## Step 3 of 6: Splitting up to A, B and B_algebraic")
+    #r_temp, c_temp = A.shape
+    #r_temp_2, c_temp_2 = B_algebraic.shape    
+    #print("Dimension of matrices A and B:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
+    #print("Dimension of matrices B_algebraic:\t%dX%d<br>"%(int(r_temp_2),int(c_temp_2)))    
+    #A_temp = A
+    #B_temp = B
+    #B_alg_temp = B_algebraic
+    #for index in range(len(x)):
+    #    A_temp = A_temp.subs(x[index],variables[index])
+    #    B_temp = B_temp.subs(x[index],variables[index])
+    #    B_alg_temp = B_alg_temp.subs(x[index],variables[index])        
+    #print("Matrix A<br>")        
+    #print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
+    #print("Matrix B<br>")
+    #print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))
+    #print("Matrix B_algebraic<br>")
+    #print("\\begin{equation}\nB_{\\textrm{algebraic}}=%s\n\\end{equation}"%(latex(B_alg_temp)))
+    #print("Coefficient matrix c:")
+    #print("\\begin{equation}\n\\mathbf{c}=%s\n\\end{equation}"%(latex(Matrix(len(c),1,c))))
     #------------------------------------------------------------------------------
     # STEP 4 of 6: REMOVE (POTENTIAL) EXTRA COLUMNS 
     #-----------------------------------------------------------------------------
     # Calculate rows and columns of matrices
     r_algebraic, cols = B_algebraic.shape # Dimensions of B_algebraic
     rows, cols = A.shape # Dimensions of A
-    print("Dimensions of A:\t%dX%d\n"%(rows,cols))
-    print("Dimensions of B_algebraic:\t%dX%d\n"%(r_algebraic,cols))
+    #print("Dimensions of A:\t%dX%d\n"%(rows,cols))
+    #print("Dimensions of B_algebraic:\t%dX%d\n"%(r_algebraic,cols))
     # Create a set of all the columns
     col_set = set(range(cols))
     # Find the pivot columns of A
@@ -668,19 +724,22 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
         # We will refer to this as a non-homogeneous
         # source term
         source_ODE = []
+        source_ODE_der = []
         source_algebraic = []        
         # DEFINE SOURCE TERM FOR ODEs
         for r in range(rows):
-            # Define a temporary source term
+            # Define two temporary source terms
             temp_source = 0
+            temp_source_der = 0
             # Loop over the non-pivot columns and perform
             # the matrix multiplication in order to define
             # the source term
             for pC in non_pivot_columns:
-                temp_source += -A[r,pC]*Derivative(c[pC](x[0]),x[0])
+                temp_source_der += -A[r,pC]*Derivative(c[pC](x[0]),x[0])
                 temp_source += B[r,pC]*c[pC](x[0])
             # Append the temporary source
             source_ODE.append(temp_source)
+            source_ODE_der.append(temp_source_der)            
         # DEFINE SOURCE TERM FOR ALGEBRAIC EQUATIONS
         for r in range(r_algebraic):
             # Define a temporary source term
@@ -692,16 +751,19 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             # Append the non-homogeneous source 
             source_algebraic.append(temp_source_alg)
         # Print the matrix
-        print("The non-homogeneous source term:<br>")
-        print(latex(Matrix(len(source_ODE),1,source_ODE),mode='equation*'))
+        #print("The non-homogeneous source term:<br>")
+        #print(latex(Matrix(len(source_ODE),1,source_ODE),mode='equation*'))
         source_ODE = Matrix(len(source_ODE),1,source_ODE)
-        print("Dimensions:<br>")
-        print(source_ODE.shape)
-        print("The algebraic source term:<br>")
+        source_ODE_der = Matrix(len(source_ODE_der),1,source_ODE_der)        
+        #print("Dimensions:<br>")
+        #print(source_ODE.shape)
+        #print("The algebraic source term:<br>")
         source_alg = Matrix(len(source_algebraic),1,source_algebraic)
-        print(latex(source_alg,mode='equation*'))
-        print("Dimensions:<br>")
-        print(source_alg.shape)
+        #print(latex(source_alg,mode='equation*'))
+        #print("Dimensions:<br>")
+        #print(source_alg.shape)
+    # Save the unknown arbitrary functions being the non-pivot elements
+    non_pivot_functions = [c[non_pivot_column] for non_pivot_column in non_pivot_columns]
     # Remove all non-pivot tangential coefficient
     non_pivot_columns.sort(reverse=True)
     # Loop over all non_pivot_columns and remove them from our three
@@ -713,28 +775,28 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
         B_algebraic.col_del(non_pivot_columns[index])
         # Remove the non-pivot parameters from the coefficient vector
         del c[non_pivot_columns[index]]
-    print("## Step 4 of 6: Removing potential extra pivot columns")
+    #print("## Step 4 of 6: Removing potential extra pivot columns")
     r_temp, c_temp = A.shape
     r_temp_2, c_temp_2 = B_algebraic.shape    
-    print("Dimension of matrices A and B:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
-    print("Dimension of matrices B_algebraic:\t%dX%d<br>"%(int(r_temp_2),int(c_temp_2)))    
-    A_temp = A
-    B_temp = B
-    B_alg_temp = B_algebraic
-    for index in range(len(x)):
-        A_temp = A_temp.subs(x[index],variables[index])
-        B_temp = B_temp.subs(x[index],variables[index])
-        B_alg_temp = B_alg_temp.subs(x[index],variables[index])        
-    print("Matrix A<br>")        
-    print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
-    print("Matrix B<br>")
-    print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))
+    #print("Dimension of matrices A and B:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
+    #print("Dimension of matrices B_algebraic:\t%dX%d<br>"%(int(r_temp_2),int(c_temp_2)))    
+    #A_temp = A
+    #B_temp = B
+    #B_alg_temp = B_algebraic
+    #for index in range(len(x)):
+        #A_temp = A_temp.subs(x[index],variables[index])
+        #B_temp = B_temp.subs(x[index],variables[index])
+        #B_alg_temp = B_alg_temp.subs(x[index],variables[index])        
+    #print("Matrix A<br>")        
+    #print("\\begin{equation}\nA=%s\n\\end{equation}"%(latex(A_temp)))
+    #print("Matrix B<br>")
+    #print("\\begin{equation}\nB=%s\n\\end{equation}"%(latex(B_temp)))
     #------------------------------------------------------------------------------
     # STEP 5 of 6: SOLVE THE ODE SYSTEM PROVIDED THAT IT IS QUADRATIC AND
     # SUBSTITUTE THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
     num_rows, num_cols = B.shape
-    print("Dimensions of B:\t%dX%d<br>"%(num_rows,num_cols))
+    #print("Dimensions of B:\t%dX%d<br>"%(num_rows,num_cols))
     if num_rows == num_cols:
         # Check that the matrix A is an identity matrix
         #if A != -eye(num_rows):
@@ -755,63 +817,78 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                 exec("constant_list.append(C%d)"%(int(i+1)))
             # Define a coefficient matrix
             c_mat = Matrix(len(constant_list),1,constant_list)
-            print("Coefficients:<br>")
-            print(latex(c_mat,mode='equation'))
-            print("Number of unknowns:\t%d<br>"%(int(len(c_mat))))
+            # Allocate memory for the constants stemming from the inhomogeneities
+            const_inhomo = []
+            # Loop over the number of desired constants
+            for i in range(len(c),len(c)+len(non_pivot_functions)):
+                # Create a symbol for the current constant
+                exec("C%d=Symbol('C%d')"%(int(i+1),int(i+1)))
+                # Append the constant
+                exec("const_inhomo.append(C%d)"%(int(i+1)))
+            #print("Coefficients:<br>")
+            #print(latex(c_mat,mode='equation'))
+            #print("Number of unknowns:\t%d<br>"%(int(len(c_mat))))
             # PRINT TO THE USER
-            print("## Step 5 of 6: Solving the ODE system")
-            r_temp, c_temp = B.shape
-            r_temp_2, c_temp_2 = B_algebraic.shape    
-            print("Dimension of the matrix B:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
-            print("Dimension of the matrix B_algebraic:\t%dX%d<br>"%(int(r_temp_2),int(c_temp_2)))    
-            B_temp = B
-            B_alg_temp = B_algebraic
-            for index in range(len(x)):
-                A_temp = A_temp.subs(x[index],variables[index])
-                B_temp = B_temp.subs(x[index],variables[index])
-                B_alg_temp = B_alg_temp.subs(x[index],variables[index])        
-            print("ODE system:<br>")        
-            print("\\begin{equation}\n\dfrac{\mathrm{d}}{\mathrm{d}t}%s=%s%s\n\\end{equation}"%(latex(Matrix(len(c),1,c)),latex(B_temp),latex(Matrix(len(c),1,c))))     
+            #print("## Step 5 of 6: Solving the ODE system")
+            #r_temp, c_temp = B.shape
+            #r_temp_2, c_temp_2 = B_algebraic.shape    
+            #print("Dimension of the matrix B:\t%dX%d<br>"%(int(r_temp),int(c_temp)))
+            #print("Dimension of the matrix B_algebraic:\t%dX%d<br>"%(int(r_temp_2),int(c_temp_2)))    
+            #B_temp = B
+            #B_alg_temp = B_algebraic
+            #for index in range(len(x)):
+                #A_temp = A_temp.subs(x[index],variables[index])
+                #B_temp = B_temp.subs(x[index],variables[index])
+                #B_alg_temp = B_alg_temp.subs(x[index],variables[index])        
+            #print("ODE system:<br>")        
+            #print("\\begin{equation}\n\dfrac{\mathrm{d}}{\mathrm{d}t}%s=%s%s\n\\end{equation}"%(latex(Matrix(len(c),1,c)),latex(B_temp),latex(Matrix(len(c),1,c))))     
             #----------------------------------------------
             # PART 2: Solve ODE system
             #----------------------------------------------
-            print("Solve the ODE system:<br>")
-            print("Initial conditions for $\\mathbf{c}$ denoted by $\mathbf{c}_0$ in terms of arbitrary integration constants:")
-            print("\\begin{equation}\n\mathbf{c}_{0}=%s=%s\n\\end{equation}"%(latex(Matrix(len(c),1,c)),latex(c_mat)))
+            #print("Solve the ODE system:<br>")
+            #print("Initial conditions for $\\mathbf{c}$ denoted by $\mathbf{c}_0$ in terms of arbitrary integration constants:")
+            #print("\\begin{equation}\n\mathbf{c}_{0}=%s=%s\n\\end{equation}"%(latex(Matrix(len(c),1,c)),latex(c_mat)))
             # Calculate the Jordan form of the matrix B
             P,J = B.jordan_form()
             #P,J = (-B).jordan_form()
-            print("Jordan form:<br>")
-            J_temp = J
-            P_temp = P
-            for index in range(len(x)):
-                J_temp = J_temp.subs(x[index],variables[index])
-                P_temp = P_temp.subs(x[index],variables[index])
-            print("\\begin{equation}\nP=%s\n\\end{equation}"%(latex(P_temp)))
-            print("\\begin{equation}\nJ=%s\n\\end{equation}"%(latex(J_temp)))                            
+            #print("Jordan form:<br>")
+            #J_temp = J
+            #P_temp = P
+            #for index in range(len(x)):
+                #J_temp = J_temp.subs(x[index],variables[index])
+                #P_temp = P_temp.subs(x[index],variables[index])
+            #print("\\begin{equation}\nP=%s\n\\end{equation}"%(latex(P_temp)))
+            #print("\\begin{equation}\nJ=%s\n\\end{equation}"%(latex(J_temp)))                            
             # Re-define our matrix J by scaling it by the
             # independent variable x[0]
             J = x[0]*J
             # Re-define J by taking the matrix exponential
             J = J.exp()
-            J_temp = J
-            for index in range(len(x)):
-                J_temp = J_temp.subs(x[index],variables[index])
-            print("Exponential form:<br>")
-            print("\\begin{equation}\n\\exp\\left(J\\cdot t\\right)=%s\n\\end{equation}"%(latex(J_temp)))
+            #J_temp = J
+            #for index in range(len(x)):
+                #J_temp = J_temp.subs(x[index],variables[index])
+            #print("Exponential form:<br>")
+            #print("\\begin{equation}\n\\exp\\left(J\\cdot t\\right)=%s\n\\end{equation}"%(latex(J_temp)))
             # Calculate the homogeneous solution
             homo_sol = (P*J*P.inv())*c_mat
-            homo_sol_temp = homo_sol
-            for index in range(len(x)):
-                homo_sol_temp = homo_sol_temp.subs(x[index],variables[index])            
-            print("Solution to the ODE system:")
-            print("\\begin{equation}\nP\\exp\\left(J\\cdot t\\right)P^{-1}\mathbf{c}_{0}=%s\n\\end{equation}"%(latex(homo_sol_temp)))                 
+            #homo_sol_temp = homo_sol
+            #for index in range(len(x)):
+                #homo_sol_temp = homo_sol_temp.subs(x[index],variables[index])            
+            #print("Solution to the ODE system:")
+            #print("\\begin{equation}\nP\\exp\\left(J\\cdot t\\right)P^{-1}\mathbf{c}_{0}=%s\n\\end{equation}"%(latex(homo_sol_temp)))                 
             # Add the particular solution
             if non_homogeneous: # non-homogeneous ODE
                 # Begin by defining the integrand of the particular
                 # solution as the exponential matrix times the source
                 # term of the ODE
                 part_sol = (P*J.inv()*P.inv())*source_ODE
+                part_sol_der = (P*J.inv()*P.inv())*source_ODE_der
+                # Convert the derivative part to a list
+                part_sol_der = list(part_sol_der)
+                # Simplify the derivative terms using integration by parts
+                part_sol_der = integration_by_parts(non_pivot_functions,const_inhomo,part_sol_der,x[0])
+                # Re-define it as a Matrix
+                part_sol_der = Matrix(len(part_sol_der),1,part_sol_der)
                 # Define the dimensions of the particular solution at
                 # hand
                 m,n = part_sol.shape
@@ -821,11 +898,11 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                     for cI in range(n):
                         # Define each matrix element as an integral 
                         # with respect to the zeroth variable 
-                        part_sol[rI,cI] = Integral(part_sol[rI,cI],x[0])
+                        part_sol[rI,cI] = Integral(part_sol[rI,cI],(x[0],0,x[0]))
                         # If possible, try to evaluate the integral at hand
                         part_sol[rI,cI] = part_sol[rI,cI].doit()
                 # Lastly, multiply with J again to construct the particular solution
-                part_sol = (P*J*P.inv())*part_sol
+                part_sol = simplify(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
             else:# homogeneous ODE
                 part_sol = zeros(len(c_mat),1) # We just add zeroes
             # Construct the solution by adding the particular
@@ -840,13 +917,13 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             #----------------------------------------------
             # Derive the algebraic equations where each
             # element equals zero
-            print("## Step 6 of 6: Solving the algebraic system<br>")
-            m, n = B_algebraic.shape
-            print("Number of algebraic equations:\t%d\n"%(m))
-            print("Matrix B_algebraic<br>")
-            print("\\begin{equation}\nB_{\\textrm{algebraic}}=%s\n\\end{equation}"%(latex(B_alg_temp)))
-            print("Algebraic equations:<br>")
-            print("\\begin{equation}\n%s%s=%s\n\\end{equation}"%(latex(B_alg_temp),latex(Matrix(len(c),1,c)),latex(zeros(len(c),1))))
+            #print("## Step 6 of 6: Solving the algebraic system<br>")
+            #m, n = B_algebraic.shape
+            #print("Number of algebraic equations:\t%d\n"%(m))
+            #print("Matrix B_algebraic<br>")
+            #print("\\begin{equation}\nB_{\\textrm{algebraic}}=%s\n\\end{equation}"%(latex(B_alg_temp)))
+            #print("Algebraic equations:<br>")
+            #print("\\begin{equation}\n%s%s=%s\n\\end{equation}"%(latex(B_alg_temp),latex(Matrix(len(c),1,c)),latex(zeros(len(c),1))))
             if non_homogeneous:
                 c_alg = B_algebraic*c_mat + source_alg
             else:
@@ -854,8 +931,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             c_alg_temp = c_alg
             for index in range(len(x)):
                 c_alg_temp = c_alg_temp.subs(x[index],variables[index])                        
-            print("Algebraic equations after substitution of the solution to the ODE system:<br>")
-            print("\\begin{equation}\n%s%s=%s=%s\n\\end{equation}"%(str(latex(B_alg_temp)),str(latex(homo_sol_temp)),str(latex(c_alg_temp)),latex(zeros(m,1))))
+            #print("Algebraic equations after substitution of the solution to the ODE system:<br>")
+            #print("\\begin{equation}\n%s%s=%s=%s\n\\end{equation}"%(str(latex(B_alg_temp)),str(latex(homo_sol_temp)),str(latex(c_alg_temp)),latex(zeros(m,1))))
             # Define a list of remaining constants
             const_remaining = []
             # Define the rows in c_alg
@@ -869,25 +946,27 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                     if c_alg[eq_index,0].coeff(constant) != 0:
                         const_remaining.append(constant)
                         break
-            print("<br>*Solving the algebraic equations:*<br>")
+            # Add the inhomogeneous constants as well
+            const_remaining = const_remaining + const_inhomo
+            #print("<br>*Solving the algebraic equations:*<br>")
             # Loop through the algebraic equations and solve them
             for eq_temp in list(c_alg):
                 # Solve the corresponding equations given by the current
                 # algebraic equations
-                eq_print = eq_temp
-                for index in range(len(x)):
-                    eq_print = eq_print.subs(x[index],variables[index])
-                print("Equation:<br>\n\\begin{equation}\n%s=0\n\\end{equation}"%(latex(eq_print)))
+                #eq_print = eq_temp
+                #for index in range(len(x)):
+                    #eq_print = eq_print.subs(x[index],variables[index])
+                #print("Equation:<br>\n\\begin{equation}\n%s=0\n\\end{equation}"%(latex(eq_print)))
                 LHS_list,RHS_list = solve_algebraic_equation(eq_temp,const_remaining)
-                print("Solutions:<br>\n\\begin{align*}")
-                for index in range(len(LHS_list)):
-                    LHS_print = LHS_list[index]
-                    RHS_print = RHS_list[index]
-                    for index in range(len(x)):
-                        LHS_print = LHS_print.subs(x[index],variables[index])
-                        RHS_print = RHS_print.subs(x[index],variables[index])                                            
-                    print("%s&=%s\\\\"%(latex(LHS_print),latex(RHS_print)))
-                print("\\end{align*}")
+                #print("Solutions:<br>\n\\begin{align*}")
+                #for index in range(len(LHS_list)):
+                    #LHS_print = LHS_list[index]
+                    #RHS_print = RHS_list[index]
+                    #for index in range(len(x)):
+                        #LHS_print = LHS_print.subs(x[index],variables[index])
+                        #RHS_print = RHS_print.subs(x[index],variables[index])                                            
+                    #print("%s&=%s\\\\"%(latex(LHS_print),latex(RHS_print)))
+                #print("\\end{align*}")
                 # Substitute the solution of the algebraic equation
                 # into the solution of the ODE for the tangential coefficients
                 for sub_index in range(len(c_mat)):
@@ -899,14 +978,16 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             # Substitute to the original variables
             for index in range(len(x)):
                 c_mat_temp = c_mat_temp.subs(x[index],variables[index])            
-            print("Solution *after* algebraic substitution:<br>")
-            print("\\begin{equation*}\n\mathbf{c}=%s\n\\end{equation*}"%(latex(c_mat_temp)))                
+            #print("Solution *after* algebraic substitution:<br>")
+            #print("\\begin{equation*}\n\mathbf{c}=%s\n\\end{equation*}"%(latex(c_mat_temp)))                
             #----------------------------------------------
             # PART 4: Substitute the solution into the tangents
             # and each sub-generator
             #----------------------------------------------
             print("\n\n# The very final step")
             print("The very final step: substituting the solution into the tangents and print the results:<br>")
+            # Add the inhomogenous constants to the list of constants
+            constant_list = constant_list + const_inhomo
             # See which constants that exists among the constants
             constants_in_final_solution = []
             # Loop over all algebraic expressions
@@ -967,7 +1048,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             # PART 5: Check if the generators satisfy
             # the linearised symmetry conditions
             #----------------------------------------------
-            print("Number of component tangents before removing:\t%d<br>"%(int(len(tangent_component))))
+            #print("Number of component tangents before removing:\t%d<br>"%(int(len(tangent_component))))
             # Check the linearised symmetry conditions
             # Allocate a vector of the linearised symmetry conditions
             lin_sym_index = []
@@ -1052,9 +1133,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
             # Add the final touch to the generator
             X += "\\end{align*}"
             X = X.replace(",\\\\\n\\end{align*}", ".\\\\\n\\end{align*}")
-            
-            
-            #X = "Now, we are close man..."
     else:
         # Return that the matrix
         X = "\\Huge\\textsf{Not a quadratic matrix}\\normalsize\\\\[2cm]" 
