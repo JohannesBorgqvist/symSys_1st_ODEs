@@ -511,13 +511,16 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable):
             primitive_function = Integral(derivative_term,variable).doit()
             # Let's add the three terms to our temporary integral
             temp_int += primitive_function*other_func
+            #temp_int += -primitive_function*other_func
             # Loop over integration constants as well
             for f_i in range(len(function_list)):
                 if function_list[f_i](variable)==primitive_function:
                     temp_int += -constant_list[f_i]*other_func.subs(variable,0)
+                    #temp_int += constant_list[f_i]*other_func.subs(variable,0)
             # Lastly, we add the integral term
             new_integrand = primitive_function*Derivative(other_func,variable).doit()
             temp_int += -Integral(new_integrand,(variable,0,variable))
+            #temp_int += Integral(new_integrand,(variable,0,variable))
         # Make sure that the integral is evaluated 
         if temp_int != 0:
             temp_int = temp_int.doit()
