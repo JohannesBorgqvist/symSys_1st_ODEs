@@ -479,13 +479,17 @@ def solve_algebraic_equation(expr,coeff_list):
 # The inputs are:
 # 1. The "function_list" being a list of all involved arbitrary unknown functions,
 # 2. The "constant_list" being a list of all arbitrary integration constants
+# 3. The "integrand_list" being a list of all integrands that are of the type
+# "df/dt*exp(k*t)",
+# 4. The variable "variable" which is the current integration variable,
+# 4. The dummy variable "s" which is used for the integration.
 # stemming from the integration by parts where the arbitrary functions are evaluated
 # at zero,
 # 3. The "integrand_list" being a list of all integrands,
 # 4. The "variable" which in this setting is just x[0] being the independent variable.
 # The output is:
 # 1. The "integral_list" being a list of all integrals.
-def integration_by_parts(function_list,constant_list,integrand_list,variable):
+def integration_by_parts(function_list,constant_list,integrand_list,variable,s):
     # At the end, we want to return the correct integrals
     integral_list = []
     # Loop through the integrands
@@ -517,9 +521,13 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable):
                 if function_list[f_i](variable)==primitive_function:
                     temp_int += -constant_list[f_i]*other_func.subs(variable,0)
                     #temp_int += constant_list[f_i]*other_func.subs(variable,0)
-            # Lastly, we add the integral term
+            # Lastly, we add the integral term:
+            # Define the new integrand
             new_integrand = primitive_function*Derivative(other_func,variable).doit()
-            temp_int += -Integral(new_integrand,(variable,0,variable))
+            # Change integration to a dummy variable s
+            new_integrand = new_integrand.subs(variable,s)
+            # Lastly, add the integral term as well
+            temp_int += -Integral(new_integrand,(s,0,variable))
             #temp_int += Integral(new_integrand,(variable,0,variable))
         # Make sure that the integral is evaluated 
         if temp_int != 0:
@@ -886,10 +894,12 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                 # term of the ODE
                 part_sol = (P*J.inv()*P.inv())*source_ODE
                 part_sol_der = (P*J.inv()*P.inv())*source_ODE_der
+                # Introduce a dummy variable with which we conduct the integration
+                s = Symbol('s')
                 # Convert the derivative part to a list
                 part_sol_der = list(part_sol_der)
                 # Simplify the derivative terms using integration by parts
-                part_sol_der = integration_by_parts(non_pivot_functions,const_inhomo,part_sol_der,x[0])
+                part_sol_der = integration_by_parts(non_pivot_functions,const_inhomo,part_sol_der,x[0],s)
                 # Re-define it as a Matrix
                 part_sol_der = Matrix(len(part_sol_der),1,part_sol_der)
                 # Define the dimensions of the particular solution at
@@ -899,9 +909,11 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                 # element of the vector with the particular solution
                 for rI in range(m):
                     for cI in range(n):
+                        # Replace the current variable x[0] with the dummy variable s
+                        part_sol[rI,cI] = part_sol[rI,cI].subs(x[0],s)
                         # Define each matrix element as an integral 
                         # with respect to the zeroth variable 
-                        part_sol[rI,cI] = Integral(part_sol[rI,cI],(x[0],0,x[0]))
+                        part_sol[rI,cI] = Integral(part_sol[rI,cI],(s,0,x[0]))
                         # If possible, try to evaluate the integral at hand
                         part_sol[rI,cI] = part_sol[rI,cI].doit()
                 # Lastly, multiply with J again to construct the particular solution
