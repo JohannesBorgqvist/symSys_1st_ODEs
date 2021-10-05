@@ -727,8 +727,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
     # extra inhomogeneities. 
     if len(non_pivot_columns)!=0: # Yes, we do have non-pivot coefficients
         # Print the non-pivot columns
-        print("Non-Pivot columns")
-        print(non_pivot_columns)
+        #print("Non-Pivot columns")
+        #print(non_pivot_columns)
         # Indicate that we have a non_homogeneous system
         non_homogeneous = True
         # Define a list of all non-pivot elements.
@@ -894,6 +894,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                 # term of the ODE
                 part_sol = (P*J.inv()*P.inv())*source_ODE
                 part_sol_der = (P*J.inv()*P.inv())*source_ODE_der
+                part_sol_der_before = part_sol_der
                 # Introduce a dummy variable with which we conduct the integration
                 s = Symbol('s')
                 # Convert the derivative part to a list
@@ -916,6 +917,26 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                         part_sol[rI,cI] = Integral(part_sol[rI,cI],(s,0,x[0]))
                         # If possible, try to evaluate the integral at hand
                         part_sol[rI,cI] = part_sol[rI,cI].doit()
+                        # Replace the current variable x[0] with the dummy variable s
+                        part_sol_der_before[rI,cI] = part_sol_der_before[rI,cI].subs(x[0],s)
+                        # Define each matrix element as an integral 
+                        # with respect to the zeroth variable 
+                        part_sol_der_before[rI,cI] = Integral(part_sol_der_before[rI,cI],(s,0,x[0]))
+                        # If possible, try to evaluate the integral at hand
+                        part_sol_der_before[rI,cI] = part_sol_der_before[rI,cI].doit()
+                # Print before and after
+                print("# Comparison with and without integration by parts")
+                part_sol_der_print = part_sol_der
+                part_sol_der_before_print = part_sol_der_before
+                for rI in range(m):
+                    for cI in range(n):
+                        for index in range(len(x)):
+                            part_sol_der_print[rI,cI].subs(x[index],variables[index])
+                            part_sol_der_before_print[rI,cI] = part_sol_der_before_print[rI,cI].subs(x[index],variables[index])
+                print("Solution without integration by parts:<br>")
+                print("\\begin{equation}\nP^{-1}\\exp(Jt)P\\int^{t}_{0}P^{-1}\\exp(-Js)P\\dfrac{\\mathrm{d}c}{\\mathrm{d}s}\\mathrm{d}s=%s\n\\end{equation}"%(latex(part_sol_der_before_print)))
+                print("Solution with integration by parts:<br>")
+                print("\\begin{equation}\nP^{-1}\\exp(Jt)P\\int^{t}_{0}P^{-1}\\exp(-Js)P\\dfrac{\\mathrm{d}c}{\\mathrm{d}s}\\mathrm{d}s=%s\n\\end{equation}"%(latex(part_sol_der_print)))
                 # Lastly, multiply with J again to construct the particular solution
                 part_sol = simplify(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
             else:# homogeneous ODE
@@ -943,9 +964,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                 c_alg = B_algebraic*c_mat + source_alg
             else:
                 c_alg = B_algebraic*c_mat
-            c_alg_temp = c_alg
-            for index in range(len(x)):
-                c_alg_temp = c_alg_temp.subs(x[index],variables[index])                        
+            #c_alg_temp = c_alg
+            #for index in range(len(x)):
+                #c_alg_temp = c_alg_temp.subs(x[index],variables[index])                        
             #print("Algebraic equations after substitution of the solution to the ODE system:<br>")
             #print("\\begin{equation}\n%s%s=%s=%s\n\\end{equation}"%(str(latex(B_alg_temp)),str(latex(homo_sol_temp)),str(latex(c_alg_temp)),latex(zeros(m,1))))
             # Define a list of remaining constants
