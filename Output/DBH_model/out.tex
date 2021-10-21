@@ -1,5 +1,5 @@
-\section*{Run 04\_56PM\_06\_October-2021}
-\textbf{Degree in tangential ansätze:}	1\\
+\section*{Run 03\_24PM\_21\_October-2021}
+Degree in tangential ansätze:	1.\\
 The system of ODEs is given by:
 
 \begin{align*}
@@ -11,9 +11,52 @@ The system of ODEs is given by:
 \noindent The calculated generators are:
 
 \begin{align*}
-X_{1}&=\left( t^{2} \right)\partial t+\left( - 2 t w_{1} + 1 \right)\partial w_{1}+\left( - 2 t w_{2} + 1 \right)\partial w_{2}+\left( - 2 t w_{3} + 1 \right)\partial w_{3},\\
-,\\
-X_{2}&=\left( 1 \right)\partial t,\\
-,\\
-X_{3}&=\left( - t \right)\partial t+\left( w_{1} \right)\partial w_{1}+\left( w_{2} \right)\partial w_{2}+\left( w_{3} \right)\partial w_{3}.\\
+X_{1}=&\left(-1+t \right)\partial t+\left(w_{1} \right)\partial w_{1}+\left(w_{2} \right)\partial w_{2}+\left(w_{3} \right)\partial w_{3},\\
 \end{align*}
+
+\begin{align*}
+X_{2}=&\left(1 \right)\partial t,\\
+\end{align*}
+
+\begin{align*}
+X_{3}=&\left(t+2 \right)\partial t+\left(1- 2 t w_{1} \right)\partial w_{1}+\left(1- 2 t w_{2} \right)\partial w_{2}\\
+&+\left(1- 2 t w_{3} \right)\partial w_{3}
+\end{align*}
+
+The execution time of the script was:
+$$0\;\mathrm{hours}\;0\;\mathrm{minutes}\;42 \;\mathrm{seconds}.$$
+\section*{Run 04\_17PM\_21\_October-2021}
+Degree in tangential ansätze:	2.\\
+The system of ODEs is given by:
+
+\begin{align*}
+\dv{w_{1}}{t}&=- w_{1} w_{2} - w_{1} w_{3} + w_{2} w_{3},\\
+\dv{w_{2}}{t}&=- w_{1} w_{2} + w_{1} w_{3} - w_{2} w_{3},\\
+\dv{w_{3}}{t}&=w_{1} w_{2} - w_{1} w_{3} - w_{2} w_{3}.\\
+\end{align*}
+
+\noindent The calculated generators are:
+
+\begin{align*}
+X_{1}=&\left(t+2 \right)\partial t+\left(1- 2 t w_{1} \right)\partial w_{1}+\left(1- 2 t w_{2} \right)\partial w_{2}\\
+&+\left(1- 2 t w_{3} \right)\partial w_{3}
+\end{align*}
+
+\begin{align*}
+X_{2}=&\left(1 \right)\partial t,\\
+\end{align*}
+
+\begin{align*}
+X_{3}=&\left(t \right)\partial t+\left(w_{2} w_{3} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{2} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{3} \operatorname{f_{1}}{\left(t \right)} \right)\partial w_{1}+\left(w_{1} w_{3} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{2} \operatorname{f_{1}}{\left(t \right)}\right.\\
+&+\left.- w_{2} w_{3} \operatorname{f_{1}}{\left(t \right)} \right)\partial w_{2}+\left(w_{1} w_{2} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{3} \operatorname{f_{1}}{\left(t \right)}- w_{2} w_{3} \operatorname{f_{1}}{\left(t \right)} \right)\partial w_{3}
+\end{align*}
+
+
+
+\noindent Some of the generators might contain the following arbitrary functions:
+\begin{align*}
+&\operatorname{f_{1}}\\
+\end{align*}
+
+The execution time of the script was:
+$$0\;\mathrm{hours}\;4\;\mathrm{minutes}\;55 \;\mathrm{seconds}.$$

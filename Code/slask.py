@@ -742,3 +742,150 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                     c_mat[sub_index] = expand(cancel(c_mat[sub_index]))
             print("Coefficients:<br>")
             print(latex(c_mat,mode='equation'))
+    #-----------------------------------------------------------------------------
+        #-----------------------------------------------------------------------------
+            #-----------------------------------------------------------------------------
+
+            # Loop over tangents and substitute the calculated coefficients into these expressions
+            for tangent_number in range(len(eta_list)):
+                # Expand the tangents
+                eta_list[tangent_number] = eta_list[tangent_number].expand()
+                # Loop through all coefficients and replace them in all tangents
+                for index in range(len(c)):            
+                    # Substitute coefficient in the tangents
+                    #eta_list[tangent_number] = substitute_tangents(eta_list[tangent_number],c[index](x[0]),c_mat[index])
+                    #if eta_list[tangent_number].coeff(c[index](x[0]))!=0:
+                    temp_expression = eta_list[tangent_number]
+                    temp_expression = temp_expression.subs(c[index](x[0]),cancel(expand(simplify(c_mat[index]))))                    
+                    eta_list[tangent_number] = expand(cancel(temp_expression))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#==================================================================
+# FIXING THE PRINTING OF THE GENERATOR
+#==================================================================
+                # Increment the counter for the generator
+                generator_counter += 1
+                # Set the plus indicator to false
+                plus_indicator = False
+                # Start
+                X += "\\begin{align*}\nX_{" + str(generator_counter) + "}&="
+                # Re-set the term_counter
+                term_counter = 1
+                # Loop over each coordinate in the tangent vector   
+                for tangent_part in range(len(tangent)):
+                    # Add all non-trivial tangents to the generator    
+                    if tangent[tangent_part]!=0:
+                        # Replace the name of all arbitrary functions
+                        for arb_func_ind in range(len(non_pivot_functions)):
+                            tangent[tangent_part] = tangent[tangent_part].subs(non_pivot_functions[arb_func_ind],arbitrary_functions[arb_func_ind])
+                        # Write the tangent to the string
+                        if plus_indicator:
+                            X += "+\\left( "                                
+                        else:
+                            #X += "\\left( " + str(latex(tangent[tangent_part])) + " \\right)" + "\\partial " + str(latex(variables[tangent_part])) + ""
+                            X += "\\left( "                                
+                            plus_indicator = True
+                        # Chop the tangent into its pieces
+                        chopped_generator = latex(tangent[tangent_part]).split("+")
+                        # Loop over the pieces of the tangent
+                        for term_index in range(len(chopped_generator)):
+                            # Add the terms one by one
+                            if term_index == (len(chopped_generator)-1):
+                                # The very last generator or the other ones
+                                X += chopped_generator[term_index] + " \\right)" + "\\partial " + str(latex(variables[tangent_part])) + ""
+                                # Reset the term counter if this happens?
+                                #term_counter = 1
+                            else: # Just add the term
+                                X += chopped_generator[term_index] + "+"                                    
+                            # Increment the term counter
+                            term_counter += 1
+                            # Add a line break if we have too many rows
+                            if term_counter > term_tolerance:
+                                # Re-set the term_counter
+                                term_counter =1
+                                # Two cases if we end a line or not
+                                if term_index == (len(chopped_generator)-1):
+                                    # Add a new row
+                                    X += "\\\\\n"
+                                else: # Not the last term then we need to add a \left...    
+                                    # Add a new row
+                                    X += "\\right.\\\\\n\\left.&+"
+                # End the alignment                    
+                X += "\\end{align*}\n"                   
+                            
+        # Add a line break
+        #X += ",\\\\\n"
+        # Re-set the term counter when this is done
+        #term_counter = 1
+        # Add a new line break
+        #line_counter += 1        
+        # Add the final touch to the generator
+        #if line_counter != 1:
+            #X += "\\end{align*}"
+        #X = X.replace(",\\\\\n\\end{align*}", ".\\\\\n\\end{align*}")
+        #
+
+
+
+
+
+
+
+
+
+                        # Start the alignment
+                X += "\\begin{align*}\nX_{" + str(generator_counter) + "}&="
+                # Set the plus indicator to false
+                plus_indicator = False
+                # Re-set the term_counter
+                term_counter = 1                
+                # Loop over each coordinate in the tangent vector   
+                for tangent_part in range(len(tangent)):
+                    # Add all non-trivial tangents to the generator    
+                    if tangent[tangent_part]!=0:
+                        # Write the tangent to the string
+                        if plus_indicator:
+                            X += "+\\left( "                                
+                        else:
+                            X += "\\left( "                                
+                        # Chop the tangent into its pieces
+                        chopped_generator = latex(tangent[tangent_part]).split("+")
+                        # Loop over the pieces of the tangent and add them
+                        for term_index in range(len(chopped_generator)):
+                            # Add the next term
+                            X += chopped_generator[term_index]
+                            # Add the terms one by one
+                            if term_index == (len(chopped_generator)-1):
+                                # The very last generator or the other ones
+                                X += " \\right)" + "\\partial " + str(latex(variables[tangent_part])) + "+"
+                            else: # Just add the term
+                                X += "+"
+                            # Increment the term counter
+                            term_counter += 1
+                            print("Term counter\t=\t%d"%(term_counter))
+                            # Add a line break if we have too many rows
+                            if term_counter > term_tolerance:
+                                # Re-set the term_counter
+                                term_counter =1
+                                if term_index == (len(chopped_generator)-1):                          
+                                    X += "\\\\"
+                                elif term_index<(len(chopped_generator)-1):
+                                    X += "\\right.\\\\\n&\\left."
+                # End the alignment                    
+                X += "\n\\end{align*}\n"

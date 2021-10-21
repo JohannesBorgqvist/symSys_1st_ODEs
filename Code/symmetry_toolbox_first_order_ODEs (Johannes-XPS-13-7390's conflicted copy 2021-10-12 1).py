@@ -31,7 +31,6 @@ from sympy import symbols, Eq, Function
 from sympy.matrices import Matrix, eye, zeros, ones, diag, GramSchmidt
 # Import math for combinatorials
 from math import *
-import math
 # To do the fancy iterations
 import itertools
 # To manipulate string
@@ -124,7 +123,7 @@ def create_tangent_ansatze(num_of_variables,num_of_states,degree_polynomial):
         # Add our tangent to the list of tangents "eta_list"
         exec("eta_list.append(eta_%d)"% (iteration))
     # Return the output    
-    return x, c, eta_list, M
+    return x, c, eta_list
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # FUNCTION 2: "Lie_generator"
@@ -396,14 +395,6 @@ def identify_basis_functions(expr,coeff_list):
 # The function uses the previous function (i.e. Function 6) called "identify_basis_functions" in
 # order to find the basis functions and the arbitrary functions in the expression at hand.
 def solve_algebraic_equation(expr,coeff_list):
-    #print("Expression before:$%s$"%(latex(expr)))
-    # See if expression is a fraction or not
-    num, denom = fraction(expr)
-    # In case it is we only keep the numerator
-    if denom != 1:
-        expr = num
-    #print("Num=$%s$, Denom=$%s$"%(latex(expr),latex(denom)))
-    #print("Expression after:$%s$"%(latex(expr)))    
     # Find all basis functions and arbitrary functions in the expression at hand
     arbitrary_functions,basis_functions = identify_basis_functions(expr,coeff_list)
     # Allocate memory for the LHS being the solutions to the equations
@@ -456,7 +447,6 @@ def solve_algebraic_equation(expr,coeff_list):
         # equation stemming from the constant if such
         # a constant exist among the basis functions
         temp_sum = 0
-        #print("Basis functions:\n$$%s$$"%(latex(basis_functions)))
         # Loop through the basis functions and save
         # the solution and its corresponding expression
         for func_temp in basis_functions:
@@ -479,9 +469,7 @@ def solve_algebraic_equation(expr,coeff_list):
                 # Increase the temporary sum
                 temp_sum += eq_temp*func_temp
         # Define the zeroth equation
-        #eq_zero = simplify(cancel(expand(expr - temp_sum)))
-        eq_zero = expand(cancel(expr - temp_sum))
-        #eq_zero = cancel(expand(expr - temp_sum))
+        eq_zero = simplify(cancel(expand(expr - temp_sum)))
         # Find the coefficient which we solve for
         LHS_temp = 0
         for koeff in coeff_list:
@@ -540,12 +528,6 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable,dum
             if len(list(other_function.atoms(Function)))==0:
                 # Just solve the integral
                 temp_int += (other_function*func(variable)) - (other_function*constant_list[func_index])
-                # If we have a polynomial of t we need to add an extra term
-                if degree(other_function,variable)!=0:
-                    # The integral in the integration by parts
-                    new_integrand = (func(variable)*Derivative(other_function,variable).doit()).subs(variable,dummy)
-                    # Add the integral term as well
-                    temp_int += -Integral(new_integrand,(dummy,0,variable))
             else:# Alternative 2: Integration by parts
                 # The boundary term in the integration by parts
                 temp_int += (other_function*func(variable)) - (other_function.subs(variable,0)*constant_list[func_index]) 
@@ -561,7 +543,33 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable,dum
     return integral_list
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 9: "solve_determining_equations"
+# FUNCTION 9: "break_after"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# The function breaks the execution of another script if the scrit never finishes
+class TimeoutException(Exception):   # Custom exception class
+    pass
+def break_after(seconds=2):
+    def timeout_handler(signum, frame):   # Custom signal handler
+        raise TimeoutException
+    def function(function):
+        def wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(seconds)
+            try:
+                indicator = False
+                res = function(*args, **kwargs)
+                signal.alarm(0)      # Clear alarm
+                return res, indicator
+            except TimeoutException:
+                indicator = True
+                return eye(3), eye(3), indicator
+            return
+        return wrapper
+    return function
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# FUNCTION 10: "solve_determining_equations"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes four inputs which are the following:
@@ -571,56 +579,12 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable,dum
 # 4. The list of the determining equations called "det_eq".
 # The script return the following output:
 # 1. The calculated generator of the symmetry which is stored in a string called "X".
-def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
-    #------------------------------------------------------------------------------
-    # STEP 0 of 6: ENABLE FOR EASY CALCULATIONS OF TANGENTS WITHOUT SUBSTITUTIONS
-    #-----------------------------------------------------------------------------
-    # The whole aim of this function is to determine the unknown coefficients stored
-    # in the list c which is provided as an input. Later in this script, the vector
-    # c_mat (technically stored as a Matrix) will contain the calculated constants
-    # after solving the involved matrix equations. Initially, the tangents corresponding
-    # to the final solution were retrieved by substituting the value of the elements
-    # in the list c by the corresponding element in c_mat. This substitution was
-    # conducted using the "subs" function in sympy. However, it turns out that when
-    # the expressions in c_mat contains integrals of arbitrary functions where the
-    # integrals contain a dummy variable, then it is not possible for "subs" to
-    # conduct the substitution. Therefore another approach is implemented where
-    # each coefficient in c has a matching monomial in the list "monomial_list"
-    # and a matching tangent in the list "tangent_indicator". In this way, it is
-    # just a matter of looping through one list (as these three lists have the
-    # same dimensions) and then reconstruct the tangents from there. This part
-    # of the code sets up these lists which will enable an easy assembly of the
-    # tangents in the very end of the code after all calculations are done.
-    # THE CODE BEGINS
-    # Create a list of the monomials in the tangential ansätze of a certain order
-    monomial_list = list(M)
-    # Allocate memory for a list indicating which tangent the corresponding monomial
-    # belongs to
-    tangent_indicators = []
-    # Fill this list with values. These are indices indicating which tangent the
-    # particular monomial and the particular coefficient belong to.
-    for index in range(len(c)):
-        # Since we always use the same number of unknown coefficients in
-        # the ansätze, it is possible to assign an integer to each tangent
-        # based on the number of monomials we have in the ansätze
-        tangent_indicators.append(math.floor(index/len(monomial_list)))        
-    # Calculate the number of tangents
-    num_tangents = len(eta_list)
-    # Add the monomial_list to itself "num_tangents-1" times so that each
-    # coefficient in c matches a monomial. 
-    for index in range(num_tangents-1):
-        monomial_list += monomial_list
-    # Allocate a vector for the tangents which we will calculate
-    eta_list_final = []
-    # Loop over the tangents in the ansätze, and initialise this
-    # list with zeroes. 
-    for index in range(len(eta_list)):
-        eta_list_final.append(0)
-    #for index in range(len(c)):
-        #eta_list_new[tangent_indicator[index]] += c[index](x[0])*monomial_list[index]
+def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
+    #print("# Solving the determining equations")
     #------------------------------------------------------------------------------
     # STEP 1 of 6: FORMULATE THE DETERMINING EQUATIONS ON MATRIX FORM A*dc/dt=B*c
     #-----------------------------------------------------------------------------
+    #print("## Step 0 of 6: Defining the matrices from the determining equations")
     # Allocate memory for the two matrices. 
     # We allocate them as lists because we can
     # easily generate matrices from a list where
@@ -683,7 +647,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
     M_tilde = M_tilde.rref()[0]
     # Split the matrix into its component parts
     A = M_tilde[:,0:(len(c))]
-    B = -M_tilde[:,len(c):(2*len(c))]
+    B = -M_tilde[:,len(c):(2*len(c))]    
     #------------------------------------------------------------------------------
     # STEP 3 of 6: FIND THE PURELY ALGEBRAIC EQUATIONS WHICH CORRESPONDS TO THE ZERO ROWS IN THE MATRIX A. THE SAME ROWS IN THE MATRIX B WILL BE FORMULATED INTO A NEW MATRIX B_algebraic WHICH CONTAINS ONLY THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
@@ -758,10 +722,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
         source_alg = Matrix(len(source_algebraic),1,source_algebraic)
     # Save the unknown arbitrary functions being the non-pivot elements
     non_pivot_functions = [c[non_pivot_column] for non_pivot_column in non_pivot_columns]
-    # Save the monomials of the unknown non-pivot functions as well
-    non_pivot_monomials = [monomial_list[non_pivot_column] for non_pivot_column in non_pivot_columns]
-    # Save the tangent indicator of the unknown non-pivot functions as well
-    non_pivot_tangent_indicators = [tangent_indicators[non_pivot_column] for non_pivot_column in non_pivot_columns]    
     # Remove all non-pivot tangential coefficient
     non_pivot_columns.sort(reverse=True)
     # Loop over all non_pivot_columns and remove them from our three
@@ -771,18 +731,14 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
         A.col_del(non_pivot_columns[index])
         B.col_del(non_pivot_columns[index])
         B_algebraic.col_del(non_pivot_columns[index])
-        # Remove the non-pivot parameters from the coefficient vector c,
-        # the monomial_list and the tangent_indicators
+        # Remove the non-pivot parameters from the coefficient vector
         del c[non_pivot_columns[index]]
-        del monomial_list[non_pivot_columns[index]]
-        del tangent_indicators[non_pivot_columns[index]]
     #------------------------------------------------------------------------------
     # STEP 5 of 6: SOLVE THE ODE SYSTEM PROVIDED THAT IT IS QUADRATIC AND
     # SUBSTITUTE THE ALGEBRAIC EQUATIONS
     #-----------------------------------------------------------------------------
     # Calculate the dimensions of B
     num_rows, num_cols = B.shape
-    r_algebraic, num_cols = B_algebraic.shape    
     # Check if B is quadratic which it must be in order for the script to
     # find the solution
     if num_rows == num_cols:
@@ -790,7 +746,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
         if A != eye(num_rows):#If not we stop the script
             X = "\\Huge\\textsf{$A$ is quadratic but not an identity matrix!}\normalsize\\[2cm]" 
         else: # A is an identity matrix
-            X = ""
             #----------------------------------------------
             # PART 1: Allocate arbitrary coefficients
             #----------------------------------------------
@@ -829,8 +784,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 # Begin by defining the integrand of the particular
                 # solution as the exponential matrix times the source
                 # term of the ODE
-                part_sol = expand(cancel((P*J.inv()*P.inv())*source_ODE))
-                part_sol_der = expand(cancel((P*J.inv()*P.inv())*source_ODE_der))
+                part_sol = (P*J.inv()*P.inv())*source_ODE
+                part_sol_der = (P*J.inv()*P.inv())*source_ODE_der
                 # Introduce a dummy variable with which we conduct the integration
                 s = Symbol('s')
                 # Convert the derivative part to a list
@@ -842,8 +797,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 # Define the dimensions of the particular solution at
                 # hand
                 m,n = part_sol.shape
-                # Cast the particular solution to te matrix format
-                part_sol = Matrix(part_sol)
                 # Loop over the rows and columns and integrate each
                 # element of the vector with the particular solution
                 for rI in range(m):
@@ -856,9 +809,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         # If possible, try to evaluate the integral at hand
                         part_sol[rI,cI] = part_sol[rI,cI].doit()
                 # Lastly, multiply with J again to construct the particular solution
-                #part_sol = simplify(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
-                part_sol = expand(cancel((P*J*P.inv())*(part_sol + part_sol_der)))
-                #part_sol = cancel(expand((P*J*P.inv())*(part_sol + part_sol_der)))
+                part_sol = simplify(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
             else:# homogeneous ODE
                 part_sol = zeros(len(c_mat),1) # We just add zeroes
             # Construct the solution by adding the particular
@@ -891,22 +842,27 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Convert to standard matrices
             c_mat = Matrix(c_mat)
             c_alg = Matrix(c_alg)
-            #print("# Checking each of the algebraic equations")
+            # First check, just look at the number of algebraic equations before we break down
+            #print("The number of algebraic equations is:\t%d<br>\n\n"%(len(c_alg)))
             # Loop through the algebraic equations and solve them
             for eq_temp_index in range(len(c_alg)):
-                #print("## Iter %d out of %d"%(eq_temp_index+1,len(c_alg)))
                 # Extract the current equation
                 eq_temp = cancel(expand(c_alg[eq_temp_index]))
-                c_alg[eq_temp_index] = eq_temp
+                #print("Eq %d out of %d:$$%s=0$$"%(eq_temp_index+1,len(c_alg),latex(eq_temp)))                
                 # Solve the corresponding equations given by the current
                 # algebraic equations
                 LHS_list,RHS_list = solve_algebraic_equation(eq_temp,const_remaining)
+                # Display the solution
+                #print("The solutions:\n\\begin{align*}")
+                #for temp_index in range(len(LHS_list)):
+                    #print("%s=%s\\\\"%(latex(LHS_list[temp_index]),latex(RHS_list[temp_index])))
+                #print("\\end{align*}")
                 # Substitute the solution of the algebraic equation
                 # into the solution of the ODE for the tangential coefficients
                 for sub_index in range(len(c_mat)):
-                    for index in range(len(LHS_list)):                        
+                    for index in range(len(LHS_list)):
+                        #print("Equation:\n$$%s$$\nLHS:\n$$%s$$\nRHS:\n$$%s$$"%(latex(c_mat[sub_index]),latex(LHS_list[index]),latex(RHS_list[index]))
                         c_mat[sub_index] = c_mat[sub_index].subs(LHS_list[index],RHS_list[index])
-                        #c_mat[sub_index] = cancel(expand(c_mat[sub_index]))
                         c_mat[sub_index] = expand(cancel(c_mat[sub_index]))
                 # Substitute the solution of the current algebraic equation into the remaining
                 # algebraic equations
@@ -920,7 +876,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                     for sub_index in range(next_index,len(c_alg)):
                         for index in range(len(LHS_list)):
                             c_alg[sub_index] = c_alg[sub_index].subs(LHS_list[index],RHS_list[index])
-                            c_alg[sub_index] = expand(cancel(c_alg[sub_index]))
+                            c_alg[sub_index] = expand(cancel(c_alg[sub_index]))                            
             #----------------------------------------------
             # PART 4: Substitute the solution into the tangents
             # and each sub-generator
@@ -939,15 +895,15 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         constants_in_final_solution.append(constant_list[constant_index])
             # Only save the unique ones
             constants_in_final_solution = list(set(constants_in_final_solution))
-            # Loop over the constants and assemble the final tangents
-            for index in range(len(c)):
-                eta_list_final[tangent_indicators[index]] += expand(cancel(c_mat[index]))*monomial_list[index]
-            # Also, loop over the non-pivot arbitrary functions and add these to the same tangents
-            for index in range(len(non_pivot_functions)):
-                eta_list_final[non_pivot_tangent_indicators[index]] += non_pivot_functions[index](x[0])*non_pivot_monomials[index]
-            # Finally, just loop through the tangents and simplify
-            for index in range(len(eta_list)):
-                eta_list_final[index] = expand(cancel(eta_list_final[index]))
+            # Loop over tangents and substitute the calculated coefficients into these expressions
+            for tangent_number in range(len(eta_list)):
+                # Expand the tangents
+                eta_list[tangent_number] = eta_list[tangent_number].expand()
+                # Loop through all coefficients and replace them in all tangents
+                for index in range(len(c)):            
+                    # Substitute coefficient in the tangents
+                    eta_list[tangent_number] = eta_list[tangent_number].subs(c[index](x[0]),c_mat[index])                    
+                    eta_list[tangent_number] = expand(cancel(eta_list[tangent_number]))            
             # In the non-homogeneous case, we need to save a non-homogeneous tangent as well
             if non_homogeneous:
                 # Allocate memory
@@ -965,19 +921,19 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 # corresponding to the current arbitrary coefficient
                 for tangent_number in range(len(eta_list)):
                     # Save the sub-generator
-                    temp_eta.append(eta_list_final[tangent_number].coeff(constant))
+                    temp_eta.append(eta_list[tangent_number].coeff(constant))
                     # The non-homogeneous case: Save all terms involving the coefficients so that we can substract it from the original tangent later in order to calculate the extra terms.
                     if non_homogeneous:
                         # Add the term in order to calculate the non-homogeneous part
-                        non_homo_tangent[tangent_number] += eta_list_final[tangent_number].coeff(constant)*constant
+                        non_homo_tangent[tangent_number] += eta_list[tangent_number].coeff(constant)*constant
                 # Append the extracted generator to the list of tangents
                 tangent_component.append(temp_eta)
             # Calculate the non-homogeneous tangent if such a tangent exist
             if non_homogeneous:
                 # Loop over the non-homogenous terms and calculate the part of the tangent that is not associated with an arbitrary integration constant
                 for non_homo_index in range(len(non_homo_tangent)):
-                    non_homo_tangent[non_homo_index] = expand(eta_list_final[non_homo_index]) - expand(non_homo_tangent[non_homo_index])
-                    non_homo_tangent[non_homo_index] = cancel(non_homo_tangent[non_homo_index])
+                    non_homo_tangent[non_homo_index] = expand(eta_list[non_homo_index]) - expand(non_homo_tangent[non_homo_index])
+                    non_homo_tangent[non_homo_index] = simplify(cancel(non_homo_tangent[non_homo_index]))
                 # Append the non-homogeneous tangent to the list of tangents
                 tangent_component.append(non_homo_tangent)
             #----------------------------------------------
@@ -1038,123 +994,54 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 arb_func_counter += 1
             # Define a counter for the generators
             generator_counter = 0
-            # Initialise the output string
-            X = ""
-            #-----------------------------------------------------
-            # Some stuff for pretty printing
-            #-----------------------------------------------------
-            # Define a term counter and a line counter
-            term_counter = 1
-            # Define two tolerances for the number of terms we tolerate
-            # and the number of lines we tolerate
-            term_tolerance = 6
-            # Loop over the component tangent vectors
+            # Define one generator per constant in the final solution
+            #for constant in constants_in_final_solution:
             for tangent in tangent_component:
-                # Allocate memory for a list with all terms
-                term_list = []
-                # Reset the term_counter
-                term_counter = 1
-                # Increment the generator_counter
+                # Increment the counter for the generator
                 generator_counter += 1
-                # Loop over each coordinate in the tangent vector   
+                # Set the plus indicator to false
+                plus_indicator = False
+                # It is our first generator we begin alignc
+                if generator_counter == 1:
+                    # Define our generator
+                    X = "\\begin{align*}\nX_{" + str(generator_counter) + "}&="
+                else:
+                    # Define our generator
+                    X += ",\\\\\nX_{" + str(generator_counter) + "}&="                    
                 for tangent_part in range(len(tangent)):
                     # Add all non-trivial tangents to the generator    
                     if tangent[tangent_part]!=0:
                         # Replace the name of all arbitrary functions
                         for arb_func_ind in range(len(non_pivot_functions)):
-                            tangent[tangent_part] = tangent[tangent_part].subs(non_pivot_functions[arb_func_ind],arbitrary_functions[arb_func_ind])                        
-                        # Save a temporary string for the tangents
-                        temp_str = latex(tangent[tangent_part])
-                        # Chop the tangent into its pieces
-                        chopped_generator = temp_str.split("+")
-                        # Calculate the arguments
-                        tangent_arguments = tangent[tangent_part].args
-                        # Case one, we only have a translation generator
-                        # which is identified in the following manner
-                        if len(tangent_arguments) == 0 and len(chopped_generator) == 1:
-                            # We stay with the chopped_generator which is just the
-                            # translation operator for instance
-                            chopped_generator = chopped_generator
+                            tangent[tangent_part] = tangent[tangent_part].subs(non_pivot_functions[arb_func_ind],arbitrary_functions[arb_func_ind])
+                        # Write the tangent to the string
+                        if plus_indicator:
+                            X += "+\\left( " + str(latex(tangent[tangent_part])) + " \\right)" + "\\partial " + str(latex(variables[tangent_part])) + ""
                         else:
-                            chopped_generator = [latex(argument) for argument in tangent_arguments]  
-                        # Loop over the pieces of the tangent and add them
-                        for term_index in range(len(chopped_generator)):
-                            # If we only have one generator we add it directly
-                            if len(chopped_generator)==1:
-                                term_list.append("\\left(" + chopped_generator[term_index] + " \\right)" + "\\partial " + str(latex(variables[tangent_part])))
-                            # For the first element we add a "\left(" before
-                            elif term_index == 0:
-                                term_list.append("\\left(" + chopped_generator[term_index])
-                            # The last element we add a "\right)" after
-                            elif term_index == (len(chopped_generator)-1):
-                                term_list.append(chopped_generator[term_index] + " \\right)" + "\\partial " + str(latex(variables[tangent_part])))
-                                # Also add an extra element so that we can recognise these elements
-                                term_list.append(1)                                
-                            # The other terms in the middle of the tangent is just about adding
-                            # the darn element
-                            else:
-                                term_list.append(chopped_generator[term_index])
-                # Back to the tangent! Let's loop over it and add the generator at hand
-                # Start the alignment
-                X += "\\begin{align*}\nX_{" + str(generator_counter) + "}=&"
-                # Loop over the terms
-                for term_index in range(len(term_list)):
-                    # If the element is one we move on
-                    if term_list[term_index] == 1:
-                        continue
-                    else: # Else, we mean business!
-                        # Add the term at hand
-                        X += term_list[term_index]
-                        # Increment the term_counter
-                        term_counter += 1
-                        # Check the cases when we should add a plus sign and so on
-                        if term_index == (len(term_list)-1): # The very last element
-                            # The very last generator ends with a point
-                            if generator_counter == len(tangent_component):
-                                X += ".\\\\\n"
-                            else: # The other generators ends with a comma
-                                X += ",\\\\\n"                            
-                        else: # The other elements
-                                # If we have too many terms we break
-                                # and add a new line
-                                if term_counter > term_tolerance:
-                                    # Re-set the term_counter
-                                    term_counter = 1
-                                    # We are at the end of a tangent coordinate
-                                    if term_list[term_index + 1]==1:
-                                        # We are at the end of the tangent and
-                                        # therefore we should close the generator
-                                        if (term_index + 1) == (len(term_list)-1):
-                                            X+= "\\\\\n"
-                                        else: # Otherwise, we continue adding terms on the next row
-                                            X+= "\\\\\n&+"
-                                    else: # We break in the middle of a tangent
-                                        X+= "\\right.\\\\\n&+\\left."
-                                else: # We just add a plus sign
-                                    X += "+"
-                # We finish up with our tangent
-                X += "\\end{align*}\n\n"
-                # Correct the ending of the alignment
-                X = X.replace("+\\end{align*}","\n\\end{align*}")
-                # Correct the minus signs as well
-                X = X.replace("+-","-")                
-        # Add a string in case we have a non-homogeneous function
-        if non_homogeneous:
-            # Add all the arbitrary functions to the output
-            temp_str =  "\n\n\\noindent Some of the generators might contain the following arbitrary functions:\n"
-            temp_str += "\\begin{align*}\n"
-            for arbitrary_function in arbitrary_functions:
-                temp_str += "&" + latex(arbitrary_function) + "\\\\\n"
-            temp_str += "\\end{align*}\n\n"
-            # Add these to the generator as well
-            X = X + temp_str
-        # Add a string in case we have non-generators             
-        if not_a_symmetry:
-            # Add a string saying that something went wrong and that the list is not complete
-            temp_str = "\\noindent\\huge\\textbf{WARNING}:\\\\\n"
-            temp_str += "\\noindent\\Large\\textit{Some of the calculated generators did not satisfy the linearised symmetry conditions. Thus, the presented list here is not complete and consists exclusively of the calculated generators that satisfy the linearised symmetry conditions.}\\normalsize\\\\[2cm]\n"
-            # Add these to the generator as well
-            X = X + temp_str             
+                            X += "\\left( " + str(latex(tangent[tangent_part])) + " \\right)" + "\\partial " + str(latex(variables[tangent_part])) + ""
+                            plus_indicator = True
+                # Add a line break
+                X += ",\\\\\n"
+            # Add the final touch to the generator
+            X += "\\end{align*}"
+            X = X.replace(",\\\\\n\\end{align*}", ".\\\\\n\\end{align*}")
+            # Add a string in case we have a non-homogeneous function
+            if non_homogeneous:
+                # Add all the arbitrary functions to the output
+                temp_str =  "\n\nSome of the generators might contain the following arbitrary functions:\n"
+                temp_str += "\\begin{align*}\n"
+                for arbitrary_function in arbitrary_functions:
+                    temp_str += "&" + latex(arbitrary_function) + "\\\\\n"
+                temp_str += "\\end{align*}\n\n"
+                # Add these to the generator as well
+                X = X + temp_str
+            # Add a string in case we have non-generators             
+            if not_a_symmetry:
+                # Add a string saying that something went wrong and that the list is not complete
+                temp_str = "\\huge\\textbf{WARNING}:\\\\\n"
+                temp_str = "Some of the found generators did not satisfy the linearised symmetry conditions. The presented list here is not complete and consists of the generators that were find by the script.\\[2cm]\n"
+                # Add these to the generator as well
+                X = temp_str + X            
     else:
         # Return that the matrix is not quadratic
         X = "\\Huge\\textsf{Not a quadratic matrix}\\normalsize\\\\[2cm]" 

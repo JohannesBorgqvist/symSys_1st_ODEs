@@ -160,7 +160,7 @@ def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_ter
     date_str = date_str.replace("_","\\_")
     f.write("\\section*{Run %s}\n" % (date_str))
     # Print the degree of the polynomial in the ansätze
-    f.write("Degree in tangential ansätze:\t%d.\\\\\n"%(int(tangent_degree)))
+    f.write("\\textbf{Degree in tangential ansätze:}\t%d\\\\\n"%(int(tangent_degree)))
     # Print the system of ODEs
     f.write("The system of ODEs is given by:\n\n")
     f.write("\\begin{align*}\n")
