@@ -42,7 +42,8 @@ import math
 
 def calculate_symmetries_ODEs(file_name, tangent_degree):
     # Take the start time
-    t_total_start = time.time()
+    #t_total_start = time.time()
+    t_total_start = time.perf_counter()
     # Print to the user that we are creating ansätze
     print("\t\t\tStep 1 out of 6: Loading the model...")
     # Read the model given by the file name
@@ -88,7 +89,8 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         # Print that this is done
         print("\t\t\t\tDone!")
         # Take the end time
-        t_total_end = time.time()
+        #t_total_end = time.time()
+        t_total_end = time.perf_counter()
         # Calculate the total time that was needed
         t_total = t_total_end - t_total_start
         # Calculate the time in hours minutes and so on
@@ -97,7 +99,7 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         minutes = math.floor(((minutes)/(60)))
         seconds = math.floor(t_total-(hours*3600) - (minutes*60))
         # Add the execution time to the generator
-        X += "The execution time of the script was:\n$$" + str(hours) + "\\;\\mathrm{hours}\;" + str(minutes) + "\\;\\mathrm{minutes}\;" + str(seconds) + " \\;\\mathrm{seconds}.$$"
+        X += "\\noindent The execution time of the script was:\n$$" + str(hours) + "\\;\\mathrm{hours}\;" + str(minutes) + "\\;\\mathrm{minutes}\;" + str(seconds) + " \\;\\mathrm{seconds}.$$"
         # Print to the user that we are solving the determining equations
         print("\t\t\tStep 6 out of 6: Saving the data...")
         # Print that we are saving the data

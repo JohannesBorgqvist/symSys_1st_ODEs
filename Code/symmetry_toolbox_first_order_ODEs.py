@@ -987,10 +987,12 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Check the linearised symmetry conditions
             # Allocate a vector of the linearised symmetry conditions
             lin_sym_index = []
+            lin_sym_failure = []
             # Loop over all sub tangents and check the linearised symmetry conditions
             for tangent_index in range(len(tangent_component)):
                 # Calculate the symmetry conditions for the tangent at hand
                 temp_list = lin_sym_cond(x, tangent_component[tangent_index], omega_list)
+                temp_list = [cancel(expr) for expr in temp_list]
                 # Loop over all tangents in the generator at hand
                 for sub_index in range(len(tangent_component[tangent_index])):
                     # Extract a tangent
@@ -1013,8 +1015,17 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 # we remove it from the list of symmetries
                 if not_a_symmetry:
                     lin_sym_index.append(tangent_index)
+                    lin_sym_failure.append(temp_list)
             # Sort the list in reverse
             lin_sym_index.sort(reverse=True)
+            if len(lin_sym_index)>0:
+                print("\n\t\tFor some reason this part of the code was invoked which has to do with finding non-symmetries! Here are the indices and the generators")
+                for index in range(len(lin_sym_index)):
+                    print("\t\t\tFailed generator %d out of %d"%(index,len(lin_sym_index)))
+                    print(lin_sym_index[index])
+                    print(tangent_component[index])
+                    print(lin_sym_failure[index])
+                not_a_symmetry = True
             # Remove all tangents that were miscalculated
             for index in lin_sym_index:
                 del tangent_component[index]
