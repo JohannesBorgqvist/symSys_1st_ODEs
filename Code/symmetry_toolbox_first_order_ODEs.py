@@ -222,7 +222,9 @@ def lin_sym_cond(x,eta_list,omega_list):
         tidy_eq, denom = fraction(tidy_eq)
         # Cancel terms, expand by performing multiplications and organise in
         # terms of monomials
-        lin_sym_list[help_counter] = powsimp(expand(cancel(tidy_eq)))
+        #lin_sym_list[help_counter] = powsimp(expand(cancel(tidy_eq)))
+        #lin_sym_list[help_counter] = powsimp(expand(tidy_eq))
+        lin_sym_list[help_counter] = expand(tidy_eq)
         # Increment the help_counter
         help_counter += 1
     return lin_sym_list # Return the equations
@@ -480,7 +482,8 @@ def solve_algebraic_equation(expr,coeff_list):
                 temp_sum += eq_temp*func_temp
         # Define the zeroth equation
         #eq_zero = simplify(cancel(expand(expr - temp_sum)))
-        eq_zero = expand(cancel(expr - temp_sum))
+        #eq_zero = expand(cancel(expr - temp_sum))
+        eq_zero = expand(expr - temp_sum)
         #eq_zero = cancel(expand(expr - temp_sum))
         # Find the coefficient which we solve for
         LHS_temp = 0
@@ -829,8 +832,10 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 # Begin by defining the integrand of the particular
                 # solution as the exponential matrix times the source
                 # term of the ODE
-                part_sol = expand(cancel((P*J.inv()*P.inv())*source_ODE))
-                part_sol_der = expand(cancel((P*J.inv()*P.inv())*source_ODE_der))
+                #part_sol = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE)))
+                part_sol = expand((P*J.inv()*P.inv())*source_ODE)
+                #part_sol_der = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE_der)))
+                part_sol_der = expand((P*J.inv()*P.inv())*source_ODE_der)
                 # Introduce a dummy variable with which we conduct the integration
                 s = Symbol('s')
                 # Convert the derivative part to a list
@@ -857,22 +862,25 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         part_sol[rI,cI] = part_sol[rI,cI].doit()
                 # Lastly, multiply with J again to construct the particular solution
                 #part_sol = simplify(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
-                part_sol = expand(cancel((P*J*P.inv())*(part_sol + part_sol_der)))
+                #part_sol = expand(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
                 #part_sol = cancel(expand((P*J*P.inv())*(part_sol + part_sol_der)))
+                part_sol = expand((P*J*P.inv())*(part_sol + part_sol_der))
             else:# homogeneous ODE
                 part_sol = zeros(len(c_mat),1) # We just add zeroes
             # Construct the solution by adding the particular
             # and homogeneous solution
-            c_mat = homo_sol + part_sol
+            c_mat = expand(homo_sol + part_sol)
+            #c_mat = expand(cancel(expand(c_mat)))
+            
             #----------------------------------------------
             # PART 3: Solve Algebraic equations
             #----------------------------------------------
             # Derive the algebraic equations where each
             # element equals zero
             if non_homogeneous:# The non-homogeneous case
-                c_alg = B_algebraic*c_mat + source_alg
+                c_alg = expand(B_algebraic*c_mat + source_alg)
             else:
-                c_alg = B_algebraic*c_mat
+                c_alg = expand(B_algebraic*c_mat)
             # Define a list of remaining constants
             const_remaining = []
             # Define the rows in c_alg
@@ -891,12 +899,11 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Convert to standard matrices
             c_mat = Matrix(c_mat)
             c_alg = Matrix(c_alg)
-            #print("# Checking each of the algebraic equations")
             # Loop through the algebraic equations and solve them
             for eq_temp_index in range(len(c_alg)):
-                #print("## Iter %d out of %d"%(eq_temp_index+1,len(c_alg)))
                 # Extract the current equation
-                eq_temp = cancel(expand(c_alg[eq_temp_index]))
+                #eq_temp =expand(cancel(expand(c_alg[eq_temp_index])))
+                eq_temp = expand(c_alg[eq_temp_index])
                 c_alg[eq_temp_index] = eq_temp
                 # Solve the corresponding equations given by the current
                 # algebraic equations
@@ -907,7 +914,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                     for index in range(len(LHS_list)):                        
                         c_mat[sub_index] = c_mat[sub_index].subs(LHS_list[index],RHS_list[index])
                         #c_mat[sub_index] = cancel(expand(c_mat[sub_index]))
-                        c_mat[sub_index] = expand(cancel(c_mat[sub_index]))
+                        #c_mat[sub_index] = expand(cancel(expand(c_mat[sub_index])))
+                        c_mat[sub_index] = expand(c_mat[sub_index])
+                
                 # Substitute the solution of the current algebraic equation into the remaining
                 # algebraic equations
                 # Find the next index
@@ -920,7 +929,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                     for sub_index in range(next_index,len(c_alg)):
                         for index in range(len(LHS_list)):
                             c_alg[sub_index] = c_alg[sub_index].subs(LHS_list[index],RHS_list[index])
-                            c_alg[sub_index] = expand(cancel(c_alg[sub_index]))
+                            #c_alg[sub_index] = expand(cancel(expand(c_alg[sub_index])))
+                            c_alg[sub_index] = expand(c_alg[sub_index])
             #----------------------------------------------
             # PART 4: Substitute the solution into the tangents
             # and each sub-generator
@@ -941,13 +951,13 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             constants_in_final_solution = list(set(constants_in_final_solution))
             # Loop over the constants and assemble the final tangents
             for index in range(len(c)):
-                eta_list_final[tangent_indicators[index]] += expand(cancel(c_mat[index]))*monomial_list[index]
+                eta_list_final[tangent_indicators[index]] += expand(c_mat[index]*monomial_list[index])
             # Also, loop over the non-pivot arbitrary functions and add these to the same tangents
             for index in range(len(non_pivot_functions)):
                 eta_list_final[non_pivot_tangent_indicators[index]] += non_pivot_functions[index](x[0])*non_pivot_monomials[index]
             # Finally, just loop through the tangents and simplify
             for index in range(len(eta_list)):
-                eta_list_final[index] = expand(cancel(eta_list_final[index]))
+                eta_list_final[index] = expand(eta_list_final[index])
             # In the non-homogeneous case, we need to save a non-homogeneous tangent as well
             if non_homogeneous:
                 # Allocate memory
@@ -976,8 +986,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             if non_homogeneous:
                 # Loop over the non-homogenous terms and calculate the part of the tangent that is not associated with an arbitrary integration constant
                 for non_homo_index in range(len(non_homo_tangent)):
-                    non_homo_tangent[non_homo_index] = expand(eta_list_final[non_homo_index]) - expand(non_homo_tangent[non_homo_index])
-                    non_homo_tangent[non_homo_index] = cancel(non_homo_tangent[non_homo_index])
+                    non_homo_tangent[non_homo_index] = expand(eta_list_final[non_homo_index] - non_homo_tangent[non_homo_index])
                 # Append the non-homogeneous tangent to the list of tangents
                 tangent_component.append(non_homo_tangent)
             #----------------------------------------------
@@ -992,7 +1001,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             for tangent_index in range(len(tangent_component)):
                 # Calculate the symmetry conditions for the tangent at hand
                 temp_list = lin_sym_cond(x, tangent_component[tangent_index], omega_list)
-                temp_list = [cancel(expr) for expr in temp_list]
+                temp_list = [expand(expr) for expr in temp_list]
                 # Loop over all tangents in the generator at hand
                 for sub_index in range(len(tangent_component[tangent_index])):
                     # Extract a tangent

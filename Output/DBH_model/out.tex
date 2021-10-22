@@ -1,4 +1,4 @@
-\section*{Run 09\_12PM\_21\_October-2021}
+\section*{Run 01\_23PM\_22\_October-2021}
 Degree in tangential ansätze:	1.\\
 The system of ODEs is given by:
 
@@ -11,8 +11,7 @@ The system of ODEs is given by:
 \noindent The calculated generators are:
 
 \begin{align*}
-X_{1}=&\left(t+2 \right)\partial t+\left(1- 2 t w_{1} \right)\partial w_{1}+\left(1- 2 t w_{2} \right)\partial w_{2}\\
-&+\left(1- 2 t w_{3} \right)\partial w_{3}
+X_{1}=&\left(-1+t \right)\partial t+\left(w_{1} \right)\partial w_{1}+\left(w_{2} \right)\partial w_{2}+\left(w_{3} \right)\partial w_{3},\\
 \end{align*}
 
 \begin{align*}
@@ -20,12 +19,13 @@ X_{2}=&\left(1 \right)\partial t,\\
 \end{align*}
 
 \begin{align*}
-X_{3}=&\left(-1+t \right)\partial t+\left(w_{1} \right)\partial w_{1}+\left(w_{2} \right)\partial w_{2}+\left(w_{3} \right)\partial w_{3}.\\
+X_{3}=&\left(t+2 \right)\partial t+\left(1- 2 t w_{1} \right)\partial w_{1}+\left(1- 2 t w_{2} \right)\partial w_{2}\\
+&+\left(1- 2 t w_{3} \right)\partial w_{3}
 \end{align*}
 
 \noindent The execution time of the script was:
-$$0\;\mathrm{hours}\;0\;\mathrm{minutes}\;25 \;\mathrm{seconds}.$$
-\section*{Run 09\_16PM\_21\_October-2021}
+$$0\;\mathrm{hours}\;0\;\mathrm{minutes}\;43 \;\mathrm{seconds}.$$
+\section*{Run 01\_28PM\_22\_October-2021}
 Degree in tangential ansätze:	2.\\
 The system of ODEs is given by:
 
@@ -38,12 +38,56 @@ The system of ODEs is given by:
 \noindent The calculated generators are:
 
 \begin{align*}
-X_{1}=&\left(1 \right)\partial t,\\
+X_{1}=&\left(-1 \right)\partial t,\\
 \end{align*}
 
 \begin{align*}
-X_{2}=&\left(t+2 \right)\partial t+\left(1- 2 t w_{1} \right)\partial w_{1}+\left(1- 2 t w_{2} \right)\partial w_{2}\\
+X_{2}=&\left(-1+t \right)\partial t+\left(w_{1} \right)\partial w_{1}+\left(w_{2} \right)\partial w_{2}+\left(w_{3} \right)\partial w_{3},\\
+\end{align*}
+
+\begin{align*}
+X_{3}=&\left(t+2 \right)\partial t+\left(1- 2 t w_{1} \right)\partial w_{1}+\left(1- 2 t w_{2} \right)\partial w_{2}\\
 &+\left(1- 2 t w_{3} \right)\partial w_{3}
+\end{align*}
+
+\begin{align*}
+X_{4}=&\left(1 \right)\partial t,\\
+\end{align*}
+
+\begin{align*}
+X_{5}=&\left(t \right)\partial t+\left(w_{2} w_{3} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{2} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{3} \operatorname{f_{1}}{\left(t \right)} \right)\partial w_{1}+\left(w_{1} w_{3} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{2} \operatorname{f_{1}}{\left(t \right)}\right.\\
+&+\left.- w_{2} w_{3} \operatorname{f_{1}}{\left(t \right)} \right)\partial w_{2}+\left(w_{1} w_{2} \operatorname{f_{1}}{\left(t \right)}- w_{1} w_{3} \operatorname{f_{1}}{\left(t \right)}- w_{2} w_{3} \operatorname{f_{1}}{\left(t \right)} \right)\partial w_{3}
+\end{align*}
+
+
+
+\noindent Some of the generators might contain the following arbitrary functions:
+\begin{align*}
+&\operatorname{f_{1}}\\
+\end{align*}
+
+\noindent\huge\textbf{WARNING}:\\
+\noindent\Large\textit{Some of the calculated generators did not satisfy the linearised symmetry conditions. Thus, the presented list here is not complete and consists exclusively of the calculated generators that satisfy the linearised symmetry conditions.}\normalsize\\[2cm]
+\noindent The execution time of the script was:
+$$0\;\mathrm{hours}\;5\;\mathrm{minutes}\;5 \;\mathrm{seconds}.$$
+\section*{Run 01\_28PM\_22\_October-2021}
+Degree in tangential ansätze:	2.\\
+The system of ODEs is given by:
+
+\begin{align*}
+\dv{w_{1}}{t}&=- w_{1} w_{2} - w_{1} w_{3} + w_{2} w_{3},\\
+\dv{w_{2}}{t}&=- w_{1} w_{2} + w_{1} w_{3} - w_{2} w_{3},\\
+\dv{w_{3}}{t}&=w_{1} w_{2} - w_{1} w_{3} - w_{2} w_{3}.\\
+\end{align*}
+
+\noindent The calculated generators are:
+
+\begin{align*}
+X_{1}=&\left(-1 \right)\partial t,\\
+\end{align*}
+
+\begin{align*}
+X_{2}=&\left(1 \right)\partial t,\\
 \end{align*}
 
 \begin{align*}
@@ -61,4 +105,28 @@ X_{3}=&\left(t \right)\partial t+\left(w_{2} w_{3} \operatorname{f_{1}}{\left(t 
 \noindent\huge\textbf{WARNING}:\\
 \noindent\Large\textit{Some of the calculated generators did not satisfy the linearised symmetry conditions. Thus, the presented list here is not complete and consists exclusively of the calculated generators that satisfy the linearised symmetry conditions.}\normalsize\\[2cm]
 \noindent The execution time of the script was:
-$$0\;\mathrm{hours}\;3\;\mathrm{minutes}\;32 \;\mathrm{seconds}.$$
+$$0\;\mathrm{hours}\;5\;\mathrm{minutes}\;3 \;\mathrm{seconds}.$$
+\section*{Run 01\_31PM\_22\_October-2021}
+Degree in tangential ansätze:	1.\\
+The system of ODEs is given by:
+
+\begin{align*}
+\dv{w_{1}}{t}&=- w_{1} w_{2} - w_{1} w_{3} + w_{2} w_{3},\\
+\dv{w_{2}}{t}&=- w_{1} w_{2} + w_{1} w_{3} - w_{2} w_{3},\\
+\dv{w_{3}}{t}&=w_{1} w_{2} - w_{1} w_{3} - w_{2} w_{3}.\\
+\end{align*}
+
+\noindent The calculated generators are:
+
+\begin{align*}
+X_{1}=&\left(-1+t \right)\partial t+\left(w_{1} \right)\partial w_{1}+\left(w_{2} \right)\partial w_{2}+\left(w_{3} \right)\partial w_{3},\\
+\end{align*}
+
+\begin{align*}
+X_{2}=&\left(1 \right)\partial t.\\
+\end{align*}
+
+\noindent\huge\textbf{WARNING}:\\
+\noindent\Large\textit{Some of the calculated generators did not satisfy the linearised symmetry conditions. Thus, the presented list here is not complete and consists exclusively of the calculated generators that satisfy the linearised symmetry conditions.}\normalsize\\[2cm]
+\noindent The execution time of the script was:
+$$0\;\mathrm{hours}\;0\;\mathrm{minutes}\;44 \;\mathrm{seconds}.$$
