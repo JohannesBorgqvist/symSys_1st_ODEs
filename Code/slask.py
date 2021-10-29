@@ -889,3 +889,72 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                                     X += "\\right.\\\\\n&\\left."
                 # End the alignment                    
                 X += "\n\\end{align*}\n"
+
+
+
+
+
+
+
+
+
+
+
+
+                        if len(basis_functions[base_index].atoms(Symbol))==0:
+            constant_basis_list.append(base_index)
+        else:
+            # Make sure we do not have a negative sign in front
+            # of the basis element for all polynomial bases
+            num, denom = fraction(basis_functions[base_index])
+            # We have a polynomial type thingy (monomial or exponential).
+            # Then, we can calculate the sign through factor_list. If we have
+            # A rational thingy (e.g. 1/x[0]) then factor_list does not work.
+            # This is why we calculate the denominator before hand. 
+            if denom == 1:
+                # Calculate the factors in this polynomial which will give
+                # us the sign
+                factors = factor_list(basis_functions[base_index])
+                #sign_factor = simplify(basis_functions[base_index]/Abs(basis_functions[base_index]))
+                #basis_functions[base_index] = sign_factor * basis_functions[base_index]
+                # Change the sign of the negative basis elements
+                #if factors[0]<0:
+                    #basis_functions[base_index] = -1 * basis_functions[base_index]
+                    #if factors[0]==-1:
+                    #    basis_functions[base_index] = -1 * basis_functions[base_index]
+                    #else:
+                basis_functions[base_index] = ((1)/(factors[0])) * basis_functions[base_index]
+            else:
+    # Make sure that the constant correspond to the basis element 1
+    basis_functions[constant_basis_list[0]] = basis_functions[constant_basis_list[0]]/basis_functions[constant_basis_list[0]]
+    # Remove the zeroth element
+    del constant_basis_list[0]
+    # Sort in reverse order
+    constant_basis_list.sort(reverse=True)
+    # Remove all these constants from the basis list
+    for index in constant_basis_list:
+        del basis_functions[index]        
+    # Lastly, save only unique values
+    unique_values = []
+    # Save the first element
+    unique_values.append(basis_functions[0])
+    # Loop over all basis functions and save the unique ones
+    for base in basis_functions:
+        # Skip the first one
+        if base != basis_functions[0]:
+            # Allocate a temp sum
+            temp_sum = 0
+            # Loop over all unique values and see if we append
+            # the value or not
+            for unique_value in unique_values:
+                # We only care about non-constant functions
+                if len(unique_value.atoms(Symbol))!=0:
+                    if len(simplify(base/unique_value).atoms(Symbol))==0:
+                        # Add term to the temp sum
+                        temp_sum += 1
+            # If no terms were added then we have a unique value
+            if temp_sum == 0:
+                divide_by_this = factor_list(base)[0]
+                unique_values.append(simplify(base/divide_by_this))
+    # Finally, we assign the unique values to the basis functions
+    basis_functions = unique_values

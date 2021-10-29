@@ -222,9 +222,9 @@ def lin_sym_cond(x,eta_list,omega_list):
         tidy_eq, denom = fraction(tidy_eq)
         # Cancel terms, expand by performing multiplications and organise in
         # terms of monomials
-        #lin_sym_list[help_counter] = powsimp(expand(cancel(tidy_eq)))
+        lin_sym_list[help_counter] = powsimp(expand(cancel(tidy_eq)))
         #lin_sym_list[help_counter] = powsimp(expand(tidy_eq))
-        lin_sym_list[help_counter] = expand(tidy_eq)
+        #lin_sym_list[help_counter] = expand(tidy_eq)
         # Increment the help_counter
         help_counter += 1
     return lin_sym_list # Return the equations
@@ -319,69 +319,86 @@ def determining_equations(x,lin_sym_list,degree_monomial):
 # FUNCTION 6: "identify_basis_functions"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# The function takes two inputs which are the following:
-# 1. An arbitrary expression being a linear combination of functions stored in the variable "expr",
-# 2. A list of all arbitrary integration coefficients stored in "coeff_list",
+# The function takes three inputs which are the following:
+# 1. An algebraic equation being a linear combination of functions stored in the variable "alg_eq",
+# 2. A list of all arbitrary integration coefficients stored in "const_list",
+# 3. The list of variables called x (it is really only the independent variable x[0] that is of interest here).
 # The script returns two outputs:
 # 1. A list of arbitrary functions stored in "arbitrary_functions",
 # 2. A list of all basis functions stored in "basis_functions".
-def identify_basis_functions(expr,coeff_list):
+def identify_basis_functions(alg_eq,const_list,x):
     # Define the arbitrary functions
-    arbitrary_functions = list(expr.atoms(AppliedUndef))
+    arbitrary_functions = list(alg_eq.atoms(AppliedUndef))
     # Allocate memory an empty list for the basis functions
     basis_functions = []
-    # Define a list with all arguments
-    arguments = list(expr.args)
+    # ---------------------------------------------------
+    # Step 1: Extract all arguments in the algebraic equation
+    # ---------------------------------------------------    
+    # Define a list with all arguments (or terms) in the
+    # algebraic equation
+    arguments = list(alg_eq.args)
     # Loop through all arguments
     for argument in arguments:
         # Loop through all coefficients 
-        for coefficient in coeff_list:
+        for constant in const_list:
             # Save all basis functions provided that
-            # the exist as a linear combination of the
-            # coefficients in coeff_list
-            if argument.coeff(coefficient) != 0: 
-                basis_functions.append(argument.coeff(coefficient))
-    # Lastly, we only want unique basis functions so we take the
-    # set of these functions
-    basis_functions = list(set(basis_functions).difference(set(arbitrary_functions)))
-    # We also need to remove doublettes. Start with the constants
-    constant_basis_list = []
+            # they exist as a linear combination of the
+            # arbitrary integration constants in coeff_list
+            if argument.coeff(constant) != 0: 
+                basis_functions.append(argument.coeff(constant))
+    # ---------------------------------------------------
+    # Step 2: Loop through the basis functions and normalise
+    # them in order to remove constants or factors. We
+    # only want to keep the important part of the basis
+    # function so that if we obtain "-3t**2" we only keep
+    # "t**2" as a basis function. There are three keys to
+    # this: (1) fraction to get the nominator and denominator,
+    # (2) factor_list to get all factors in the product,
+    # (3) Derivative to just extract the functions of t.
+    # ---------------------------------------------------    
+    # Loop over the basis functions
     for base_index in range(len(basis_functions)):
-        if len(basis_functions[base_index].atoms(Symbol))==0:
-            constant_basis_list.append(base_index)
-    # Make sure that the constant correspond to the basis element 1
-    basis_functions[constant_basis_list[0]] = basis_functions[constant_basis_list[0]]/basis_functions[constant_basis_list[0]]
-    # Remove the zeroth element
-    del constant_basis_list[0]
-    # Sort in reverse order
-    constant_basis_list.sort(reverse=True)
-    # Remove all these constants from the basis list
-    for index in constant_basis_list:
-        del basis_functions[index]        
-    # Lastly, save only unique values
-    unique_values = []
-    # Save the first element
-    unique_values.append(basis_functions[0])
-    # Loop over all basis functions and save the unique ones
-    for base in basis_functions:
-        # Skip the first one
-        if base != basis_functions[0]:
-            # Allocate a temp sum
-            temp_sum = 0
-            # Loop over all unique values and see if we append
-            # the value or not
-            for unique_value in unique_values:
-                # We only care about non-constant functions
-                if len(unique_value.atoms(Symbol))!=0:
-                    if len(simplify(base/unique_value).atoms(Symbol))==0:
-                        # Add term to the temp sum
-                        temp_sum += 1
-            # If no terms were added then we have a unique value
-            if temp_sum == 0:
-                divide_by_this = factor_list(base)[0]
-                unique_values.append(simplify(base/divide_by_this))
-    # Finally, we assign the unique values to the basis functions
-    basis_functions = unique_values        
+        # Extract the numerator and the denominator from the basis function
+        nom, denom = fraction(basis_functions[base_index])
+        # The basis function will be rational in the sense that it contains
+        # a contribution from the numerator num and denominator denom above.
+        # These will be constructed as a product of all the factors in num
+        # and denom respectively. 
+        # Initiate these functions with 1
+        f_nom = 1 # Nominator
+        f_denom = 1 # Denominator
+        # Start with the nominator: If we have
+        # any factors in this list which are functions
+        # of the independent variable x[0], we multiply
+        # the current function with this factor
+        if len(factor_list(nom)[1])!=0:
+            # Loop over the factors and multiply
+            for factor_tuple in factor_list(nom)[1]:
+                # If it is a function of the independent variable x[0]
+                # then we extract this function and multiply the contribution
+                # to the basis function from the nominator
+                if Derivative(factor_tuple[0],x[0]).doit()!=0: # We have a function!
+                    f_nom = f_nom*((factor_tuple[0])**(factor_tuple[1]))
+        # Do the same steps with the denominator: If we have
+        # any factors in this list which are functions
+        # of the independent variable x[0], we multiply
+        # the current function with this factor
+        if len(factor_list(denom)[1])!=0:
+            # Loop over the factors and multiply
+            for factor_tuple in factor_list(denom)[1]:
+                # If it is a function of the independent variable x[0]
+                # then we extract this function and multiply the contribution
+                # to the basis function from the nominator
+                if Derivative(factor_tuple[0],x[0]).doit()!=0: # We have a function!
+                    f_denom = f_denom*((factor_tuple[0])**(factor_tuple[1]))
+        # Lastly, update the basis function at hand
+        basis_functions[base_index] = ((f_nom)/(f_denom))
+    # ---------------------------------------------------
+    # Step 3: Only return the unique basis functions
+    # ---------------------------------------------------    
+    # Lastly, we only want unique basis functions so we take the
+    # set of these functions    
+    basis_functions = list(set(basis_functions).difference(set(arbitrary_functions)))
     # Return the output
     return arbitrary_functions, basis_functions
 #----------------------------------------------------------------------------------
@@ -389,25 +406,23 @@ def identify_basis_functions(expr,coeff_list):
 # FUNCTION 7: "solve_algebraic_equation"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# The function takes two inputs which are the following:
+# The function takes three inputs which are the following:
 # 1. An arbitrary expression being a linear combination of functions stored in the variable "expr",
 # 2. A list of all arbitrary integration coefficients stored in "coeff_list",
+# 3. A list of the variables x (where the independent variable x[0] is used to identify the basis functions). 
 # The script returns two outputs:
 # 1. A list of the LHSs being the solutions stored in "LHS",
 # 2. A list of the RHSs being the expressions stored in "RHS".
 # The function uses the previous function (i.e. Function 6) called "identify_basis_functions" in
 # order to find the basis functions and the arbitrary functions in the expression at hand.
-def solve_algebraic_equation(expr,coeff_list):
-    #print("Expression before:$%s$"%(latex(expr)))
+def solve_algebraic_equation(expr,coeff_list,x):
     # See if expression is a fraction or not
-    num, denom = fraction(expr)
+    nom, denom = fraction(expr)
     # In case it is we only keep the numerator
     if denom != 1:
-        expr = num
-    #print("Num=$%s$, Denom=$%s$"%(latex(expr),latex(denom)))
-    #print("Expression after:$%s$"%(latex(expr)))    
+        expr = nom
     # Find all basis functions and arbitrary functions in the expression at hand
-    arbitrary_functions,basis_functions = identify_basis_functions(expr,coeff_list)
+    arbitrary_functions,basis_functions = identify_basis_functions(expr,coeff_list,x)
     # Allocate memory for the LHS being the solutions to the equations
     # stemming from the expression at hand and the RHS being the
     # corresponding expressions for the solutions
@@ -458,7 +473,6 @@ def solve_algebraic_equation(expr,coeff_list):
         # equation stemming from the constant if such
         # a constant exist among the basis functions
         temp_sum = 0
-        #print("Basis functions:\n$$%s$$"%(latex(basis_functions)))
         # Loop through the basis functions and save
         # the solution and its corresponding expression
         for func_temp in basis_functions:
@@ -834,8 +848,10 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 # term of the ODE
                 #part_sol = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE)))
                 part_sol = expand((P*J.inv()*P.inv())*source_ODE)
+                #part_sol = (P*J.inv()*P.inv())*source_ODE
                 #part_sol_der = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE_der)))
                 part_sol_der = expand((P*J.inv()*P.inv())*source_ODE_der)
+                #part_sol_der = (P*J.inv()*P.inv())*source_ODE_der
                 # Introduce a dummy variable with which we conduct the integration
                 s = Symbol('s')
                 # Convert the derivative part to a list
@@ -864,14 +880,13 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 #part_sol = simplify(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
                 #part_sol = expand(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
                 #part_sol = cancel(expand((P*J*P.inv())*(part_sol + part_sol_der)))
-                part_sol = expand((P*J*P.inv())*(part_sol + part_sol_der))
+                #part_sol = expand((P*J*P.inv())*(part_sol + part_sol_der))
+                part_sol = simplify((P*J*P.inv())*(part_sol + part_sol_der))
             else:# homogeneous ODE
                 part_sol = zeros(len(c_mat),1) # We just add zeroes
             # Construct the solution by adding the particular
             # and homogeneous solution
             c_mat = expand(homo_sol + part_sol)
-            #c_mat = expand(cancel(expand(c_mat)))
-            
             #----------------------------------------------
             # PART 3: Solve Algebraic equations
             #----------------------------------------------
@@ -907,7 +922,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 c_alg[eq_temp_index] = eq_temp
                 # Solve the corresponding equations given by the current
                 # algebraic equations
-                LHS_list,RHS_list = solve_algebraic_equation(eq_temp,const_remaining)
+                LHS_list,RHS_list  = solve_algebraic_equation(eq_temp,const_remaining,x)
                 # Substitute the solution of the algebraic equation
                 # into the solution of the ODE for the tangential coefficients
                 for sub_index in range(len(c_mat)):
@@ -916,7 +931,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         #c_mat[sub_index] = cancel(expand(c_mat[sub_index]))
                         #c_mat[sub_index] = expand(cancel(expand(c_mat[sub_index])))
                         c_mat[sub_index] = expand(c_mat[sub_index])
-                
                 # Substitute the solution of the current algebraic equation into the remaining
                 # algebraic equations
                 # Find the next index
@@ -986,7 +1000,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             if non_homogeneous:
                 # Loop over the non-homogenous terms and calculate the part of the tangent that is not associated with an arbitrary integration constant
                 for non_homo_index in range(len(non_homo_tangent)):
-                    non_homo_tangent[non_homo_index] = expand(eta_list_final[non_homo_index] - non_homo_tangent[non_homo_index])
+                    non_homo_tangent[non_homo_index] = expand(simplify(eta_list_final[non_homo_index] - non_homo_tangent[non_homo_index]))
                 # Append the non-homogeneous tangent to the list of tangents
                 tangent_component.append(non_homo_tangent)
             #----------------------------------------------
@@ -997,6 +1011,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Allocate a vector of the linearised symmetry conditions
             lin_sym_index = []
             lin_sym_failure = []
+            #print("# The component tangents and their linearised symmetry conditions")
+            
             # Loop over all sub tangents and check the linearised symmetry conditions
             for tangent_index in range(len(tangent_component)):
                 # Calculate the symmetry conditions for the tangent at hand
@@ -1028,12 +1044,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Sort the list in reverse
             lin_sym_index.sort(reverse=True)
             if len(lin_sym_index)>0:
-                print("\n\t\tFor some reason this part of the code was invoked which has to do with finding non-symmetries! Here are the indices and the generators")
-                for index in range(len(lin_sym_index)):
-                    print("\t\t\tFailed generator %d out of %d"%(index,len(lin_sym_index)))
-                    print(lin_sym_index[index])
-                    print(tangent_component[index])
-                    print(lin_sym_failure[index])
+                # We had failed symmetries which shall be printed, hey?
                 not_a_symmetry = True
             # Remove all tangents that were miscalculated
             for index in lin_sym_index:
@@ -1081,8 +1092,10 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                     # Add all non-trivial tangents to the generator    
                     if tangent[tangent_part]!=0:
                         # Replace the name of all arbitrary functions
-                        for arb_func_ind in range(len(non_pivot_functions)):
-                            tangent[tangent_part] = tangent[tangent_part].subs(non_pivot_functions[arb_func_ind],arbitrary_functions[arb_func_ind])                        
+                        for arb_func_ind in range(len(non_pivot_functions)):                        
+                            tangent[tangent_part] = tangent[tangent_part].subs(non_pivot_functions[arb_func_ind](variables[0]),arbitrary_functions[arb_func_ind](variables[0]))
+                            tangent[tangent_part] = tangent[tangent_part].subs(non_pivot_functions[arb_func_ind](s),arbitrary_functions[arb_func_ind](s))                            
+
                         # Save a temporary string for the tangents
                         temp_str = latex(tangent[tangent_part])
                         # Chop the tangent into its pieces
@@ -1174,7 +1187,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             temp_str = "\\noindent\\huge\\textbf{WARNING}:\\\\\n"
             temp_str += "\\noindent\\Large\\textit{Some of the calculated generators did not satisfy the linearised symmetry conditions. Thus, the presented list here is not complete and consists exclusively of the calculated generators that satisfy the linearised symmetry conditions.}\\normalsize\\\\[2cm]\n"
             # Add these to the generator as well
-            X = X + temp_str             
+            X = X + temp_str
     else:
         # Return that the matrix is not quadratic
         X = "\\Huge\\textsf{Not a quadratic matrix}\\normalsize\\\\[2cm]" 
