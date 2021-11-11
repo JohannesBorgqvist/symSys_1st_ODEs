@@ -200,6 +200,8 @@ def lin_sym_cond(x,eta_list,omega_list):
         sym_temp -= total_derivative(x,omega_list,eta_list[i+num_of_variables])
         # Term 3: omega * D_t eta_0
         sym_temp += omega_list[i]*total_derivative(x,omega_list,eta_list[num_of_variables-1])
+        # Expand the term so that we do not have any factors
+        sym_temp = expand(sym_temp)
         # Add this to the list
         lin_sym_list.append(sym_temp)
         # Reset the symmetry condition
@@ -222,8 +224,8 @@ def lin_sym_cond(x,eta_list,omega_list):
         tidy_eq, denom = fraction(tidy_eq)
         # Cancel terms, expand by performing multiplications and organise in
         # terms of monomials
-        lin_sym_list[help_counter] = powsimp(expand(cancel(tidy_eq)))
-        #lin_sym_list[help_counter] = powsimp(expand(tidy_eq))
+        #lin_sym_list[help_counter] = powsimp(expand(cancel(tidy_eq)))
+        lin_sym_list[help_counter] = powsimp(expand(tidy_eq))
         #lin_sym_list[help_counter] = expand(tidy_eq)
         # Increment the help_counter
         help_counter += 1
@@ -403,7 +405,100 @@ def identify_basis_functions(alg_eq,const_list,x):
     return arbitrary_functions, basis_functions
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 7: "solve_algebraic_equation"
+# FUNCTION 7: "post_processing_algebraic_solutions"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# The function takes four inputs which are the following:
+# 1. A list of the left hand sides of the solved equations called LHS_list,
+# 2. A list of the right hand sides of the solved equations called RHS_list,
+# 3. A list of arbitrary integration constants called "const_list"
+# The script returns the following outputs:
+# 1. A list of the updated left hand sides called LHS_list_updated,
+# 2. A list of the updated right hand sides called RHS_list_updated.
+#----------------------------------------------------------------------------------
+def post_processing_algebraic_solutions(LHS_list,RHS_list,const_list):
+    # Allocate memory for the output
+    LHS_list_updated = []
+    RHS_list_updated = []
+    # Allocate memory for the elements being removed which are
+    # equations of the type "0=0"
+    indices_remove_solutions = [i for i in range(len(LHS_list)) if (LHS_list[i]==0 and RHS_list[i]==0)]
+    # Sort these indices in reverse
+    indices_remove_solutions.sort(reverse=True)
+    # Remove all useless equations with no information in them
+    for index in indices_remove_solutions:
+        del LHS_list[index]
+        del RHS_list[index]
+    # Allocate memory for the constant that exist in our equations
+    const_mat = []
+    # Loop through all constants and save the ones that exist in our
+    # equations
+    for constant in const_list:
+        # Loop through the solutions as well
+        for i in range(len(LHS_list)):
+            # Save the ones that exist in our equations
+            if LHS_list[i].coeff(constant)!=0 or RHS_list[i].coeff(constant)!=0:
+                const_mat.append(constant)
+    # Lastly, we are merely intested in the unique constants
+    const_mat = list(set(const_mat))
+    # Create a solution list which we will later convert to a matrix
+    sol_list = [LHS_list[i]-RHS_list[i] for i in range(len(LHS_list))]
+    # Now we will make a matrix out of the solutions in sol_list
+    A = []
+    # Loop through the solutions
+    for rI in range(len(sol_list)):
+        # Loop through the coefficients
+        for cI in range(len(const_mat)):
+            # Save the coefficients of each integration constant
+            A.append(sol_list[rI].coeff(const_mat[cI]))
+    # Now, we convert this into a matrix
+    A = Matrix(len(sol_list),len(const_mat),A)
+    # Convert the list of constants into a matrix too
+    const_mat = Matrix(len(const_mat),1,const_mat)
+    # Next, we row-reduce the matrix A to remove linearly dependent solutions
+    A, pivot_columns = A.rref()
+    # Remove all zero rows of A:
+    # Caclulate the non-zero rows
+    rows_nonzero = [i for i in range(len(sol_list)) if any(A[i, j] != 0 for j in range(len(const_mat)))]
+    # Update A
+    A = A[rows_nonzero, :]
+    # Now, we define an updated RHS list
+    RHS_list_updated = A*const_mat
+    # The left hand side consists of the pivot constants
+    LHS_list_updated = [const_mat[pC] for pC in list(pivot_columns)]
+    # Update the RHS
+    RHS_list_updated = list(-(RHS_list_updated-Matrix(len(LHS_list_updated),1,LHS_list_updated)))
+    # Return the output
+    return LHS_list_updated, RHS_list_updated
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# FUNCTION 7: "extract_equation_linear_independence"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# The function takes three inputs which are the following:
+# 1. An expression expr which defines an equation of the type "expr=0" with
+# linearly independent basis functions,
+# 2. A basis function basis_function which is not zero and is a function of
+# the independent variable x[0],
+# 3. A list of the variables x where the independent variable x[0] is of
+# interest.
+# The script returns the following output:
+# 1. The extracted equation called extracted_equation.
+#----------------------------------------------------------------------------------
+def extract_equation_linear_independence(expr,basis_function,x):
+    # Allicate memory for the equation we return at the end
+    extracted_equation = 0
+    # Loop through the terms in the expression at hand
+    # and add the constants in front of each basis function
+    for term in expr.args:
+        # Add the term if it contains our basis function at hand
+        if Derivative(simplify(term/basis_function),x[0]).doit()==0:
+            extracted_equation += simplify(term/basis_function)
+    # Return the extracted equation
+    return extracted_equation
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# FUNCTION 8: "solve_algebraic_equation"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes three inputs which are the following:
@@ -416,11 +511,16 @@ def identify_basis_functions(alg_eq,const_list,x):
 # The function uses the previous function (i.e. Function 6) called "identify_basis_functions" in
 # order to find the basis functions and the arbitrary functions in the expression at hand.
 def solve_algebraic_equation(expr,coeff_list,x):
-    # See if expression is a fraction or not
-    nom, denom = fraction(expr)
+    eq_str = ""
+    # First we simplify everything to get it on a common denominator
+    #expr = simplify(expr)
+    # Then we extractthe nominator
+    expr, denom = fraction(expr)
     # In case it is we only keep the numerator
     if denom != 1:
         expr = nom
+    # Then we expand our lovely expression as far as we can
+    expr = expand(expr)
     # Find all basis functions and arbitrary functions in the expression at hand
     arbitrary_functions,basis_functions = identify_basis_functions(expr,coeff_list,x)
     # Allocate memory for the LHS being the solutions to the equations
@@ -428,13 +528,18 @@ def solve_algebraic_equation(expr,coeff_list,x):
     # corresponding expressions for the solutions
     LHS = []
     RHS = []
+    # Equations that we do not need in most cases
+    LHS_before = []
+    RHS_before = []
+    # Allocate an empty equation string as well
+    eq_Str = ""
     # If we have an arbitrary function then we solve the equation
     # for that, otherwise we solve for each coefficient
     if len(arbitrary_functions)!=0: # Arbitrary functions
         # We have two cases here, one difficult and one ease choice. The latter
-        # on is when we just have an arbitrary function which we directly
+        # one is when we just have an arbitrary function which we directly
         # solve the expression for. The harder case is when we have an unknown
-        # integral which we must solve for. In the latter case it is necessary
+        # integral which we must solve for. In this case, it is necessary
         # to do some work in order just to extract this arbitrary function in
         # sympy. We use an if-statement where the first statement is the difficult
         # case and the second statement is the easy case
@@ -467,7 +572,8 @@ def solve_algebraic_equation(expr,coeff_list,x):
             sol_temp = solve(expr,arbitrary_functions[0])
             # Save the solution and the equation
             LHS.append(arbitrary_functions[0])
-            RHS.append(sol_temp[0])        
+            #RHS.append(sol_temp[0])
+            RHS.append(expand(sol_temp[0]))        
     else: # No arbitrary functions
         # Create a temporary sum in order to define the
         # equation stemming from the constant if such
@@ -475,25 +581,33 @@ def solve_algebraic_equation(expr,coeff_list,x):
         temp_sum = 0
         # Loop through the basis functions and save
         # the solution and its corresponding expression
-        for func_temp in basis_functions:
+        for basis_function in basis_functions:
             # We ignore the constant basis function
-            if func_temp != 1:
+            if basis_function != 1:
+                #==============================================================================
                 # We define the equation which is the constant
                 # in front of the basis function
-                eq_temp = expr.coeff(func_temp)
+                #eq_temp = expr.coeff(func_temp)
+                eq_temp = extract_equation_linear_independence(expr,basis_function,x)
+                # Printing statements
+                eq_str += "Equation for the basis function $" + latex(basis_function) + "$:\n"
+                eq_str += "$$" + latex(eq_temp) + "$$\n"
                 # Find the coefficient which we solve for
                 LHS_temp = 0
                 for koeff in coeff_list:
                     if eq_temp.coeff(koeff)!=0:
                         LHS_temp = koeff
                         break
+                eq_str += "This equation was solved for: $" + latex(LHS_temp) + "$ which gave the solution:\n"
                 # Solve the equation for this coefficient
-                RHS_temp = solve(eq_temp,LHS_temp)[0]
+                #RHS_temp = solve(eq_temp,LHS_temp)[0]
+                RHS_temp = expand(solve(eq_temp,LHS_temp)[0])
+                eq_str += "$$" + latex(RHS_temp) + "$$\n" 
                 # Append both the LHS and the RHS
                 LHS.append(LHS_temp)
                 RHS.append(RHS_temp)                
                 # Increase the temporary sum
-                temp_sum += eq_temp*func_temp
+                temp_sum += eq_temp*basis_function
         # Define the zeroth equation
         #eq_zero = simplify(cancel(expand(expr - temp_sum)))
         #eq_zero = expand(cancel(expr - temp_sum))
@@ -506,15 +620,22 @@ def solve_algebraic_equation(expr,coeff_list,x):
                 LHS_temp = koeff
                 break
         # Solve the equation for this coefficient
-        RHS_temp = solve(eq_zero,LHS_temp)[0]
+        #RHS_temp = solve(eq_zero,LHS_temp)[0]
+        RHS_temp = expand(solve(eq_zero,LHS_temp)[0])        
         # Append both the LHS and the RHS
         LHS.append(LHS_temp)
-        RHS.append(RHS_temp)                        
+        RHS.append(RHS_temp)
+        # Return the solutions before for clarity's sake
+        LHS_before = LHS
+        RHS_before = RHS
+        # Lastly, we do a quick post-processing of the solutions we have
+        # which makes sure that we have linearly independent solutions only
+        LHS,RHS = post_processing_algebraic_solutions(LHS,RHS,coeff_list)                        
     # Lastly, return the LHS and the RHS
-    return LHS, RHS
+    return LHS, RHS, basis_functions, LHS_before, RHS_before, eq_str
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 8: "integration_by_parts"
+# FUNCTION 9: "integration_by_parts"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # This function conduct the integration by parts necessary to simplify all
@@ -531,7 +652,7 @@ def solve_algebraic_equation(expr,coeff_list,x):
 # 3. The "integrand_list" being a list of all integrands,
 # 4. The "variable" which in this setting is just x[0] being the independent variable.
 # The output is:
-# 1. The "integral_list" being a list of all integrals.
+# 1. The "integrallist" being a list of all integrals.
 def integration_by_parts(function_list,constant_list,integrand_list,variable,dummy):
     # At the end, we want to return the correct integrals
     integral_list = []
@@ -578,7 +699,94 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable,dum
     return integral_list
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 9: "solve_determining_equations"
+# FUNCTION 10: "ilt"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# This function computes the inverse last place transform of a rational function.
+# I do not want to take any credit for this function what so ever since it was
+# written by Oscar Benjamin (see https://github.com/sympy/sympy/issues/21585).
+# The inputs are:
+# 1. e being the integrand that in the Laplace transform (i.e. the function of interest),
+# 2. s being the dummy variable in the Laplace transform,
+# 3. t being the integration variable,
+# The output is:
+# 1. _ilt(e) being the inverse Laplace transform of the function at hand.
+def ilt(e, s, t):
+    """Fast inverse Laplace transform of rational function including RootSum"""
+    a, b, n = symbols('a, b, n', cls=Wild, exclude=[s])
+
+    def _ilt(e):
+        if not e.has(s):
+            return e
+        elif e.is_Add:
+            return _ilt_add(e)
+        elif e.is_Mul:
+            return _ilt_mul(e)
+        elif e.is_Pow:
+            return _ilt_pow(e)
+        elif isinstance(e, RootSum):
+            return _ilt_rootsum(e)
+        else:
+            raise NotImplementedError
+
+    def _ilt_add(e):
+        return e.func(*map(_ilt, e.args))
+
+    def _ilt_mul(e):
+        coeff, expr = e.as_independent(s)
+        if expr.is_Mul:
+            raise NotImplementedError
+        return coeff * _ilt(expr)
+
+    def _ilt_pow(e):
+        match = e.match((a*s + b)**n)
+        if match is not None:
+            nm, am, bm = match[n], match[a], match[b]
+            if nm.is_Integer and nm < 0:
+                if nm == 1:
+                    return exp(-(bm/am)*t) / am
+                else:
+                    return t**(-nm-1)*exp(-(bm/am)*t)/(am**-nm*gamma(-nm))
+        raise NotImplementedError
+
+    def _ilt_rootsum(e):
+        expr = e.fun.expr
+        [variable] = e.fun.variables
+        return RootSum(e.poly, Lambda(variable, together(_ilt(expr))))
+
+    return _ilt(e)
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# FUNCTION 11: "expMt"
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# This function calculates the matrix exponential of a given matrix M.
+# I do not want to take any credit for this function what so ever since it was
+# written by Oscar Benjamin (see https://github.com/sympy/sympy/issues/21585).
+# The inputs are:
+# 1. M being the matrix of interest,
+# 2. x[0] being the integration variable.
+# The output is:
+# 1. expMt which is the exponential of the matrix.
+def expMt(M, x):
+    """Compute matrix exponential exp(M*t)"""
+
+    assert M.is_square
+    N = M.shape[0]
+    s = Dummy('s')
+
+    Ms = (s*eye(N) - M)
+    Mres = Ms.adjugate() / Ms.det()
+
+    def expMij(i, j):
+        """Partial fraction expansion then inverse Laplace transform"""
+        Mresij_pfe = apart(Mres[i, j], s, full=True)
+        return ilt(Mresij_pfe, s, x[0])
+
+    return Matrix(N, N, expMij)
+
+#----------------------------------------------------------------------------------
+# FUNCTION 12: "solve_determining_equations"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes four inputs which are the following:
@@ -589,6 +797,7 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable,dum
 # The script return the following output:
 # 1. The calculated generator of the symmetry which is stored in a string called "X".
 def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
+    alg_str = ""
     #------------------------------------------------------------------------------
     # STEP 0 of 6: ENABLE FOR EASY CALCULATIONS OF TANGENTS WITHOUT SUBSTITUTIONS
     #-----------------------------------------------------------------------------
@@ -793,6 +1002,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
         del c[non_pivot_columns[index]]
         del monomial_list[non_pivot_columns[index]]
         del tangent_indicators[non_pivot_columns[index]]
+    # Make a copy of the original coefficients
+    c_original = c
     #------------------------------------------------------------------------------
     # STEP 5 of 6: SOLVE THE ODE SYSTEM PROVIDED THAT IT IS QUADRATIC AND
     # SUBSTITUTE THE ALGEBRAIC EQUATIONS
@@ -807,6 +1018,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
         if A != eye(num_rows):#If not we stop the script
             X = "\\Huge\\textsf{$A$ is quadratic but not an identity matrix!}\normalsize\\[2cm]" 
         else: # A is an identity matrix
+            print("\t\t\t\tBeginning to solve ODE system...")
             X = ""
             #----------------------------------------------
             # PART 1: Allocate arbitrary coefficients
@@ -832,28 +1044,58 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             #----------------------------------------------
             # PART 2: Solve ODE system
             #----------------------------------------------
+            t_start = time.perf_counter()
+            print("\t\t\t\t\tCalculating Jordan form...")
             # Calculate Jordan form
             P,J = B.jordan_form()
+            t_end = time.perf_counter()
+            print("\t\t\t\t\t\tIt took %d seconds..."%(round(t_end-t_start)))
+            # Calculate the inverse matrix of P once and once only
+            t_start = time.perf_counter()
+            print("\t\t\t\t\tCalculating inv(P)...")
+            P_inv = P.inv()
+            t_end = time.perf_counter()
+            print("\t\t\t\t\t\tIt took %d seconds..."%(round(t_end-t_start)))            
             # Re-define our matrix J by scaling it by the
             # independent variable x[0]
+            t_start = time.perf_counter()
+            print("\t\t\t\t\tCalculating exp(Jt)...")            
             J = x[0]*J
+            # We also calculate the inverse matrix
+            #J_inv = -x[0]*J            
             # Re-define J by taking the matrix exponential
             J = J.exp()
+            t_end = time.perf_counter()
+            print("\t\t\t\t\t\tIt took %d seconds..."%(round(t_end-t_start)))            
+            #J = expMt(J,x)
+            # Re-define J_inv by taking the matrix exponential
+            #J_inv = J_inv.exp()
+            t_start = time.perf_counter()
+            print("\t\t\t\t\tCalculating inv(exp(Jt))...")
+            J_inv = J.inv()
+            t_end = time.perf_counter()
+            print("\t\t\t\t\t\tIt took %d seconds..."%(round(t_end-t_start)))            
+            # Calculate matrix factor 1
+            mat_factor_1 = (P*J*P_inv)
+            # Calculate matrix factor 2
+            mat_factor_2 = (P*J_inv*P_inv)            
             # Calculate the homogeneous solution
-            homo_sol = (P*J*P.inv())*c_mat
+            homo_sol = mat_factor_1*c_mat
             # Add the particular solution if such a solution exists
             if non_homogeneous: # non-homogeneous ODE
                 # Begin by defining the integrand of the particular
                 # solution as the exponential matrix times the source
                 # term of the ODE
                 #part_sol = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE)))
-                part_sol = expand((P*J.inv()*P.inv())*source_ODE)
+                #part_sol = expand((P*J.inv()*P.inv())*source_ODE)
+                part_sol = expand(mat_factor_2*source_ODE)                
                 #part_sol = (P*J.inv()*P.inv())*source_ODE
                 #part_sol_der = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE_der)))
-                part_sol_der = expand((P*J.inv()*P.inv())*source_ODE_der)
                 #part_sol_der = (P*J.inv()*P.inv())*source_ODE_der
+                part_sol_der = expand(mat_factor_2*source_ODE_der)
                 # Introduce a dummy variable with which we conduct the integration
-                s = Symbol('s')
+                #s = Symbol('s')
+                s = Dummy('s')                
                 # Convert the derivative part to a list
                 part_sol_der = list(part_sol_der)
                 # Simplify the derivative terms by using integration by parts
@@ -881,12 +1123,14 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 #part_sol = expand(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
                 #part_sol = cancel(expand((P*J*P.inv())*(part_sol + part_sol_der)))
                 #part_sol = expand((P*J*P.inv())*(part_sol + part_sol_der))
-                part_sol = simplify((P*J*P.inv())*(part_sol + part_sol_der))
+                #part_sol = simplify((P*J*P.inv())*(part_sol + part_sol_der))
+                part_sol = simplify(mat_factor_1*(part_sol + part_sol_der))
             else:# homogeneous ODE
                 part_sol = zeros(len(c_mat),1) # We just add zeroes
             # Construct the solution by adding the particular
             # and homogeneous solution
             c_mat = expand(homo_sol + part_sol)
+            print("\t\t\t\tODE system is solved...")
             #----------------------------------------------
             # PART 3: Solve Algebraic equations
             #----------------------------------------------
@@ -920,9 +1164,22 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 #eq_temp =expand(cancel(expand(c_alg[eq_temp_index])))
                 eq_temp = expand(c_alg[eq_temp_index])
                 c_alg[eq_temp_index] = eq_temp
+                alg_str += "\nEquation:$" + latex(eq_temp) + "=0$\n"
                 # Solve the corresponding equations given by the current
                 # algebraic equations
-                LHS_list,RHS_list  = solve_algebraic_equation(eq_temp,const_remaining,x)
+                LHS_list,RHS_list,basis_functions,LHS_before,RHS_before,eq_str  = solve_algebraic_equation(eq_temp,const_remaining,x)
+                alg_str += "Basis functions:\n$$" + latex(basis_functions) + "$$\n"
+                #alg_str += eq_str
+                #alg_str += "Solutions \\textit{before} processing:\n"
+                #alg_str += "\\begin{align*}\n"
+                #for temp_index in range(len(LHS_before)):
+                #    alg_str += latex(LHS_before[temp_index]) + "&=" + latex(RHS_before[temp_index]) + "\\\\\n"
+                #alg_str += "\\end{align*}\n"
+                alg_str += "Solutions \\textit{after} processing:\n"
+                alg_str += "\\begin{align*}\n"
+                for temp_index in range(len(LHS_list)):
+                    alg_str += latex(LHS_list[temp_index]) + "&=" + latex(RHS_list[temp_index]) + "\\\\\n"
+                alg_str += "\\end{align*}\n"
                 # Substitute the solution of the algebraic equation
                 # into the solution of the ODE for the tangential coefficients
                 for sub_index in range(len(c_mat)):
@@ -931,6 +1188,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         #c_mat[sub_index] = cancel(expand(c_mat[sub_index]))
                         #c_mat[sub_index] = expand(cancel(expand(c_mat[sub_index])))
                         c_mat[sub_index] = expand(c_mat[sub_index])
+                # Current ODE solutions
+                alg_str += "Current ODE solutions:\n"
+                alg_str += "\\begin{equation*}\n\\mathbf{c}=" + latex(c_mat) + "\n\\end{equation*}\n" 
                 # Substitute the solution of the current algebraic equation into the remaining
                 # algebraic equations
                 # Find the next index
@@ -945,6 +1205,11 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                             c_alg[sub_index] = c_alg[sub_index].subs(LHS_list[index],RHS_list[index])
                             #c_alg[sub_index] = expand(cancel(expand(c_alg[sub_index])))
                             c_alg[sub_index] = expand(c_alg[sub_index])
+                # Current algebraic solutions
+                alg_str += "Current algebraic equations solutions:\n"
+                alg_str += "\\begin{equation*}\n" + latex(c_alg) + "=" + latex(zeros(len(c_alg),1)) + "\n\\end{equation*}\n"                             
+            alg_str += "\\huge\\textit{Solutions after all is done:}\\normalsize\n"
+            alg_str += "\\begin{equation*}\n\\mathbf{c}=" + latex(c_mat) + "\n\\end{equation*}\n" 
             #----------------------------------------------
             # PART 4: Substitute the solution into the tangents
             # and each sub-generator
@@ -970,8 +1235,12 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             for index in range(len(non_pivot_functions)):
                 eta_list_final[non_pivot_tangent_indicators[index]] += non_pivot_functions[index](x[0])*non_pivot_monomials[index]
             # Finally, just loop through the tangents and simplify
+            alg_str += "Tangents before any manipulation:\n\\begin{align*}\n"
             for index in range(len(eta_list)):
                 eta_list_final[index] = expand(eta_list_final[index])
+                alg_str += "\\eta_{" + str(index) + "}&=" + latex(eta_list_final[index]) + "\\\\\n"
+            alg_str += "\\end{align*}\n"
+            
             # In the non-homogeneous case, we need to save a non-homogeneous tangent as well
             if non_homogeneous:
                 # Allocate memory
@@ -1003,6 +1272,10 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                     non_homo_tangent[non_homo_index] = expand(simplify(eta_list_final[non_homo_index] - non_homo_tangent[non_homo_index]))
                 # Append the non-homogeneous tangent to the list of tangents
                 tangent_component.append(non_homo_tangent)
+
+            alg_str += "Generators before some are removed:\n"
+            for tangent_index in range(len(tangent_component)):
+                alg_str += "$$" + latex(tangent_component[tangent_index]) + "$$\n"
             #----------------------------------------------
             # PART 5: Check if the generators satisfy
             # the linearised symmetry conditions
@@ -1012,12 +1285,14 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             lin_sym_index = []
             lin_sym_failure = []
             #print("# The component tangents and their linearised symmetry conditions")
-            
+            alg_str += "The tangents and their symmetry conditions:\n"
             # Loop over all sub tangents and check the linearised symmetry conditions
             for tangent_index in range(len(tangent_component)):
+                alg_str += "$$\\eta_{" + str(tangent_index) + "}=" + latex(tangent_component[tangent_index]) + "$$\n"
                 # Calculate the symmetry conditions for the tangent at hand
                 temp_list = lin_sym_cond(x, tangent_component[tangent_index], omega_list)
                 temp_list = [expand(expr) for expr in temp_list]
+                alg_str += "$$" + latex(temp_list) + "$$\n"
                 # Loop over all tangents in the generator at hand
                 for sub_index in range(len(tangent_component[tangent_index])):
                     # Extract a tangent
@@ -1049,6 +1324,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Remove all tangents that were miscalculated
             for index in lin_sym_index:
                 del tangent_component[index]
+            alg_str += "Generators after some were removed:\n"
+            for tangent_index in range(len(tangent_component)):
+                alg_str += "$$" + latex(tangent_component[tangent_index]) + "$$\n"                
             #----------------------------------------------
             # PART 6: Printing the generator
             #----------------------------------------------
@@ -1100,16 +1378,19 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         temp_str = latex(tangent[tangent_part])
                         # Chop the tangent into its pieces
                         chopped_generator = temp_str.split("+")
+                        alg_str += "Generator:$$" + temp_str + "$$\n"
                         # Calculate the arguments
                         tangent_arguments = tangent[tangent_part].args
                         # Case one, we only have a translation generator
                         # which is identified in the following manner
-                        if len(tangent_arguments) == 0 and len(chopped_generator) == 1:
+                        #if len(tangent_arguments) == 0 and len(chopped_generator) == 1:
+                        if len(chopped_generator) == 1:
                             # We stay with the chopped_generator which is just the
                             # translation operator for instance
                             chopped_generator = chopped_generator
                         else:
-                            chopped_generator = [latex(argument) for argument in tangent_arguments]  
+                            chopped_generator = [latex(argument) for argument in tangent_arguments]
+                        alg_str += "Component parts of generator:$$" + str(chopped_generator) + "$$\n"                             
                         # Loop over the pieces of the tangent and add them
                         for term_index in range(len(chopped_generator)):
                             # If we only have one generator we add it directly
@@ -1191,6 +1472,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
     else:
         # Return that the matrix is not quadratic
         X = "\\Huge\\textsf{Not a quadratic matrix}\\normalsize\\\\[2cm]" 
+    #X += alg_str
     # Return the solved coefficients and the generator
-    return X 
+    return X, c_mat, c_alg, c_original, eta_list_final 
 

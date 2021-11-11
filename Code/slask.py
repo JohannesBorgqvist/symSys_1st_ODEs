@@ -958,3 +958,27 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list):
                 unique_values.append(simplify(base/divide_by_this))
     # Finally, we assign the unique values to the basis functions
     basis_functions = unique_values
+
+
+
+
+
+
+
+    #==============================================================================
+    # We define the equation which is the constant
+    # in front of the basis function
+    eq_temp = expr.coeff(func_temp)
+    # Ok, let's remove all terms which has a dependence
+    # on the independent variable.
+    # Allocate memory for the dependent terms which we will remove
+    dependent_terms = 0
+    # Loop over the terms in our equation at hand
+    for term in eq_temp.args:
+        # Save the one with a dependence on the
+        # independent variable
+        if Derivative(term,x[0]).doit()!=0: # We have a function!
+            dependent_terms += term
+            # Now, we update our equation and remove the dependent terms
+            eq_temp = eq_temp - dependent_terms
+            #==============================================================================

@@ -79,7 +79,7 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         print("\t\t\t\tDone!")
         # Print to the user that we are solving the determining equations
         print("\t\t\tStep 5 out of 6: Solving the determining equations...")
-        X = symmetry_toolbox_first_order_ODEs.solve_determining_equations(
+        X, c_mat, c_alg, c_original, eta_list_final = symmetry_toolbox_first_order_ODEs.solve_determining_equations(
             x, eta_list, c, det_eq, variables,omega_list, M)
         # Change the name of the variables
         for i in range(len(variables)):
@@ -104,7 +104,7 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         print("\t\t\tStep 6 out of 6: Saving the data...")
         # Print that we are saving the data
         read_and_write_data.write_output_generator(
-            tangent_degree, file_name, variables, x, X, reaction_terms, omega_list)
+            tangent_degree, file_name, variables, x, X, reaction_terms, omega_list,c_mat, c_alg, c_original, eta_list, eta_list_final)
         print("\t\t\t\tDone!\n")
         print("\t\t\tThe calculations are finished.")
     else:  # We could not read the model: => Print an error message!

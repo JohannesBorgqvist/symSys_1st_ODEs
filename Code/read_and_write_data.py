@@ -37,6 +37,8 @@ from sympy import latex
 import os
 # To get the date and time
 import datetime
+# Save Python objects using pickle
+import pickle
 #=================================================================================
 #=================================================================================
 # The Functions
@@ -142,7 +144,7 @@ def read_input_model(file_name):
 # The function takes various lists of equations, tangents, the variables,
 # the parameters, the algebraic equations, the solution of the algebraic equations and it saves all these lists in the pickle-format (i.e. binary files).
 # The files are stored in a subsub-folder of the folder "../Output" where the first folder is determined by the name in the input file and the second folder is a unique folder named after the time and date that the script was launched. Also, the generatoris written into the Markdown-file "out.md" stored in the sub folder of Output named after the name of the model which is defined in the model file. 
-def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_terms,omega_list):
+def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_terms,omega_list,c_mat, c_alg, c_original, eta_list, eta_list_final):
     # Begin by creating our dear output folder
     path = "../Output/" + folder_name
     os.makedirs(path, exist_ok=True)
@@ -180,4 +182,42 @@ def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_ter
     f.write("\\noindent The calculated generators are:\n\n")
     f.write("%s\n"%(X))
     # Close the file
-    f.close()    
+    f.close()
+    #-----------------------------------------------------------------------------
+    # Now we write all Python objects as well using pickle
+    #-----------------------------------------------------------------------------
+    # Now it seems like some of the symbolic object that we work with here cannot be
+    # pickled. So we'll convert enverything to lists and then each element to strings.
+    # And then we hope that everything can be pickled nicely.
+    # Convert everything to lists
+    c_mat_list = list(c_mat)
+    c_alg_list = list(c_alg)
+    c_original_list = list(c_original)
+    eta_list = list(eta_list)
+    eta_list_final = list(eta_list_final)
+    # Convert all elements in these lists to strings
+    c_mat_list = [str(c_mat_list[index]) for index in range(len(c_mat_list))]
+    c_alg_list = [str(c_alg_list[index]) for index in range(len(c_alg_list))]
+    c_original_list = [str(c_original_list[index]) for index in range(len(c_original_list))]
+    eta_list = [str(eta_list[index]) for index in range(len(eta_list))]
+    eta_list_final = [str(eta_list_final[index]) for index in range(len(eta_list_final))]    
+    # Save the lists of strings
+    with open(path + "/ODE_solutions.pickle",'wb') as f:
+        pickle.dump(c_mat_list,f)
+    with open(path + "/Algebraic_equations.pickle",'wb') as f:
+        pickle.dump(c_alg_list,f)
+    with open(path + "/original_coefficients_given_by_ODE_solutions.pickle",'wb') as f:
+        pickle.dump(c_original_list,f)
+    with open(path + "/original_tangential_ansatze.pickle",'wb') as f:
+        pickle.dump(eta_list,f)
+    with open(path + "/tangents_after_substitutions.pickle",'wb') as f:
+        pickle.dump(eta_list_final,f)
+     # Also we save four of the input lists with the variables and the reaction terms
+    with open(path + "/original_variables.pickle",'wb') as f:
+        pickle.dump(variables,f)
+    with open(path + "/new_variables_for_calculations.pickle",'wb') as f:
+        pickle.dump(x,f)     
+    with open(path + "/original_reaction_terms.pickle",'wb') as f:
+        pickle.dump(reaction_terms,f)
+    with open(path + "/new_reaction_terms.pickle",'wb') as f:
+        pickle.dump(omega_list,f)     
