@@ -19,4 +19,4 @@
 *.xlsx~
 *.sh~
 # We also remove the gitignore itself
-.gitignore
+.gitignore~
