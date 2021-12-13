@@ -26,19 +26,25 @@ import pandas as pd
 # For manipulating string
 #from string import *
 # For symbolic calculations
-#import sympy
-#from symengine import *
+import sympy
+from symengine import *
 from sympy.abc import _clash1
 from sympy import sympify
 from sympy import Symbol
 from sympy import Function
 from sympy import latex
+from sympy.utilities.lambdify import lambdify
+from sympy import Matrix
 # To create a data folder
 import os
 # To get the date and time
 import datetime
 # Save Python objects using pickle
 import pickle
+# Save the matrix
+import scipy.io
+# To write the matrices to a csv file
+import csv
 #=================================================================================
 #=================================================================================
 # The Functions
@@ -220,4 +226,4 @@ def write_output_generator(tangent_degree,folder_name,variables,x,X,reaction_ter
     with open(path + "/original_reaction_terms.pickle",'wb') as f:
         pickle.dump(reaction_terms,f)
     with open(path + "/new_reaction_terms.pickle",'wb') as f:
-        pickle.dump(omega_list,f)     
+        pickle.dump(omega_list,f)             

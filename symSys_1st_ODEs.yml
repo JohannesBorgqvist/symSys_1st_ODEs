@@ -1,9 +1,0 @@
-name: symSys_1st_ODEs
-dependencies:
-  - python = 3.8.3
-  - sympy = 1.6.1
-  - pandas = 1.0.5
-  - notebook = 6.0.3
-  - anaconda = 2020.07
-  - symengine = 0.7.2
-  - multiprocess = 0.70.11.1

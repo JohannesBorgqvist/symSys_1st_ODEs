@@ -51,10 +51,12 @@ import signal
 #3. *total_derivative* (Defines the total derivative $D_t$),
 #4. *lin_sym_cond* (Generates the linearised symmetry conditions),
 #5. *determining_equations* (Generates the determining equations),
-#6. *sub_const* (The function changes the name of the arbitrary integration constants)
-#7. *solve_linear_sys_ODEs* (Help function 1 for function 9)
-#8. *solve_system_with_algebraic_equations* (Help function 2 for function 9)
-#9. *solve_determining_equations* (Solves the determining equations).
+#6. *identify_basis_function* (The function changes the name of the arbitrary integration constants)
+#7.  *post_processing_algebraic_solutions* (Help function 1 for function 9)
+#8. *extract_equation_linear_independence* (Help function 2 for function 9)
+#9. *solve_algebraic_equations* (Solve an algebraic equation one at a time)
+# 10. *"integration_by_parts"* (Integration by parts on the non-homogenous source terms)
+# 11. *"solve_determining_equations"* (the main function solving the determining equations)
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # FUNCTION 1: "create_tangent_ansatze"
@@ -224,9 +226,7 @@ def lin_sym_cond(x,eta_list,omega_list):
         tidy_eq, denom = fraction(tidy_eq)
         # Cancel terms, expand by performing multiplications and organise in
         # terms of monomials
-        #lin_sym_list[help_counter] = powsimp(expand(cancel(tidy_eq)))
         lin_sym_list[help_counter] = powsimp(expand(tidy_eq))
-        #lin_sym_list[help_counter] = expand(tidy_eq)
         # Increment the help_counter
         help_counter += 1
     return lin_sym_list # Return the equations
@@ -472,7 +472,7 @@ def post_processing_algebraic_solutions(LHS_list,RHS_list,const_list):
     return LHS_list_updated, RHS_list_updated
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 7: "extract_equation_linear_independence"
+# FUNCTION 8: "extract_equation_linear_independence"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes three inputs which are the following:
@@ -498,7 +498,7 @@ def extract_equation_linear_independence(expr,basis_function,x):
     return extracted_equation
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 8: "solve_algebraic_equation"
+# FUNCTION 9: "solve_algebraic_equation"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes three inputs which are the following:
@@ -512,9 +512,7 @@ def extract_equation_linear_independence(expr,basis_function,x):
 # order to find the basis functions and the arbitrary functions in the expression at hand.
 def solve_algebraic_equation(expr,coeff_list,x):
     eq_str = ""
-    # First we simplify everything to get it on a common denominator
-    #expr = simplify(expr)
-    # Then we extractthe nominator
+    # Extractthe nominator
     expr, denom = fraction(expr)
     # In case it is we only keep the numerator
     if denom != 1:
@@ -609,10 +607,7 @@ def solve_algebraic_equation(expr,coeff_list,x):
                 # Increase the temporary sum
                 temp_sum += eq_temp*basis_function
         # Define the zeroth equation
-        #eq_zero = simplify(cancel(expand(expr - temp_sum)))
-        #eq_zero = expand(cancel(expr - temp_sum))
         eq_zero = expand(expr - temp_sum)
-        #eq_zero = cancel(expand(expr - temp_sum))
         # Find the coefficient which we solve for
         LHS_temp = 0
         for koeff in coeff_list:
@@ -620,7 +615,6 @@ def solve_algebraic_equation(expr,coeff_list,x):
                 LHS_temp = koeff
                 break
         # Solve the equation for this coefficient
-        #RHS_temp = solve(eq_zero,LHS_temp)[0]
         RHS_temp = expand(solve(eq_zero,LHS_temp)[0])        
         # Append both the LHS and the RHS
         LHS.append(LHS_temp)
@@ -635,7 +629,7 @@ def solve_algebraic_equation(expr,coeff_list,x):
     return LHS, RHS, basis_functions, LHS_before, RHS_before, eq_str
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
-# FUNCTION 9: "integration_by_parts"
+# FUNCTION 10: "integration_by_parts"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # This function conduct the integration by parts necessary to simplify all
@@ -698,95 +692,7 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable,dum
     # Return the integral list
     return integral_list
 #----------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------
-# FUNCTION 10: "ilt"
-#----------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------
-# This function computes the inverse last place transform of a rational function.
-# I do not want to take any credit for this function what so ever since it was
-# written by Oscar Benjamin (see https://github.com/sympy/sympy/issues/21585).
-# The inputs are:
-# 1. e being the integrand that in the Laplace transform (i.e. the function of interest),
-# 2. s being the dummy variable in the Laplace transform,
-# 3. t being the integration variable,
-# The output is:
-# 1. _ilt(e) being the inverse Laplace transform of the function at hand.
-def ilt(e, s, t):
-    """Fast inverse Laplace transform of rational function including RootSum"""
-    a, b, n = symbols('a, b, n', cls=Wild, exclude=[s])
-
-    def _ilt(e):
-        if not e.has(s):
-            return e
-        elif e.is_Add:
-            return _ilt_add(e)
-        elif e.is_Mul:
-            return _ilt_mul(e)
-        elif e.is_Pow:
-            return _ilt_pow(e)
-        elif isinstance(e, RootSum):
-            return _ilt_rootsum(e)
-        else:
-            raise NotImplementedError
-
-    def _ilt_add(e):
-        return e.func(*map(_ilt, e.args))
-
-    def _ilt_mul(e):
-        coeff, expr = e.as_independent(s)
-        if expr.is_Mul:
-            raise NotImplementedError
-        return coeff * _ilt(expr)
-
-    def _ilt_pow(e):
-        match = e.match((a*s + b)**n)
-        if match is not None:
-            nm, am, bm = match[n], match[a], match[b]
-            if nm.is_Integer and nm < 0:
-                if nm == 1:
-                    return exp(-(bm/am)*t) / am
-                else:
-                    return t**(-nm-1)*exp(-(bm/am)*t)/(am**-nm*gamma(-nm))
-        raise NotImplementedError
-
-    def _ilt_rootsum(e):
-        expr = e.fun.expr
-        [variable] = e.fun.variables
-        return RootSum(e.poly, Lambda(variable, together(_ilt(expr))))
-
-    return _ilt(e)
-#----------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------
-# FUNCTION 11: "expMt"
-#----------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------
-# This function calculates the matrix exponential of a given matrix M.
-# I do not want to take any credit for this function what so ever since it was
-# written by Oscar Benjamin (see https://github.com/sympy/sympy/issues/21585).
-# The inputs are:
-# 1. M being the matrix of interest,
-# 2. x[0] being the integration variable.
-# The output is:
-# 1. expMt which is the exponential of the matrix.
-def expMt(M, x):
-    """Compute matrix exponential exp(M*t)"""
-
-    assert M.is_square
-    N = M.shape[0]
-    s = Dummy('s')
-
-    Ms = (s*eye(N) - M)
-    Mres = Ms.adjugate() / Ms.det()
-
-    def expMij(i, j):
-        """Partial fraction expansion then inverse Laplace transform"""
-        Mresij_pfe = apart(Mres[i, j], s, full=True)
-        return ilt(Mresij_pfe, s, x[0])
-
-    return Matrix(N, N, expMij)
-
-#----------------------------------------------------------------------------------
-# FUNCTION 12: "solve_determining_equations"
+# FUNCTION 11: "solve_determining_equations"
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 # The function takes four inputs which are the following:
@@ -1046,6 +952,9 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             #----------------------------------------------
             t_start = time.perf_counter()
             print("\t\t\t\t\tCalculating Jordan form...")
+            # Simplify each element if possible
+            B_list = [simplify(cancel(B[i,j])) for i in range(num_rows) for j in range(num_cols)]
+            B = Matrix(num_rows,num_cols,B_list)
             # Calculate Jordan form
             P,J = B.jordan_form()
             t_end = time.perf_counter()
@@ -1086,16 +995,10 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                 # Begin by defining the integrand of the particular
                 # solution as the exponential matrix times the source
                 # term of the ODE
-                #part_sol = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE)))
-                #part_sol = expand((P*J.inv()*P.inv())*source_ODE)
                 part_sol = expand(mat_factor_2*source_ODE)                
-                #part_sol = (P*J.inv()*P.inv())*source_ODE
-                #part_sol_der = expand(cancel(expand((P*J.inv()*P.inv())*source_ODE_der)))
-                #part_sol_der = (P*J.inv()*P.inv())*source_ODE_der
                 part_sol_der = expand(mat_factor_2*source_ODE_der)
                 # Introduce a dummy variable with which we conduct the integration
-                #s = Symbol('s')
-                s = Dummy('s')                
+                s = Symbol('s')              
                 # Convert the derivative part to a list
                 part_sol_der = list(part_sol_der)
                 # Simplify the derivative terms by using integration by parts
@@ -1119,11 +1022,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         # If possible, try to evaluate the integral at hand
                         part_sol[rI,cI] = part_sol[rI,cI].doit()
                 # Lastly, multiply with J again to construct the particular solution
-                #part_sol = simplify(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
-                #part_sol = expand(cancel(expand((P*J*P.inv())*(part_sol + part_sol_der))))
-                #part_sol = cancel(expand((P*J*P.inv())*(part_sol + part_sol_der)))
-                #part_sol = expand((P*J*P.inv())*(part_sol + part_sol_der))
-                #part_sol = simplify((P*J*P.inv())*(part_sol + part_sol_der))
                 part_sol = simplify(mat_factor_1*(part_sol + part_sol_der))
             else:# homogeneous ODE
                 part_sol = zeros(len(c_mat),1) # We just add zeroes
@@ -1476,3 +1374,5 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
     # Return the solved coefficients and the generator
     return X, c_mat, c_alg, c_original, eta_list_final 
 
+
+    

@@ -109,3 +109,5 @@ def calculate_symmetries_ODEs(file_name, tangent_degree):
         print("\t\t\tThe calculations are finished.")
     else:  # We could not read the model: => Print an error message!
         print("\t\t\tError when reading the model!\n\t\t\tAborting...\n\n")
+
+        # ----------------------------------------------------------------------------------
