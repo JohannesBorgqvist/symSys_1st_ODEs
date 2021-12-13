@@ -34,7 +34,7 @@ from math import *
 import math
 # To do the fancy iterations
 import itertools
-# To manipulate string
+# To manipulate strings
 import string
 # To time each part of the program
 import time

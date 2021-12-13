@@ -27,7 +27,7 @@ import pandas as pd
 #from string import *
 # For symbolic calculations
 import sympy
-from symengine import *
+#from symengine import *
 from sympy.abc import _clash1
 from sympy import sympify
 from sympy import Symbol

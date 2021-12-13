@@ -26,9 +26,15 @@ The script also generates a LaTeX report with *pdflatex*. The version of *pdflat
 
 To run all scripts and generate a report, a bash script called "*run\_all.sh*" has been created. It might be neccessary to get permission to run the file first which can be done by typing "*chmod +x run\_all.sh*" and then the script is executed with the command "*./run\_all.sh*".
 ## Setting up the project using anaconda
-The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed, the required dependencies in order to run the script is accessed by creating an anconda environment with the provided yml-file. This is done with the following command:<br>
-*conda env create -f symSys_1st_ODEs.yml*.<br>
+The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed,create an environment for the project
+
+conda create -n *sym\_sys\_1st\_ODEs* python sympy pandas scipy
+conda install -n *sym\_sys\_1st\_ODEs* -c conda-forge pickle5
+conda install -n *sym\_sys\_1st\_ODEs* -c anaconda csvkit
+conda install -n *sym\_sys\_1st\_ODEs* -c anaconda more-itertools
+conda install -n *sym\_sys\_1st\_ODEs* -c conda-forge multiprocess
+
 After this, the environment is activated with the command:<br>
-*conda activate symSys_1st_ODEs*,<br>
+conda activate *sym\_sys\_1st\_ODEs*,<br>
 and it is deactivated using<br>
-*conda deactivate*.<br>
+conda deactivate.<br>
