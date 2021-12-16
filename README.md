@@ -55,7 +55,9 @@ The easiest way to get the scripts to work properly is to install [anaconda](htt
 "*conda create --name sym\_sys\_1st\_ODEs --file sym\_sys\_1st\_ODEs.txt*"<br>
 which creates an anaconda environment called "*sym\_sys\_1st\_ODEs*". After this, the environment is activated with the command:<br>
 *conda activate sym\_sys\_1st\_ODEs*,<br>
-and it is deactivated using<br>
+or if this does not work you can activate the environment using the command 
+*source activate sym\_sys\_1st\_ODEs*,<br>
+and this environment is deactivated using<br>
 *conda deactivate*.<br> 
 Alternatively, all the packages could be installed manually in the following way:<br>
 
