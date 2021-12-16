@@ -10,7 +10,7 @@ One of the great difficulties with calculating symmetries of systems of differen
 <img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_1}{\mathrm{d}t} = \frac{ty_{1} %2B y_{2}^{2}}{y_{1}y_{2}-t^{2}}"><br>
 <img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_2}{\mathrm{d}t} = \frac{ty_{2} %2B y_{1}^{2}}{y_{1}y_{2}-t^{2}}"><br>
 </p>
-and it has the the following *scaling symmetry*
+and it has the the following *scaling symmetry*<br>
 
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=X=t\partial t %2B y_1\partial y_1 %2B y_2\partial y_2."><br>
@@ -25,9 +25,13 @@ Now the aim of this project is that the user should be able to find the generato
 
 
 
-## Computational limitations of the symbolic computations  
+## Computational limitations of the symbolic computations
+We want to emphasise from the outset that this implementation works for the specific models we have chosen for this implementation, and it cannot necessarily calculate the symmetries of other systems. In theory, as we describe in the article, the implementation should work for any system of first order ODEs where the right hand sides, or the reaction terms if you will, are rational functions of the states. What the script does is to use a set of polynomial ans\"atze for the component parts of the generator called the tangents, and then the resulting system of PDEs decomposes into a system of first order ODEs and a linear system of algebraic equations. The linear system of ODEs is solved by calculating the Jordan decomposition of the matrix in the right hand side, and then the exponential of this matrix scaled by the time is calculated. Now, it is these steps that causes the implementation *not to work for most systems in practice*, and thus the implementation is by no means a perfect automated implementation for finding the system of a given first order system of ODEs. This is due to the fact that matrix calculations in sympy are notoriously slow, and thus for most systems we have tested the script gets stuck when the ODE system is solved. More precisely, the scripts gets stuck either at the step where the Jordan form is calculated or where the exponential matrix of the Jordan matrix scaled by the time is calculated. Therefore, we have chosen models that we know that the script will find the symmetries to, and if you want to test other models the script terminates after two hours in the current implementation. However, this time limit can be altered by the user, and for more information on that go to the README files in the folders *Code*, *Input* and *Output* respectively. 
 
-## Pre-requisites to run the scripts
+Now we will describe how all required libraries are installed in order to execute the scripts.
+
+
+## Prerequisites to run the scripts
 The scripts have been developed on a laptop with the following operating system:<br>
 **Ubuntu 20.10**<br>
 with the following properties:<br>
