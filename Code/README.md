@@ -1,4 +1,6 @@
 # DESCRIPTIONS OF THE SCRIPTS
+**Author**: Johannes Borgqvist<br>
+**Date**: 2021-12-16<br>
 In order to calculate the symmetries of a given model, you can execute the script called *launch\_symmetry\_calculations.py*. This script takes two compulsory extra arguments and there is a third optional argument. For example,  you can run the following command in order to calculate the symmetries of Hydon's model using a set polynomial ans\"atze of degree 2:<br>
 
 *python launch\_symmetry\_calculations.py hydons_model 2*.<br>
