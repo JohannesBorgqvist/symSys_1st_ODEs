@@ -7,8 +7,8 @@ Welcome to the git repositry "*symSys_1st_ODEs*". This is a Python and LaTeX bas
 One of the great difficulties with calculating symmetries of systems of differential equations is the high dimension of the resulting symmetry calculations. This is due to the fact that as symmetry methods view differential equations from a geometrical perspective, each variable (e.g. time t and space x) and each states correspond to a variable in a highdimensional geometrical manifold being the solution space (i.e. the set of all solutions) of the system of differential equations in question. Technically, to find the symmetries of a system of differential equations we must solve a system high dimensional PDE where the dimension of these PDEs is determined by the number of variables plus the number of states and the number of derivatives in the differential equation at hand. In general, there is no theory for solving such high dimensional systems analytically and thus the task of finding symmetries is very complicated. Therefore, symmetry methods are often restricted to low dimensional differential equations where all calculations can be made by hand. The aim of this project is to try to automate the involved symmetry calculations using a symbolic solver and here we focus on systems of first order ODEs which are common in mathematical biology being the context for this article. One system of such ODEs is what we refer to as Hydon's model given by
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_1}{\mathrm{d}t} = \frac{ty_{1} + y_{2}^{2}}{y_{1}y_{2}-t^{2}}"><br>
-<img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_2}{\mathrm{d}t} = \frac{ty_{2} + y_{1}^{2}}{y_{1}y_{2}-t^{2}}"><br>
+<img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_1}{\mathrm{d}t} = \frac{ty_{1} %2B y_{2}^{2}}{y_{1}y_{2}-t^{2}}"><br>
+<img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_2}{\mathrm{d}t} = \frac{ty_{2} %2B y_{1}^{2}}{y_{1}y_{2}-t^{2}}"><br>
 </p>
 
 ![Hydons_ODEs](ODE_sys.jpg)
