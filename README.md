@@ -10,7 +10,7 @@ One of the great difficulties with calculating symmetries of systems of differen
 <img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_1}{\mathrm{d}t} = \frac{ty_{1} %2B y_{2}^{2}}{y_{1}y_{2}-t^{2}}"><br>
 <img src="https://render.githubusercontent.com/render/math?math=\dfrac{\mathrm{d}y_2}{\mathrm{d}t} = \frac{ty_{2} %2B y_{1}^{2}}{y_{1}y_{2}-t^{2}}"><br>
 </p>
-and it has the the following *scaling symmetry*<br>
+and it has the the following *scaling symmetry* <br>
 
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=X=t\partial t %2B y_1\partial y_1 %2B y_2\partial y_2."><br>
