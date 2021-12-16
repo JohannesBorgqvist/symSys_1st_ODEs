@@ -1,6 +1,6 @@
-# symSys_1st_ODEs
+# Finding the symmetries of first order systems of ODEs using an automated symbolic solver
 **Author**: Johannes Borgqvist<br>
-**Date**: 2021-06-02<br>
+**Date**: 2021-12-16<br>
 Welcome to the git repositry "*symSys_1st_ODEs*". This is a Python and LaTeX based project which conducts automated symbolic calculations of the symmetries of systems of first order ODEs using [sympy](https://www.sympy.org/en/index.html). This repositry is linked to the article (**Reference to future article**) and the aim of this repositry is that users should be able to reproduce the presented symmetries in an automated way. Let's describe the project and the way all relevant packages are installed. 
 
 ## Description of the project
