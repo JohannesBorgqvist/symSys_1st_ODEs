@@ -52,7 +52,7 @@ To run all scripts and generate a report, a bash script called "*run\_all.sh*" h
 ## Setting up the project using anaconda
 The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed, create an environment for the project using the file "*sym\_sys\_1st\_ODEs.txt*" in the following way:<br>
 
-"*conda create --name sym\_sys\_1st\_ODEs --file sym\_sys\_1st\_ODEs.txt*"<br>
+"*conda env create -f sym\_sys\_1st\_ODEs.yml*"<br>
 which creates an anaconda environment called "*sym\_sys\_1st\_ODEs*". After this, the environment is activated with the command:<br>
 *conda activate sym\_sys\_1st\_ODEs*,<br>
 or if this does not work you can activate the environment using the command 
