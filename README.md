@@ -50,7 +50,7 @@ The script also generates a LaTeX report with *pdflatex*. The version of *pdflat
 
 To run all scripts and generate a report, a bash script called "*run\_all.sh*" has been created. It might be neccessary to get permission to run the file first which can be done by typing "*chmod +x run\_all.sh*" and then the script is executed with the command "*./run\_all.sh*".
 ## Setting up the project using anaconda
-The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed, create an environment for the project using the file "*sym\_sys\_1st\_ODEs.txt*" in the following way:<br>
+The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed, create an environment for the project using the file "*sym\_sys\_1st\_ODEs.yml*" in the following way:<br>
 
 "*conda env create -f sym\_sys\_1st\_ODEs.yml*"<br>
 which creates an anaconda environment called "*sym\_sys\_1st\_ODEs*". After this, the environment is activated with the command:<br>
