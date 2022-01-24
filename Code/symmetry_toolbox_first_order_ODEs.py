@@ -703,7 +703,6 @@ def integration_by_parts(function_list,constant_list,integrand_list,variable,dum
 # The script return the following output:
 # 1. The calculated generator of the symmetry which is stored in a string called "X".
 def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
-    alg_str = ""
     #------------------------------------------------------------------------------
     # STEP 0 of 6: ENABLE FOR EASY CALCULATIONS OF TANGENTS WITHOUT SUBSTITUTIONS
     #-----------------------------------------------------------------------------
@@ -1059,36 +1058,17 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Loop through the algebraic equations and solve them
             for eq_temp_index in range(len(c_alg)):
                 # Extract the current equation
-                #eq_temp =expand(cancel(expand(c_alg[eq_temp_index])))
                 eq_temp = expand(c_alg[eq_temp_index])
                 c_alg[eq_temp_index] = eq_temp
-                alg_str += "\nEquation:$" + latex(eq_temp) + "=0$\n"
                 # Solve the corresponding equations given by the current
-                # algebraic equations
+                # algebraic equation
                 LHS_list,RHS_list,basis_functions,LHS_before,RHS_before,eq_str  = solve_algebraic_equation(eq_temp,const_remaining,x)
-                alg_str += "Basis functions:\n$$" + latex(basis_functions) + "$$\n"
-                #alg_str += eq_str
-                #alg_str += "Solutions \\textit{before} processing:\n"
-                #alg_str += "\\begin{align*}\n"
-                #for temp_index in range(len(LHS_before)):
-                #    alg_str += latex(LHS_before[temp_index]) + "&=" + latex(RHS_before[temp_index]) + "\\\\\n"
-                #alg_str += "\\end{align*}\n"
-                alg_str += "Solutions \\textit{after} processing:\n"
-                alg_str += "\\begin{align*}\n"
-                for temp_index in range(len(LHS_list)):
-                    alg_str += latex(LHS_list[temp_index]) + "&=" + latex(RHS_list[temp_index]) + "\\\\\n"
-                alg_str += "\\end{align*}\n"
                 # Substitute the solution of the algebraic equation
                 # into the solution of the ODE for the tangential coefficients
                 for sub_index in range(len(c_mat)):
                     for index in range(len(LHS_list)):                        
                         c_mat[sub_index] = c_mat[sub_index].subs(LHS_list[index],RHS_list[index])
-                        #c_mat[sub_index] = cancel(expand(c_mat[sub_index]))
-                        #c_mat[sub_index] = expand(cancel(expand(c_mat[sub_index])))
                         c_mat[sub_index] = expand(c_mat[sub_index])
-                # Current ODE solutions
-                alg_str += "Current ODE solutions:\n"
-                alg_str += "\\begin{equation*}\n\\mathbf{c}=" + latex(c_mat) + "\n\\end{equation*}\n" 
                 # Substitute the solution of the current algebraic equation into the remaining
                 # algebraic equations
                 # Find the next index
@@ -1101,13 +1081,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                     for sub_index in range(next_index,len(c_alg)):
                         for index in range(len(LHS_list)):
                             c_alg[sub_index] = c_alg[sub_index].subs(LHS_list[index],RHS_list[index])
-                            #c_alg[sub_index] = expand(cancel(expand(c_alg[sub_index])))
                             c_alg[sub_index] = expand(c_alg[sub_index])
-                # Current algebraic solutions
-                alg_str += "Current algebraic equations solutions:\n"
-                alg_str += "\\begin{equation*}\n" + latex(c_alg) + "=" + latex(zeros(len(c_alg),1)) + "\n\\end{equation*}\n"                             
-            alg_str += "\\huge\\textit{Solutions after all is done:}\\normalsize\n"
-            alg_str += "\\begin{equation*}\n\\mathbf{c}=" + latex(c_mat) + "\n\\end{equation*}\n" 
             #----------------------------------------------
             # PART 4: Substitute the solution into the tangents
             # and each sub-generator
@@ -1133,12 +1107,8 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             for index in range(len(non_pivot_functions)):
                 eta_list_final[non_pivot_tangent_indicators[index]] += non_pivot_functions[index](x[0])*non_pivot_monomials[index]
             # Finally, just loop through the tangents and simplify
-            alg_str += "Tangents before any manipulation:\n\\begin{align*}\n"
             for index in range(len(eta_list)):
                 eta_list_final[index] = expand(eta_list_final[index])
-                alg_str += "\\eta_{" + str(index) + "}&=" + latex(eta_list_final[index]) + "\\\\\n"
-            alg_str += "\\end{align*}\n"
-            
             # In the non-homogeneous case, we need to save a non-homogeneous tangent as well
             if non_homogeneous:
                 # Allocate memory
@@ -1170,10 +1140,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                     non_homo_tangent[non_homo_index] = expand(simplify(eta_list_final[non_homo_index] - non_homo_tangent[non_homo_index]))
                 # Append the non-homogeneous tangent to the list of tangents
                 tangent_component.append(non_homo_tangent)
-
-            alg_str += "Generators before some are removed:\n"
-            for tangent_index in range(len(tangent_component)):
-                alg_str += "$$" + latex(tangent_component[tangent_index]) + "$$\n"
             #----------------------------------------------
             # PART 5: Check if the generators satisfy
             # the linearised symmetry conditions
@@ -1182,15 +1148,11 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Allocate a vector of the linearised symmetry conditions
             lin_sym_index = []
             lin_sym_failure = []
-            #print("# The component tangents and their linearised symmetry conditions")
-            alg_str += "The tangents and their symmetry conditions:\n"
             # Loop over all sub tangents and check the linearised symmetry conditions
             for tangent_index in range(len(tangent_component)):
-                alg_str += "$$\\eta_{" + str(tangent_index) + "}=" + latex(tangent_component[tangent_index]) + "$$\n"
                 # Calculate the symmetry conditions for the tangent at hand
                 temp_list = lin_sym_cond(x, tangent_component[tangent_index], omega_list)
                 temp_list = [expand(expr) for expr in temp_list]
-                alg_str += "$$" + latex(temp_list) + "$$\n"
                 # Loop over all tangents in the generator at hand
                 for sub_index in range(len(tangent_component[tangent_index])):
                     # Extract a tangent
@@ -1222,9 +1184,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
             # Remove all tangents that were miscalculated
             for index in lin_sym_index:
                 del tangent_component[index]
-            alg_str += "Generators after some were removed:\n"
-            for tangent_index in range(len(tangent_component)):
-                alg_str += "$$" + latex(tangent_component[tangent_index]) + "$$\n"                
             #----------------------------------------------
             # PART 6: Printing the generator
             #----------------------------------------------
@@ -1276,7 +1235,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                         temp_str = latex(tangent[tangent_part])
                         # Chop the tangent into its pieces
                         chopped_generator = temp_str.split("+")
-                        alg_str += "Generator:$$" + temp_str + "$$\n"
                         # Calculate the arguments
                         tangent_arguments = tangent[tangent_part].args
                         # Case one, we only have a translation generator
@@ -1287,8 +1245,7 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
                             # translation operator for instance
                             chopped_generator = chopped_generator
                         else:
-                            chopped_generator = [latex(argument) for argument in tangent_arguments]
-                        alg_str += "Component parts of generator:$$" + str(chopped_generator) + "$$\n"                             
+                            chopped_generator = [latex(argument) for argument in tangent_arguments]                             
                         # Loop over the pieces of the tangent and add them
                         for term_index in range(len(chopped_generator)):
                             # If we only have one generator we add it directly
@@ -1370,7 +1327,6 @@ def solve_determining_equations(x,eta_list,c,det_eq,variables,omega_list,M):
     else:
         # Return that the matrix is not quadratic
         X = "\\Huge\\textsf{Not a quadratic matrix}\\normalsize\\\\[2cm]" 
-    #X += alg_str
     # Return the solved coefficients and the generator
     return X, c_mat, c_alg, c_original, eta_list_final 
 
