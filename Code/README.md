@@ -14,4 +14,4 @@ This script conducts all calculations by using the other scripts in this folder.
 1. *conduct\_symmetry\_calculations.py*: this scripts takes in the model name and the degree in the tangential ans\"atze from the script *launch\_symmetry\_calculations.py* and then it conducts all the symmetry calculations by using the subsequent two scripts in this list,
 2. *read\_and\_write\_data.py*: this script reads the xlsx files in the Input folder and it writes all the output files in the Output folder,
 3. *symmetry\_toolbox\_first\_order\_ODEs.py*: this script is the main script containing all symmetry based calculations relying on [sympy](https://www.sympy.org/en/index.html),
-4. *generate\_report.py*: this script generates a pdf-report using LaTeX based on the content of the Output folder. 
+4. *generate\_report.py*: this script generates a pdf-report using LaTeX that is stored in the Output folder and the content of this report is based on the content of the Input folder. 
