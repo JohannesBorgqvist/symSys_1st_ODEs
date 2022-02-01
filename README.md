@@ -15,7 +15,7 @@ and it has the the following *scaling symmetry* <br>
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=X=t\partial t %2B y_1\partial y_1 %2B y_2\partial y_2."><br>
 </p>
-Below, we illustrate the action of this symmetry on a solutions to the Hydon model. 
+Below, we illustrate the action of this symmetry on a solution to the Hydon model. 
 
 ![Hydons_ODEs](ODE_sys.jpg)
 
