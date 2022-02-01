@@ -101,7 +101,7 @@ echo " "
 echo ""
 python3 generate_report.py && cd ../Output && pdflatex summary_report.tex && pdflatex summary_report.tex && evince summary_report.pdf &
 echo "============================================================"
-echo "EVERYTHING WAS EXECUTED SUCCESFULLY!"
+echo "EVERYTHING WAS EXECUTED SUCCESSFULLY!"
 echo ""
 echo ""
 echo "============================================================"
