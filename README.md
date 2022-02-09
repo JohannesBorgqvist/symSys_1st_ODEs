@@ -1,6 +1,6 @@
 # Finding the symmetries of first order systems of ODEs using an automated symbolic solver
 **Author**: Johannes Borgqvist<br>
-**Date**: 2021-12-16<br>
+**Date**: 2022-02-09<br>
 Welcome to the git repository "*symSys_1st_ODEs*". This is a Python and LaTeX based project which conducts automated symbolic calculations of the symmetries of systems of first order ODEs using [sympy](https://www.sympy.org/en/index.html). This repository is linked to the article (**Reference to future article**) and the aim of this repository is that users should be able to reproduce the presented symmetries in an automated way. Let's describe the project and the way all relevant packages are installed. 
 
 ## Description of the project
@@ -39,9 +39,10 @@ with the following properties:<br>
 **Architecture: x86-64**.<br>
 The programming has been done in Python, and as an output the script generates a LaTeX-file with the calculated generator. The versions of packages required for the programming scripts are the following:<br>
 1. *python*, version 3.8.3,
-2. *pandas*, version 1.0.5,
-3. *notebook*, version 6.0.3,
-4. *anaconda*, version 2020.07 (*not required but convenient*). <br>
+2. *sympy*, version 1.8,
+3. *pandas*, version 1.0.5,
+4. *notebook*, version 6.0.3,
+5. *anaconda*, version 2020.07 (*not required but convenient*). <br>
 
 The script also generates a LaTeX report with *pdflatex*. The version of *pdflatex* that has been used for this project is the following:<br>
 **pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)**,<br>
