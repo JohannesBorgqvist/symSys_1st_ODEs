@@ -51,6 +51,8 @@ The script also generates a LaTeX report with *pdflatex*. The version of *pdflat
 
 To run all scripts and generate a report, a bash script called "*run\_all.sh*" has been created. It might be neccessary to get permission to run the file first which can be done by typing "*chmod +x run\_all.sh*" and then the script is executed with the command "*./run\_all.sh*".
 
+We have tested these scripts on the three OS:s Linux, Mac and Windows. In Linux using Ubuntu all steps including generating the report using pdflatex works. On Mac and Windows, all the computations with Python works but there were issues with either generating the report using pdflatex and even opening the resulting pdf with the pdf-reader evince or in the case of Windows there were some mistakes in the conversion from ubuntu where certain backslashes had been converted into forward slashes. Thus, if you are running the code on Mac or Windows, you might have to modify the produced tex-report called "summary\_report.pdf" in the Output folder in order to see the results. 
+
 ## Setting up the project using anaconda
 The easiest way to get the scripts to work properly is to install [anaconda](https://docs.anaconda.com/anaconda/install/). When anaconda is installed, create an environment for the project using the file "*sym\_sys\_1st\_ODEs.yml*" in the following way:<br>
 
