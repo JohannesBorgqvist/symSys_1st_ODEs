@@ -1,7 +1,7 @@
 # Finding the symmetries of first order systems of ODEs using an automated symbolic solver
 **Author**: Johannes Borgqvist<br>
 **Date**: 2022-02-09<br>
-Welcome to the git repository "*symSys_1st_ODEs*". This is a Python and LaTeX based project which conducts automated symbolic calculations of the symmetries of systems of first order ODEs using [sympy](https://www.sympy.org/en/index.html). This repository is linked to the article (**Reference to future article**) and the aim of this repository is that users should be able to reproduce the presented symmetries in an automated way. Let's describe the project and the way all relevant packages are installed. 
+Welcome to the git repository "*symSys_1st_ODEs*". This is a Python and LaTeX based project which conducts automated symbolic calculations of the symmetries of systems of first order ODEs using [SymPy](https://www.sympy.org/en/index.html). This repository is linked to the article (**Reference to future article**) and the aim of this repository is that users should be able to reproduce the presented symmetries in an automated way. Let's describe the project and the way all relevant packages are installed. 
 
 ## Description of the project
 One of the great difficulties with calculating symmetries of systems of differential equations is the high dimension of the resulting symmetry calculations. This is due to the fact that symmetry methods view differential equations from a geometrical perspective where each variable (e.g. time t and space x) and each state correspond to a variable in a high-dimensional geometrical manifold being the solution space (i.e. the set of all solutions) of the system of differential equations in question. Technically, to find the symmetries of a system of differential equations we must solve a system of high-dimensional PDEs where the dimension of these PDEs is determined by the number of variables plus the number of states and the number of derivatives in the differential equation at hand. In general, there is no theory for solving such high-dimensional systems analytically and thus the task of finding symmetries is really complicated. Therefore, symmetry methods are often restricted to low-dimensional differential equations where all calculations can be made by hand. The aim of this project is to try to automate the involved symmetry calculations using a symbolic solver and here we focus on systems of first order ODEs which are common in mathematical biology and the context for this article. One system of such ODEs is what we refer to as Hydon's model given by
@@ -39,7 +39,7 @@ with the following properties:<br>
 **Architecture: x86-64**.<br>
 The programming has been done in Python, and as an output the script generates a LaTeX-file with the calculated generator. The versions of packages required for the programming scripts are the following:<br>
 1. *python*, version 3.8.3,
-2. *sympy*, version 1.8,
+2. *SymPy*, version 1.8,
 3. *pandas*, version 1.0.5,
 4. *notebook*, version 6.0.3,
 5. *anaconda*, version 2020.07 (*not required but convenient*). <br>
