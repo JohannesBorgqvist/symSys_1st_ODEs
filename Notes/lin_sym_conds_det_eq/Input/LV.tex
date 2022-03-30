@@ -1,0 +1,30 @@
+We are looking for a generator of the following kind:
+\begin{equation}
+X=\xi(t,u,v)\partial_t+\eta_1(t,u,v)\partial_u+\eta_2(t,u,v)\partial_v.
+\end{equation}
+Now, derive the linearised symmetry conditions in equation \eqref{eq:lin_sym_practice} by plugging in our model in equation \eqref{eq:LV}. Given that we have autnomous reaction terms, our linearised symmetry conditions can be written as follows:
+
+
+\begin{align}
+    &\pdv{\eta_1}{t}+u(1-v)\pdv{\eta_1}{u}+\alpha v(u-1)\pdv{\eta_1}{v}\nonumber\\
+    &-\left[u(1-v)\right]\left(\pdv{\xi}{t}+u(1-v)\pdv{\xi}{u}+\alpha v(u-1)\pdv{\xi}{v}\right)\label{eq:LV_lin_sym_1}\\
+    &=\eta_1(1-v)-\eta_2 u,\nonumber\\
+    &\pdv{\eta_2}{t}+u(1-v)\pdv{\eta_2}{u}+\alpha v(u-1)\pdv{\eta_2}{v}\nonumber\\
+    &-\left[\alpha v(u-1)\right]\left(\pdv{\xi}{t}+u(1-v)\pdv{\xi}{u}+\alpha v(u-1)\pdv{\xi}{v}\right)\label{eq:LV_lin_sym_2}\\
+    &=\alpha\eta_1 v+\alpha\eta_2(u-1).\nonumber
+\end{align}
+
+
+
+
+Now, let's expand this as much as possible and then try to derive the determining equations. Equation \eqref{eq:LV_lin_sym_1} is expanded as
+
+
+
+\begin{align}
+  \alpha u^{2} v^{2} \pdv{\xi}{v}  - \alpha u^{2} v \pdv{\xi}{v} - \alpha u v^{2} \pdv{\xi}{v} + \alpha u v \pdv{\eta_1}{v}&\nonumber\\
+  + \alpha u v \pdv{\xi}{v}  - \alpha v \pdv{\eta_1}{v}  + \eta_1 v - \eta_1 + \eta_2 u &\nonumber\\
+  - u^{2} v^{2} \pdv{\xi}{u}  + 2 u^{2} v \pdv{\xi}{u}  - u^{2} \pdv{\xi}{u}  - u v \pdv{\eta_1}{u}&\nonumber\\
+  + u v \pdv{\xi}{t}+ u \pdv{\eta_1}{u}  - u \pdv{\xi}{t}+ \pdv{\eta_1}{t}&=0
+  \end{align}
+and equation \eqref{eq:LV_lin_sym_2} is expanded as follows:

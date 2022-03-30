@@ -1,22 +1,45 @@
-\documentclass{article}
-    % General document formatting
-    \usepackage[margin=0.7in]{geometry}
-    \usepackage[parfill]{parskip}
-    \usepackage[utf8]{inputenc}
-    
-    % Related to math
-    \usepackage{amsmath,amssymb,amsfonts,amsthm}
-
+%--------------------------------------------------------------------------------------
+% Definition of the document
+%--------------------------------------------------------------------------------------
+\documentclass[12pt]{article}
+%--------------------------------------------------------------------------------------
+% Define packages needed for the writing
+%--------------------------------------------------------------------------------------
+% General document formatting
+\usepackage[margin=1in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}    
+% Related to math
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+% To write derivative more efficiently
+\usepackage{physics}
+%--------------------------------------------------------------------------------------
+% Define the specific setup for the document
+%--------------------------------------------------------------------------------------
+% Set the font of the equations to Helvetica as well. 
+% Increase the spacing between the lines
+\linespread{1.5}
+%--------------------------------------------------------------------------------------
+% THE DOCUMENTS BEGINS
+%--------------------------------------------------------------------------------------
 \begin{document}
-
-Name, date, Exercise X
-
-\section*{Part a}
-
-Put your answer to part a here
-
-\section*{Part b}
-
-etc
-
+\title{\textbf{New take after rejection from the Bulletin of Mathematical Biology}}
+\author{Johannes Borgqvist}
+\date{\today}
+\maketitle
+\tableofcontents
+\clearpage
+%--------------------------------------------------------------------------------------
+% THE INTRO
+\section{Introduction}
+\input{./Input/Intro}
+% --------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
+% LOTKA VOLTERRA
+\section{Lotka-Volterra}
+\input{./Input/LV}
+%--------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
+% THE DOCUMENT ENDS
+%--------------------------------------------------------------------------------------
 \end{document}

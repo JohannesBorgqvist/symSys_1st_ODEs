@@ -1,0 +1,107 @@
+
+
+Okay, so we got rejected from the bulletin of Mathematical Biology. Overall, the two reviewers thought that the researchs aim and research questions were brilliant and they thought that our manuscript was very well-written. However, all the content was trivial and there was nothing new there. So they gave us three months to re-submit a new manuscript. The initial plan was to go through a bunch of famous models in mathematical biology and then present their symmetries as well as the differential invariants and so on. The thing that stopped us from doing this was the fact that our symbolic solver could not find the symmetries of these models.
+
+So my suggestion here is that we try to find the symmetries of these models by hand essentially. Again, we study the following type of system of first order ODEs
+
+\begin{equation}
+\dv{y_i}{t} = \omega_i(t,y_1,\ldots,y_k), \quad i=1,\ldots,k,
+  \label{eq:sys_ODE}
+\end{equation}
+where the infinitesimal generator of the Lie group is given by
+\begin{equation}
+  X=\xi\partial_t+\eta_{1}\partial{y_1}+\ldots+\eta_{k}\partial{y_k}
+  \label{eq:generator}
+\end{equation}
+and the prolonged generator is given by
+\begin{equation}
+  X^{(1)}=X+\eta_{1}^{(1)}\partial{y_1}+\ldots+\eta_{k}^{(1)}\partial{y_k}.
+  \label{eq:prolonged}
+\end{equation}
+Now, given this prolonged generator, the \textit{linearised symmetry conditions} are defined as follows:
+\begin{equation}
+X^{(1)} \left( \dv{y_i}{t} - \omega_i(t,y_1,\ldots,y_k) \right) = 0 , \quad i=1,\ldots,k.
+\end{equation}
+In particular, using the \textit{total derivative}
+\begin{equation}
+D_t=\partial_t+y_1'\partial{y_1}+\ldots+y_k'\partial{y_k}
+  \label{eq:tot_der}
+  \end{equation}
+these symmetry conditions can be written as follows
+\begin{equation}
+\label{eq:lin_sym_practice}
+D_t\eta_i-\omega_i D_t\xi=X\left(\omega_i(t,y_1,\ldots,y_k)\right),\quad i=1,\ldots,k \,.
+\end{equation}
+So to increase the impact, we probably need to solve equation \eqref{eq:lin_sym_practice} for a bunch of biologically relevant models. This document is the start of that journey, and below I will list the models that I figured that we can focus on.
+
+The Lotka-Volterra model:
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{t}&=u(1-v),\\
+    \dv{v}{t}&=\alpha v(u-1).\\    
+    \end{split}
+  \label{eq:LV}
+\end{equation}
+
+The BZ model
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{t}&=\dfrac{1}{\varepsilon}v-\dfrac{1}{\varepsilon}\left(\dfrac{1}{3}u^3-u\right),\\
+    \dv{v}{t}&=-u.\\    
+    \end{split}
+  \label{eq:BZ}
+\end{equation}
+
+The Lorenz equations:
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{t}&=a(v-u),\\
+    \dv{v}{t}&=-uw+bu-v,\\
+    \dv{w}{t}&=uv-cw.
+    \end{split}
+  \label{eq:Lorenz}
+\end{equation}
+
+The Brusselator:
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{t}&=1-(b-1)u+au^2 v,\\
+    \dv{v}{t}&=bu-au^2 v.\\
+    \end{split}
+  \label{eq:Lorenz}
+\end{equation}
+
+The SIR model:
+\begin{equation}
+  \begin{split}
+    \dv{S}{t}&=-rSI,\\
+    \dv{I}{t}&=rSI-aI.\\
+    \dv{R}{t}&=aI.\\    
+    \end{split}
+  \label{eq:Lorenz}
+\end{equation}
+The MM system:
+\begin{equation}
+  \begin{split}
+    \dv{s}{t}&=-k_1 es+k_{-1}c,\\
+    \dv{e}{t}&=-k_1 es+(k_{-1}+k_2)c,\\
+    \dv{c}{t}&=k_1 es-(k_{-1}+k_2)c,\\
+    \dv{p}{t}&=k_2 c.\\        
+    \end{split}
+  \label{eq:Lorenz}
+\end{equation}
+The Goodwin model (with n=1):
+\begin{equation}
+\begin{split}
+  \dv{R}{t}&=-b_1 R+\dfrac{K}{1+\beta T^n}=\omega_1 (R,L,T)\\
+  \dv{L}{t}&=g_1 R- b_2 L=\omega_2 (R,L,T)\\
+    \dv{T}{t}&=g_2 L-b_3 T=\omega_3 (R,L,T)
+\end{split}
+  \label{eq:model}
+\end{equation}
+
+So let's go through these models one by one and see if we can find any symmetries. Let's start with the Lotka-Volterra model!
