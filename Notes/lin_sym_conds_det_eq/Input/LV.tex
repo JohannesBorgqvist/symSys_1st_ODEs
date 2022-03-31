@@ -1,4 +1,13 @@
-We are looking for a generator of the following kind:
+We remind ourselves that we want to study the Lotka-Volterra model:
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{t}&=u(1-v),\\
+    \dv{v}{t}&=\alpha v(u-1),\\    
+    \end{split}
+  \label{eq:LV}
+\end{equation}
+and we are looking for a generator of the following kind:
 \begin{equation}
 X=\xi(t,u,v)\partial_t+\eta_1(t,u,v)\partial_u+\eta_2(t,u,v)\partial_v.
 \end{equation}
