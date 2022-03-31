@@ -15,7 +15,11 @@ The linearised symmetry condition 1 yields the following equations:
 
 
 \begin{align}
-- u \frac{d}{d v} \eta_1 + \pdv{\eta_1}{t} + \frac{\eta_1 u^{2}}{\varepsilon} - \frac{\eta_1}{\varepsilon} - \frac{\eta_2}{\varepsilon} - \frac{u^{4} \frac{d}{d v} \xi}{3 \varepsilon} - \frac{u^{3} \frac{d}{d u} \eta_1}{3 \varepsilon} + \frac{u^{3} \pdv{\xi}{t}}{3 \varepsilon} + \frac{u^{2} \frac{d}{d v} \xi}{\varepsilon} + \frac{u v \frac{d}{d v} \xi}{\varepsilon} + \frac{u \frac{d}{d u} \eta_1}{\varepsilon} - \frac{u \pdv{\xi}{t}}{\varepsilon} + \frac{v \frac{d}{d u} \eta_1}{\varepsilon} - \frac{v\pdv{\xi}{t}}{\varepsilon} - \frac{u^{6} \frac{d}{d u} \xi}{9 \varepsilon^{2}} + \frac{2 u^{4} \frac{d}{d u} \xi}{3 \varepsilon^{2}} + \frac{2 u^{3} v \frac{d}{d u} \xi}{3 \varepsilon^{2}} - \frac{u^{2} \frac{d}{d u} \xi}{\varepsilon^{2}} - \frac{2 u v \frac{d}{d u} \xi}{\varepsilon^{2}} - \frac{v^{2} \frac{d}{d u} \xi}{\varepsilon^{2}}&=0\\
+  - u \frac{d}{d v} \eta_1 + \pdv{\eta_1}{t} + \frac{\eta_1 u^{2}}{\varepsilon} - \frac{\eta_1}{\varepsilon} - \frac{\eta_2}{\varepsilon} - \frac{u^{4} \frac{d}{d v} \xi}{3 \varepsilon}&\nonumber\\
+  - \frac{u^{3} \frac{d}{d u} \eta_1}{3 \varepsilon} + \frac{u^{3} \pdv{\xi}{t}}{3 \varepsilon} + \frac{u^{2} \frac{d}{d v} \xi}{\varepsilon} + \frac{u v \frac{d}{d v} \xi}{\varepsilon}&\nonumber\\
+  + \frac{u \frac{d}{d u} \eta_1}{\varepsilon} - \frac{u \pdv{\xi}{t}}{\varepsilon} + \frac{v \frac{d}{d u} \eta_1}{\varepsilon} - \frac{v\pdv{\xi}{t}}{\varepsilon}&\nonumber\\
+  - \frac{u^{6} \frac{d}{d u} \xi}{9 \varepsilon^{2}} + \frac{2 u^{4} \frac{d}{d u} \xi}{3 \varepsilon^{2}} + \frac{2 u^{3} v \frac{d}{d u} \xi}{3 \varepsilon^{2}} - \frac{u^{2} \frac{d}{d u} \xi}{\varepsilon^{2}}&\nonumber\\
+  - \frac{2 u v \frac{d}{d u} \xi}{\varepsilon^{2}} - \frac{v^{2} \frac{d}{d u} \xi}{\varepsilon^{2}}&=0\label{eq:BZ_lin_sym_1}
 \end{align}
 and we see that this equation amounts to finding the roots of a polynomial of the states $u$ and $v$. Since these monomials are linearly independent we obtain the following determining equations:
 \begin{align}
@@ -33,7 +37,7 @@ u^{3} v:&\pdv{}{u}\frac{2  \xi}{3 \varepsilon^{2}}=0,\\
 
 Similarly, the second linearised symmetry condition is given by
 \begin{align}
-\eta_1 - u^{2} \pdv{}{v} \xi - u \pdv{}{v} \eta_2 + u \pdv{\xi}{t} + \pdv{\eta_2}{t} - \frac{u^{4} \pdv{}{u} \xi}{3 \varepsilon} - \frac{u^{3} \pdv{}{u} \eta_2}{3 \varepsilon} + \frac{u^{2} \pdv{}{u} \xi}{\varepsilon} + \frac{u v \pdv{}{u} \xi}{\varepsilon} + \frac{u \pdv{}{u} \eta_2}{\varepsilon} + \frac{v \pdv{}{u} \eta_2}{\varepsilon}&=0\\
+\eta_1 - u^{2} \pdv{}{v} \xi - u \pdv{}{v} \eta_2 + u \pdv{\xi}{t} + \pdv{\eta_2}{t} - \frac{u^{4} \pdv{}{u} \xi}{3 \varepsilon} - \frac{u^{3} \pdv{}{u} \eta_2}{3 \varepsilon} + \frac{u^{2} \pdv{}{u} \xi}{\varepsilon} + \frac{u v \pdv{}{u} \xi}{\varepsilon} + \frac{u \pdv{}{u} \eta_2}{\varepsilon} + \frac{v \pdv{}{u} \eta_2}{\varepsilon}&=0\label{eq:BZ_lin_sym_1}
 \end{align}
 and the corresponding determining equations
 
