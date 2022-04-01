@@ -1,0 +1,52 @@
+We remind ourselves that we want to study the Brusselator model
+
+\begin{equation*}
+  \begin{split}
+    \dv{u}{t}&=1-(b-1)u+au^2 v,\\
+    \dv{v}{t}&=bu-au^2 v.\\
+    \end{split}
+\end{equation*}
+and we are looking for a generator of the following kind:
+\begin{equation}
+X=\xi(t,u,v)\partial_t+\eta_1(t,u,v)\partial_u+\eta_2(t,u,v)\partial_v.
+\end{equation}
+Now, the first linearised symmetry condition is
+\begin{align}
+  - a^{2} u^{4} v^{2} \pdv{\xi}{u} + a^{2} u^{4} v^{2} \pdv{\xi}{v} + 2 a b u^{3} v \pdv{\xi}{u} - 2 a b u^{3} v \pdv{\xi}{v}&\nonumber\\
+  - 2 a \eta_1 u v - a \eta_2 u^{2} - 2 a u^{3} v \pdv{\xi}{u} + a u^{3} v \pdv{\xi}{v}&\nonumber\\
+  + a u^{2} v \pdv{\eta_1}{u} - a u^{2} v \pdv{\eta_1}{v} - 2 a u^{2} v \pdv{\xi}{u} + a u^{2} v \pdv{\xi}{v}&\nonumber\\
+  - a u^{2} v \pdv{\xi}{t} - b^{2} u^{2} \pdv{\xi}{u} + b^{2} u^{2} \pdv{\xi}{v} + b \eta_1&\nonumber\\
+  + 2 b u^{2} \pdv{\xi}{u} - b u^{2} \pdv{\xi}{v} - b u \pdv{\eta_1}{u} + b u \pdv{\eta_1}{v} &\nonumber\\
+  + 2 b u \pdv{\xi}{u} - b u \pdv{\xi}{v} + b u \pdv{\xi}{t} - \eta_1&\nonumber\\
+  - u^{2} \pdv{\xi}{u} + u \pdv{\eta_1}{u} - 2 u \pdv{\xi}{u} - u \pdv{\xi}{t} + \pdv{\eta_1}{u}&\nonumber\\
+  - \pdv{\xi}{u} + \pdv{\eta_1}{t} - \pdv{\xi}{t}&=0\label{eq:Brusselator_lin_sym_1}
+\end{align}
+and the corresponding determining equations:
+\begin{align*}
+1:&b \eta_1 - \eta_1 + \pdv{\eta_1}{u} - \pdv{\xi}{u} + \pdv{\eta_1}{t} - \pdv{\xi}{t}=0\\
+u:&- b \pdv{\eta_1}{u} + b \pdv{\eta_1}{v} + 2 b \pdv{\xi}{u} - b \pdv{\xi}{v} + b \pdv{\xi}{t} + \pdv{\eta_1}{u} - 2 \pdv{\xi}{u} - \pdv{\xi}{t}=0\\
+u v:&- 2 a \eta_1=0\\
+u^{2}:&- a \eta_2 - b^{2} \pdv{\xi}{u} + b^{2} \pdv{\xi}{v} + 2 b \pdv{\xi}{u} - b \pdv{\xi}{v} - \pdv{\xi}{u}=0\\
+u^{2} v:&a \pdv{\eta_1}{u} - a \pdv{\eta_1}{v} - 2 a \pdv{\xi}{u} + a \pdv{\xi}{v} - a \pdv{\xi}{t}=0\\
+u^{3} v:&2 a b \pdv{\xi}{u} - 2 a b \pdv{\xi}{v} - 2 a \pdv{\xi}{u} + a \pdv{\xi}{v}=0\\
+u^{4} v^{2}:&- a^{2} \pdv{\xi}{u} + a^{2} \pdv{\xi}{v}=0.
+\end{align*}
+The second linearised symmetry condition is
+\begin{align}
+  a^{2} u^{4} v^{2} \pdv{\xi}{u} - a^{2} u^{4} v^{2} \pdv{\xi}{v} - 2 a b u^{3} v \pdv{\xi}{u} + 2 a b u^{3} v \pdv{\xi}{v}&\nonumber\\
+  + 2 a \eta_1 u v + a \eta_2 u^{2} + a u^{3} v \pdv{\xi}{u} + a u^{2} v \pdv{\eta_2}{u}&\nonumber\\
+  - a u^{2} v \pdv{\eta_2}{v} + a u^{2} v \pdv{\xi}{u} + a u^{2} v \pdv{\xi}{t} + b^{2} u^{2} \pdv{\xi}{u}&\nonumber\\
+  - b^{2} u^{2} \pdv{\xi}{v} - b \eta_1 - b u^{2} \pdv{\xi}{u} - b u \pdv{\eta_2}{u}&\nonumber\\
+  + b u \pdv{\eta_2}{v} - b u \pdv{\xi}{u} - b u \pdv{\xi}{t} + u \pdv{\eta_2}{u}&\nonumber\\
+  + \pdv{\eta_2}{u} + \pdv{\eta_2}{t}&=0.\label{eq:Brusselator_lin_sym_2}
+\end{align}
+and the corresponding determining equations
+\begin{align*}
+1:&- b \eta_1 + \pdv{\eta_2}{u} + \pdv{\eta_2}{t}=0\\
+u:&- b \pdv{\eta_2}{u} + b \pdv{\eta_2}{v} - b \pdv{\xi}{u} - b \pdv{\xi}{t} + \pdv{\eta_2}{u}=0\\
+u v:&2 a \eta_1=0\\
+u^{2}:&a \eta_2 + b^{2} \pdv{\xi}{u} - b^{2} \pdv{\xi}{v} - b \pdv{\xi}{u}=0\\
+u^{2} v:&a \pdv{\eta_2}{u} - a \pdv{\eta_2}{v} + a \pdv{\xi}{u} + a \pdv{\xi}{t}=0\\
+u^{3} v:&- 2 a b \pdv{\xi}{u} + 2 a b \pdv{\xi}{v} + a \pdv{\xi}{u}=0\\
+u^{4} v^{2}:&a^{2} \pdv{\xi}{u} - a^{2} \pdv{\xi}{v}=0.\\
+\end{align*}
