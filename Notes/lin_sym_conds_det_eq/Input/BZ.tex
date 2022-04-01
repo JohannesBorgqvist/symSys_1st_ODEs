@@ -23,16 +23,16 @@ The linearised symmetry condition 1 yields the following equations:
 \end{align}
 and we see that this equation amounts to finding the roots of a polynomial of the states $u$ and $v$. Since these monomials are linearly independent we obtain the following determining equations:
 \begin{align}
-  1:&\pdv{\eta_1}{t} - \frac{\eta_1}{\varepsilon} - \frac{\eta_2}{\varepsilon}=0,\\
-  v:&\pdv{}{u} \frac{\eta_1}{\varepsilon} - \frac{\pdv{\xi}{t}}{\varepsilon}=0,\\
-  v^{2}:&- \pdv{}{u} \frac{\xi}{\varepsilon^{2}}=0,\\
-  u:&- \frac{d}{d v} \eta_1 + \pdv{}{u} \frac{\eta_1}{\varepsilon} - \frac{\pdv{\xi}{t}}{\varepsilon}=0,\\  
-  u v:&\pdv{}{v} \frac{\xi}{\varepsilon} - 2 \pdv{}{u} \frac{\xi}{\varepsilon^{2}}=0,\\
-  u^{2}:&\frac{\eta_1}{\varepsilon} + \pdv{}{v} \frac{\xi}{\varepsilon} - \pdv{}{u} \frac{\xi}{\varepsilon^{2}}=0,\\
-  u^{3}:&- \pdv{}{u} \frac{\eta_1}{3 \varepsilon} + \frac{\pdv{\xi}{t}}{3 \varepsilon}=0,\\
-u^{3} v:&\pdv{}{u}\frac{2  \xi}{3 \varepsilon^{2}}=0,\\
- u^{4}:&- \pdv{}{v}\frac{\xi}{3 \varepsilon} + \pdv{}{u}\frac{2 \xi}{3 \varepsilon^{2}}=0,\\
- u^{6}:&- \pdv{}{u} \frac{\xi}{9 \varepsilon^{2}}=0.\\
+  1:&\pdv{\eta_1}{t} - \frac{1}{\varepsilon}\left(\eta_1 - \eta_2\right)=0,\\
+  v:&\pdv{\eta_1}{u} - \pdv{\xi}{t}=0,\\
+  v^{2}:&- \pdv{\xi}{u}=0,\\
+  u:&-\pdv{\eta_1}{v} + \frac{1}{\varepsilon}\left(\pdv{\eta_1}{u}  - \pdv{\xi}{t}\right)=0,\\  
+  u v:&\varepsilon\pdv{\xi}{v} - 2 \pdv{\xi}{u}=0,\\
+  u^{2}:&\eta_1 + \pdv{\xi}{v} - \frac{1}{\varepsilon} \pdv{\xi}{u}=0,\\
+  u^{3}:&- \pdv{\eta_1}{u} + \pdv{\xi}{t}=0,\\
+u^{3} v:&\pdv{\xi}{u}=0,\\
+ u^{4}:&- \frac{1}{3}\pdv{\xi}{v} + \frac{2}{3 \varepsilon}\pdv{\xi}{u}=0,\\
+ u^{6}:&- \pdv{\xi}{u}=0.\\
 \end{align}
 
 Similarly, the second linearised symmetry condition is given by
@@ -43,10 +43,10 @@ and the corresponding determining equations
 
 \begin{align*}
 1:&\eta_1 + \pdv{\eta_2}{t}=0\\
-v:&\pdv{}{u} \frac{\eta_2}{\varepsilon}=0\\
-u:&- \pdv{}{v} \eta_2 + \pdv{\xi}{t} + \pdv{}{u} \frac{\eta_2}{\varepsilon}=0\\
-u v:&\pdv{}{u} \frac{\xi}{\varepsilon}=0\\
-u^{2}:&- \pdv{}{v} \xi + \pdv{}{u} \frac{\xi}{\varepsilon}=0\\
-u^{3}:&- \pdv{}{u} \frac{\eta_2}{3 \varepsilon}=0\\
-u^{4}:&- \pdv{}{u} \frac{\xi}{3 \varepsilon}=0\\
+v:&\pdv{\eta_2}{u}=0\\
+u:&- \pdv{\eta_2}{v}  + \pdv{\xi}{t} + \frac{1}{\varepsilon}\pdv{\eta_2}{u} =0\\
+u v:&\pdv{\xi}{u}=0\\
+u^{2}:&- \pdv{\xi}{v} + \frac{1}{\varepsilon}\pdv{\xi}{u} =0\\
+u^{3}:&- \pdv{\eta_2}{u}=0\\
+u^{4}:&- \pdv{\xi}{u}=0\\
 \end{align*}
