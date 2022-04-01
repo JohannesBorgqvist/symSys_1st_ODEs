@@ -1,0 +1,95 @@
+We remind ourselves that we want to study the SIR model
+\begin{equation*}
+  \begin{split}
+    \dv{u}{t}&=a(v-u),\\
+    \dv{v}{t}&=-uw+bu-v,\\
+    \dv{w}{t}&=uv-cw.
+    \end{split}
+  \end{equation*}
+  and we are looking for a generator of the following kind:
+\begin{equation}
+X=\xi(t,u,v,w)\partial_t+\eta_1(t,u,v,w)\partial_u+\eta_2(t,u,v,w)\partial_v+\eta_3(t,u,v,w)\partial_w.
+\end{equation}
+Now, the first linearised symmetry condition is
+\begin{align}
+  - a^{2} u^{2} \pdv{\xi}{u} + 2 a^{2} u v \pdv{\xi}{u} - a^{2} v^{2} \pdv{\xi}{u} + a b u^{2} \pdv{\xi}{v}&\nonumber\\
+  - a b u v \pdv{\xi}{v} - a c u w \pdv{\xi}{w} + a c v w \pdv{\xi}{w} + a \eta_1&\nonumber\\
+  - a \eta_2 + a u^{2} v \pdv{\xi}{w} - a u^{2} w \pdv{\xi}{v} - a u v^{2} \pdv{\xi}{w}&\nonumber\\
+  + a u v w \pdv{\xi}{v} - a u v \pdv{\xi}{v} - a u \pdv{\eta_1}{u} + a u \pdv{\xi}{t} &\nonumber\\
+  + a v^{2} \pdv{\xi}{v} + a v \pdv{\eta_1}{u} - a v \pdv{\xi}{t} + b u \pdv{\eta_1}{v}&\nonumber\\
+  - c w \pdv{\eta_1}{w} + u v \pdv{\eta_1}{w} - u w \pdv{\eta_1}{v} - v \pdv{\eta_1}{v} + \pdv{\eta_1}{t}&=0\label{eq:Lorenz_lin_sym_1}
+\end{align}
+and the corresponding determining equations:
+\begin{align}
+1:&a \eta_1 - a \eta_2 + \pdv{\eta_1}{t}=0,\\
+w:&- c \pdv{\eta_1}{w}=0,\\
+v:&a \pdv{\eta_1}{u} - a \pdv{\xi}{t} - \pdv{\eta_1}{v}=0,\\
+v w:&a c \pdv{\xi}{w}=0,\\
+v^{2}:&- a^{2} \pdv{\xi}{u} + a \pdv{\xi}{v}=0,\\
+u:&- a \pdv{\eta_1}{u} + a \pdv{\xi}{t} + b \pdv{\eta_1}{v}=0,\\
+u w:&- a c \pdv{\xi}{w} - \pdv{\eta_1}{v}=0,\\
+u v:&2 a^{2} \pdv{\xi}{u} - a b \pdv{\xi}{v} - a \pdv{\xi}{v} + \pdv{\eta_1}{w}=0,\\
+u v w:&a \pdv{\xi}{v}=0,\\
+u v^{2}:&- a \pdv{\xi}{w}=0,\\
+u^{2}:&- a^{2} \pdv{\xi}{u} + a b \pdv{\xi}{v}=0\\
+u^{2} w:&- a \pdv{\xi}{v}=0,\\
+u^{2} v:&a \pdv{\xi}{w}=0.
+\end{align}
+Now, the second linearised symmetry condition is
+\begin{align}
+  a b u^{2} \pdv{\xi}{u} - a b u v \pdv{\xi}{u} + a \eta_1 - a \eta_2&\nonumber\\
+  - a u^{2} w \pdv{\xi}{u} + a u v w \pdv{\xi}{u} - a u v \pdv{\xi}{u} - a u \pdv{\eta_2}{u}&\nonumber\\
+  + a v^{2} \pdv{\xi}{u} + a v \pdv{\eta_2}{u} - b^{2} u^{2} \pdv{\xi}{v} + b c u w \pdv{\xi}{w}&\nonumber\\
+  - b u^{2} v \pdv{\xi}{w} + 2 b u^{2} w \pdv{\xi}{v} + 2 b u v \pdv{\xi}{v} + b u \pdv{\eta_2}{v}&\nonumber\\
+  - b u \pdv{\xi}{t} - c u w^{2} \pdv{\xi}{w} - c v w \pdv{\xi}{w} - c w \pdv{\eta_2}{w}&\nonumber\\
+  + u^{2} v w \pdv{\xi}{w} - u^{2} w^{2} \pdv{\xi}{v} + u v^{2} \pdv{\xi}{w} - 2 u v w \pdv{\xi}{v}&\nonumber\\
+  + u v \pdv{\eta_2}{w} - u w \pdv{\eta_2}{v} + u w \pdv{\xi}{t} - v^{2} \pdv{\xi}{v}&\nonumber\\
+  - v \pdv{\eta_2}{v} + v \pdv{\xi}{t} + \pdv{\eta_2}{t}&=0\label{eq:Lorenz_lin_sym_2}
+\end{align}
+and the corresponding determining equations:
+\begin{align}
+1:&a \eta_1 - a \eta_2 + \pdv{\eta_2}{t}=0,\\
+w:&- c \pdv{\eta_2}{w}=0,\\
+v:&a \pdv{\eta_2}{u} - \pdv{\eta_2}{v} + \pdv{\xi}{t}=0\\
+v w:&- c \pdv{\xi}{w}=0,\\
+v^{2}:&a \pdv{\xi}{u} - \pdv{\xi}{v}=0,\\
+u:&- a \pdv{\eta_2}{u} + b \pdv{\eta_2}{v} - b \pdv{\xi}{t}=0,\\
+u w:&b c \pdv{\xi}{w} - \pdv{\eta_2}{v} + \pdv{\xi}{t}=0,\\
+u w^{2}:&- c \pdv{\xi}{w}=0,\\
+u v:&- a b \pdv{\xi}{u} - a \pdv{\xi}{u} + 2 b \pdv{\xi}{v} + \pdv{\eta_2}{w}=0,\\
+u v w:&a \pdv{\xi}{u} - 2 \pdv{\xi}{v}=0,\\
+u v^{2}:&\pdv{\xi}{w}=0\\
+u^{2}:&a b \pdv{\xi}{u} - b^{2} \pdv{\xi}{v}=0,\\
+u^{2} w:&- a \pdv{\xi}{u} + 2 b \pdv{\xi}{v}=0,\\
+u^{2} w^{2}:&- \pdv{\xi}{v}=0,\\
+u^{2} v:&- b \pdv{\xi}{w}=0,\\
+u^{2} v w:&\pdv{\xi}{w}=0.
+\end{align}
+Now, the third linearised symmetry condition is
+\begin{align}
+  - a c u w \pdv{\xi}{u} + a c v w \pdv{\xi}{u} + a \eta_1 - a \eta_2&\nonumber\\
+  + a u^{2} v \pdv{\xi}{u} - a u v^{2} \pdv{\xi}{u} - a u \pdv{\eta_3}{u} + a v \pdv{\eta_3}{u}&\nonumber\\
+  + b c u w \pdv{\xi}{v} - b u^{2} v \pdv{\xi}{v} + b u \pdv{\eta_3}{v} - c^{2} w^{2} \pdv{\xi}{w}&\nonumber\\
+  + 2 c u v w \pdv{\xi}{w} - c u w^{2} \pdv{\xi}{v} - c v w \pdv{\xi}{v} - c w \pdv{\eta_3}{w}&\nonumber\\
+  + c w \pdv{\xi}{t} - u^{2} v^{2} \pdv{\xi}{w} + u^{2} v w \pdv{\xi}{v} + u v^{2} \pdv{\xi}{v}&\nonumber\\
+  + u v \pdv{\eta_3}{w} - u v \pdv{\xi}{t} - u w \pdv{\eta_3}{v} - v \pdv{\eta_3}{v}&\nonumber\\
+  + \pdv{\eta_3}{t}&=0\label{eq:Lorenz_lin_sym_3}
+\end{align}
+and the corresponding determining equations:
+\begin{align}
+1:&a \eta_1 - a \eta_2 + \pdv{\eta_3}{t}=0,\\
+w:&- c \pdv{\eta_3}{w} + c \pdv{\xi}{t}=0,\\
+w^{2}:&- c^{2} \pdv{\xi}{w}=0,\\
+v:&a \pdv{\eta_3}{u} - \pdv{\eta_3}{v}=0,\\
+v w:&a c \pdv{\xi}{u} - c \pdv{\xi}{v}=0,\\
+u:&- a \pdv{\eta_3}{u} + b \pdv{\eta_3}{v}=0,\\
+u w:&- a c \pdv{\xi}{u} + b c \pdv{\xi}{v} - \pdv{\eta_3}{v}=0,\\
+u w^{2}:&- c \pdv{\xi}{v}=0,\\
+u v:&\pdv{\eta_3}{w} - \pdv{\xi}{t}=0,\\
+u v w:&2 c \pdv{\xi}{w}=0,\\
+u v^{2}:&- a \pdv{\xi}{u} + \pdv{\xi}{v}=0,\\
+u^{2} v:&a \pdv{\xi}{u} - b \pdv{\xi}{v}=0,\\
+u^{2} v w:&\pdv{\xi}{v}=0,\\
+u^{2} v^{2}:&- \pdv{\xi}{w}=0.
+\end{align}
+
