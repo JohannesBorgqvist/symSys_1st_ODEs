@@ -10,4 +10,51 @@ We remind ourselves that we want to study the SIR model
 \begin{equation}
 X=\xi(t,S,I,R)\partial_t+\eta_1(t,S,I,R)\partial_S+\eta_2(t,S,I,R)\partial_I+\eta_3(t,S,I,R)\partial_R.
 \end{equation}
+The first linearised symmetry condition is given by the following equation:
+\begin{align}
+  - a r I^{2} S \pdv{\xi}{I} + a r I^{2} S \pdv{\xi}{R} - a I \pdv{\eta_1}{I} + a I \pdv{\eta_1}{R}&\nonumber\\
+  + r^{2} I^{2} S^{2} \pdv{\xi}{I} - r^{2} I^{2} S^{2} \pdv{\xi}{S} + r I S \pdv{\eta_1}{I} - r I S \pdv{\eta_1}{S}&\nonumber\\
+  + r I S \pdv{\xi}{t} + r I\eta_1 + r S\eta_2 + \pdv{\eta_1}{t}&=0.\label{eq:SIR_lin_sym_1}
+\end{align}
+The second linearised symmetry condition is given by the following equation:
+\begin{align}
+  - a^{2} I^{2} \pdv{\xi}{I} + a^{2} I^{2} \pdv{\xi}{R} + 2 a r I^{2} S \pdv{\xi}{I} - a r I^{2} S \pdv{\xi}{R} - a r I^{2} S \pdv{\xi}{S}&\nonumber\\
+  - a I \pdv{\eta_2}{I} + a I \pdv{\eta_2}{R} + a I \pdv{\xi}{t} + a\eta_2&\nonumber\\
+  - r^{2} I^{2} S^{2} \pdv{\xi}{I} + r^{2} I^{2} S^{2} \pdv{\xi}{S} + r I S \pdv{\eta_2}{I} - r I S \pdv{\eta_2}{S}&\nonumber\\
+  - r I S \pdv{\xi}{t} - r I\eta_1 - r S\eta_2 + \pdv{\eta_2}{t}&=0.\label{eq:SIR_lin_sym_2}
+\end{align}
+The third linearised symmetry condition is given by the following equation:
+\begin{align}
+  a^{2} I^{2} \pdv{\xi}{I} - a^{2} I^{2} \pdv{\xi}{R} - a r I^{2} S \pdv{\xi}{I} + a r I^{2} S \pdv{\xi}{S}&\nonumber\\
+  - a I \pdv{\eta_3}{I} + a I \pdv{\eta_3}{R} - a I \pdv{\xi}{t} - a\eta_2&\nonumber\\
+  + r I S \pdv{\eta_3}{I} - r I S \pdv{\eta_3}{S} + \pdv{\eta_3}{t}&=0.\label{eq:SIR_lin_sym_3}
+\end{align}
 \subsection{Ans\"atze assuming that the equations for the tangents are independent of the states}
+The assumption that the derivatives of the tangents are at most functions of the time $t$ amounts to finding the roots of a polynomial of the states $u$ and $v$. Since these monomials are linearly independent we obtain the following equations:
+\begin{align}
+1:&\pdv{\eta_1}{t}=0,\\
+I:&- a \pdv{\eta_1}{I} + a \pdv{\eta_1}{R} + r\eta_1=0,\\
+S:&r\eta_2=0,\\
+S I:&r \pdv{\eta_1}{I} - r \pdv{\eta_1}{S} + r \pdv{\xi}{t}=0,\\
+S I^{2}:&- a r \pdv{\xi}{I} + a r \pdv{\xi}{R}=0,\\
+S^{2} I^{2}:&r^{2} \pdv{\xi}{I} - r^{2} \pdv{\xi}{S}=0,
+\end{align}
+for the first linearised symmetry condition, the following equations
+\begin{align}
+1:&a\eta_2 + \pdv{\eta_2}{t}=0,\\
+I:&- a \pdv{\eta_2}{I} + a \pdv{\eta_2}{R} + a \pdv{\xi}{t} - r\eta_1=0,\\
+I^{2}:&- a^{2} \pdv{\xi}{I} + a^{2} \pdv{\xi}{R}=0,\\
+S:&- r\eta_2=0,\\
+S I:&r \pdv{\eta_2}{I} - r \pdv{\eta_2}{S} - r \pdv{\xi}{t}=0,\\
+S I^{2}:&2 a r \pdv{\xi}{I} - a r \pdv{\xi}{R} - a r \pdv{\xi}{S}=0,\\
+S^{2} I^{2}:&- r^{2} \pdv{\xi}{I} + r^{2} \pdv{\xi}{S}=0,
+\end{align}
+for the second linearised symmetry condition and the following equations
+\begin{align}
+1:&- a\eta_2 + \pdv{\eta_3}{t}=0,\\
+I:&- a \pdv{\eta_3}{I} + a \pdv{\eta_3}{R} - a \pdv{\xi}{t}=0,\\
+I^{2}:&a^{2} \pdv{\xi}{I} - a^{2} \pdv{\xi}{R}=0,\\
+S I:&r \pdv{\eta_3}{I} - r \pdv{\eta_3}{S}=0,\\
+S I^{2}:&- a r \pdv{\xi}{I} + a r \pdv{\xi}{S}=0,
+\end{align}
+for the third linearised symmetry condition.
