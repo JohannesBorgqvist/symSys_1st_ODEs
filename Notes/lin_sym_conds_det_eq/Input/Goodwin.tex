@@ -1,0 +1,34 @@
+We remind ourselves that we want to study the Goodwin model
+\begin{equation}
+\begin{split}
+  \dv{R}{t}&=-b_1 R+\dfrac{K}{1+\beta T}\\
+  \dv{L}{t}&=g_1 R- b_2 L\\
+    \dv{T}{t}&=g_2 L-b_3 T
+\end{split}
+  \label{eq:Goodwin}
+\end{equation}
+  and we are looking for a generator of the following kind:
+\begin{equation}
+X=\xi(t,u,v,w)\partial_t+\eta_1(t,u,v,w)\partial_u+\eta_2(t,u,v,w)\partial_v+\eta_3(t,u,v,w)\partial_w.
+\end{equation}
+The first linearised symmetry condition is given by the following equation:
+\begin{align}
+  - \frac{K^{2} \frac{d}{d R{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta^{2} T^{2}{\left(t \right)} + 2 \beta T{\left(t \right)} + 1} + \frac{2 K b_{1} R{\left(t \right)} \frac{d}{d R{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta T{\left(t \right)} + 1} + \frac{K b_{2} L{\left(t \right)} \frac{d}{d L{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta T{\left(t \right)} + 1} + \frac{K b_{3} T{\left(t \right)} \frac{d}{d T{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta T{\left(t \right)} + 1} + \frac{K \beta \eta_{3}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta^{2} T^{2}{\left(t \right)}&\nonumber\\
+  + 2 \beta T{\left(t \right)} + 1} - \frac{K g_{1} R{\left(t \right)} \frac{d}{d L{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta T{\left(t \right)} + 1} - \frac{K g_{2} L{\left(t \right)} \frac{d}{d T{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta T{\left(t \right)} + 1}&\nonumber\\
+  + \frac{K \frac{d}{d R{\left(t \right)}} \eta_{1}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}}{\beta T{\left(t \right)} + 1} - \frac{K \left. \frac{\partial}{\partial \xi_{1}} \xi{\left(\xi_{1},R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} \right|_{\substack{ \xi_{1}=t }}}{\beta T{\left(t \right)} + 1} - b_{1}^{2} R^{2}{\left(t \right)} \frac{d}{d R{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} - b_{1} b_{2} L{\left(t \right)} R{\left(t \right)} \frac{d}{d L{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}&\nonumber\\
+  - b_{1} b_{3} R{\left(t \right)} T{\left(t \right)} \frac{d}{d T{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} + b_{1} g_{1} R^{2}{\left(t \right)} \frac{d}{d L{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} + b_{1} g_{2} L{\left(t \right)} R{\left(t \right)} \frac{d}{d T{\left(t \right)}} \xi{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} - b_{1} R{\left(t \right)} \frac{d}{d R{\left(t \right)}} \eta_{1}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}&\nonumber\\
+  + b_{1} R{\left(t \right)} \left. \frac{\partial}{\partial \xi_{1}} \xi{\left(\xi_{1},R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} \right|_{\substack{ \xi_{1}=t }} + b_{1} \eta_{1}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} - b_{2} L{\left(t \right)} \frac{d}{d L{\left(t \right)}} \eta_{1}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} - b_{3} T{\left(t \right)} \frac{d}{d T{\left(t \right)}} \eta_{1}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)}&\nonumber\\
+  + g_{1} R{\left(t \right)} \frac{d}{d L{\left(t \right)}} \eta_{1}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} + g_{2} L{\left(t \right)} \frac{d}{d T{\left(t \right)}} \eta_{1}{\left(t,R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} + \left. \frac{\partial}{\partial \xi_{1}} \eta_{1}{\left(\xi_{1},R{\left(t \right)},L{\left(t \right)},T{\left(t \right)} \right)} \right|_{\substack{ \xi_{1}=t }}&=0\label{eq:Goodwin_lin_sym_1}
+\\end{align}
+The second linearised symmetry condition is given by the following equation:
+
+The third linearised symmetry condition is given by the following equation:
+
+\subsection{Ans\"atze assuming that the equations for the tangents are independent of the states}
+The assumption that the derivatives of the tangents are at most functions of the time $t$ amounts to finding the roots of a polynomial of the states $u$ and $v$. Since these monomials are linearly independent we obtain the following equations:
+
+for the first linearised symmetry condition, the following equations
+
+for the second linearised symmetry condition and the following equations
+
+for the third linearised symmetry condition.
