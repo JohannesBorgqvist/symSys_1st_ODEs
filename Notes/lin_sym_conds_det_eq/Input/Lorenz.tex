@@ -11,15 +11,84 @@ We remind ourselves that we want to study the SIR model
 X=\xi(t,u,v,w)\partial_t+\eta_1(t,u,v,w)\partial_u+\eta_2(t,u,v,w)\partial_v+\eta_3(t,u,v,w)\partial_w.
 \end{equation}
 The first linearised symmetry condition is given by the following equation:
-
+\begin{align}
+  - a^{2} u^{2} \pdv{\xi}{u} + 2 a^{2} u v \pdv{\xi}{u} - a^{2} v^{2} \pdv{\xi}{u} + a b u^{2} \pdv{\xi}{v}&\nonumber\\ - a b u v \pdv{\xi}{v} - a c u w \pdv{\xi}{w} + a c v w \pdv{\xi}{w} + a \eta_1 - a \eta_2&\nonumber\\
+  + a u^{2} v \pdv{\xi}{w} - a u^{2} w \pdv{\xi}{v} - a u v^{2} \pdv{\xi}{w} + a u v w \pdv{\xi}{v}&\nonumber\\
+  - a u v \pdv{\xi}{v} - a u \pdv{\eta_1}{u} + a u \pdv{\xi}{t} &\nonumber\\
+  + a v^{2} \pdv{\xi}{v} + a v \pdv{\eta_1}{u} - a v \pdv{\xi}{t} + b u \pdv{\eta_1}{v}&\nonumber\\
+  - c w \pdv{\eta_1}{w} + u v \pdv{\eta_1}{w} - u w \pdv{\eta_1}{v} - v \pdv{\eta_1}{v} + \pdv{\eta_1}{t}&=0\label{eq:Lorenz_lin_sym_1}
+\end{align}
 The second linearised symmetry condition is given by the following equation:
-
+\begin{align}
+  a b u^{2} \pdv{\xi}{u} - a b u v \pdv{\xi}{u} - a u^{2} w \pdv{\xi}{u} + a u v w \pdv{\xi}{u}&\nonumber\\
+  - a u v \pdv{\xi}{u} - a u \pdv{\eta_2}{u} + a v^{2} \pdv{\xi}{u} + a v \pdv{\eta_2}{u}&\nonumber\\
+  - b^{2} u^{2} \pdv{\xi}{v} + b c u w \pdv{\xi}{w} - b \eta_1 - b u^{2} v \pdv{\xi}{w}&\nonumber\\
+  + 2 b u^{2} w \pdv{\xi}{v} + 2 b u v \pdv{\xi}{v} + b u \pdv{\eta_2}{v} - b u \pdv{\xi}{t}&\nonumber\\
+  - c u w^{2} \pdv{\xi}{w} - c v w \pdv{\xi}{w} - c w \pdv{\eta_2}{w} + \eta_1 w &\nonumber\\
+  + \eta_2 + \eta_3 u + u^{2} v w \pdv{\xi}{w} - u^{2} w^{2} \pdv{\xi}{v} + u v^{2} \pdv{\xi}{w}&\nonumber\\
+  - 2 u v w \pdv{\xi}{v} + u v \pdv{\eta_2}{w} - u w \pdv{\eta_2}{v} + u w \pdv{\xi}{t} &\nonumber\\
+  - v^{2} \pdv{\xi}{v} - v \pdv{\eta_2}{v} + v \pdv{\xi}{t} + \pdv{\eta_2}{t}&=0\label{eq:Lorenz_lin_sym_2}
+\end{align}
 The third linearised symmetry condition is given by the following equation:
+\begin{align}
+  - a c u w \pdv{\xi}{u} + a c v w \pdv{\xi}{u} + a u^{2} v \pdv{\xi}{u} - a u v^{2} \pdv{\xi}{u}&\nonumber\\
+  - a u \pdv{\eta_3}{u} + a v \pdv{\eta_3}{u} + b c u w \pdv{\xi}{v} - b u^{2} v \pdv{\xi}{v}&\nonumber\\
+  + b u \pdv{\eta_3}{v} - c^{2} w^{2} \pdv{\xi}{w} + c \eta_3 + 2 c u v w \pdv{\xi}{w}&\nonumber\\
+  - c u w^{2} \pdv{\xi}{v} - c v w \pdv{\xi}{v} - c w \pdv{\eta_3}{w} + c w \pdv{\xi}{t}&\nonumber\\
+  - \eta_1 v - \eta_2 u - u^{2} v^{2} \pdv{\xi}{w} + u^{2} v w \pdv{\xi}{v} + u v^{2} \pdv{\xi}{v}&\nonumber\\
+  + u v \pdv{\eta_3}{w} - u v \pdv{\xi}{t} - u w \pdv{\eta_3}{v} - v \pdv{\eta_3}{v} + \pdv{\eta_3}{t}&=0\label{eq:Lorenz_lin_sym_3}
+\end{align}
 \subsection{Ans\"atze assuming that the equations for the tangents are independent of the states}
 The assumption that the derivatives of the tangents are at most functions of the time $t$ amounts to finding the roots of a polynomial of the states $u$ and $v$. Since these monomials are linearly independent we obtain the following equations:
-
+\begin{align}
+1:&a \eta_1 - a \eta_2 + \pdv{\eta_1}{t}=0,\\
+w:&- c \pdv{\eta_1}{w}=0,\\
+v:&a \pdv{\eta_1}{u} - a \pdv{\xi}{t} - \pdv{\eta_1}{v}=0,\\
+v w:&a c \pdv{\xi}{w}=0,\\
+v^{2}:&- a^{2} \pdv{\xi}{u} + a \pdv{\xi}{v}=0,\\
+u:&- a \pdv{\eta_1}{u} + a \pdv{\xi}{t} + b \pdv{\eta_1}{v}=0,\\
+u w:&- a c \pdv{\xi}{w} - \pdv{\eta_1}{v}=0,\\
+u v:&2 a^{2} \pdv{\xi}{u} - a b \pdv{\xi}{v} - a \pdv{\xi}{v} + \pdv{\eta_1}{w}=0,\\
+u v w:&a \pdv{\xi}{v}=0,\\
+u v^{2}:&- a \pdv{\xi}{w}=0,\\
+u^{2}:&- a^{2} \pdv{\xi}{u} + a b \pdv{\xi}{v}=0,\\
+u^{2} w:&- a \pdv{\xi}{v}=0,\\
+u^{2} v:&a \pdv{\xi}{w}=0,
+\end{align}
 for the first linearised symmetry condition, the following equations
-
+\begin{align}
+1:&- b \eta_1 + \eta_2 + \pdv{\eta_2}{t}=0,\\
+w:&- c \pdv{\eta_2}{w} + \eta_1=0\\
+v:&a \pdv{\eta_2}{u} - \pdv{\eta_2}{v} + \pdv{\xi}{t}=0\\
+v w:&- c \pdv{\xi}{w}=0,\\
+v^{2}:&a \pdv{\xi}{u} - \pdv{\xi}{v}=0,\\
+u:&- a \pdv{\eta_2}{u} + b \pdv{\eta_2}{v} - b \pdv{\xi}{t} + \eta_3=0,\\
+u w:&b c \pdv{\xi}{w} - \pdv{\eta_2}{v} + \pdv{\xi}{t}=0\\
+u w^{2}:&- c \pdv{\xi}{w}=0,\\
+u v:&- a b \pdv{\xi}{u} - a \pdv{\xi}{u} + 2 b \pdv{\xi}{v} + \pdv{\eta_2}{w}=0,\\
+u v w:&a \pdv{\xi}{u} - 2 \pdv{\xi}{v}=0,\\
+u v^{2}:&\pdv{\xi}{w}=0,\\
+u^{2}:&a b \pdv{\xi}{u} - b^{2} \pdv{\xi}{v}=0,\\
+u^{2} w:&- a \pdv{\xi}{u} + 2 b \pdv{\xi}{v}=0,\\
+u^{2} w^{2}:&- \pdv{\xi}{v}=0,\\
+u^{2} v:&- b \pdv{\xi}{w}=0,\\
+u^{2} v w:&\pdv{\xi}{w}=0,
+\end{align}
 for the second linearised symmetry condition and the following equations
-
+\begin{align}
+1:&c \eta_3 + \pdv{\eta_3}{t}=0,\\
+w:&- c \pdv{\eta_3}{w} + c \pdv{\xi}{t}=0,\\
+w^{2}:&- c^{2} \pdv{\xi}{w}=0,\\
+v:&a \pdv{\eta_3}{u} - \eta_1 - \pdv{\eta_3}{v}=0,\\
+v w:&a c \pdv{\xi}{u} - c \pdv{\xi}{v}=0,\\
+u:&- a \pdv{\eta_3}{u} + b \pdv{\eta_3}{v} - \eta_2=0,\\
+u w:&- a c \pdv{\xi}{u} + b c \pdv{\xi}{v} - \pdv{\eta_3}{v}=0,\\
+u w^{2}:&- c \pdv{\xi}{v}=0,\\
+u v:&\pdv{\eta_3}{w} - \pdv{\xi}{t}=0,\\
+u v w:&2 c \pdv{\xi}{w}=0,\\
+u v^{2}:&- a \pdv{\xi}{u} + \pdv{\xi}{v}=0,\\
+u^{2} v:&a \pdv{\xi}{u} - b \pdv{\xi}{v}=0,\\
+u^{2} v w:&\pdv{\xi}{v}=0,\\
+u^{2} v^{2}:&- \pdv{\xi}{w}=0,
+\end{align}
 for the third linearised symmetry condition.
