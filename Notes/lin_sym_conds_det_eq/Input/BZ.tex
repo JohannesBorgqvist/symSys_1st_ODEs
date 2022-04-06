@@ -10,9 +10,7 @@ and we are looking for a generator of the following kind:
 \begin{equation}
 X=\xi(t,u,v)\partial_t+\eta_1(t,u,v)\partial_u+\eta_2(t,u,v)\partial_v.
 \end{equation}
-The linearised symmetry condition 1 yields the following equations:
-
-
+The linearised symmetry condition 1 is formulated as follows
 \begin{align}
   - u \frac{d}{d v} \eta_1 + \pdv{\eta_1}{t} + \frac{\eta_1 u^{2}}{\varepsilon} - \frac{\eta_1}{\varepsilon} - \frac{\eta_2}{\varepsilon} - \frac{u^{4} \frac{d}{d v} \xi}{3 \varepsilon}&\nonumber\\
   - \frac{u^{3} \frac{d}{d u} \eta_1}{3 \varepsilon} + \frac{u^{3} \pdv{\xi}{t}}{3 \varepsilon} + \frac{u^{2} \frac{d}{d v} \xi}{\varepsilon} + \frac{u v \frac{d}{d v} \xi}{\varepsilon}&\nonumber\\
@@ -20,7 +18,15 @@ The linearised symmetry condition 1 yields the following equations:
   - \frac{u^{6} \frac{d}{d u} \xi}{9 \varepsilon^{2}} + \frac{2 u^{4} \frac{d}{d u} \xi}{3 \varepsilon^{2}} + \frac{2 u^{3} v \frac{d}{d u} \xi}{3 \varepsilon^{2}} - \frac{u^{2} \frac{d}{d u} \xi}{\varepsilon^{2}}&\nonumber\\
   - \frac{2 u v \frac{d}{d u} \xi}{\varepsilon^{2}} - \frac{v^{2} \frac{d}{d u} \xi}{\varepsilon^{2}}&=0\label{eq:BZ_lin_sym_1}
 \end{align}
-and we see that this equation amounts to finding the roots of a polynomial of the states $u$ and $v$. Since these monomials are linearly independent we obtain the following determining equations:
+and the second linearised symmetry condition is given by
+\begin{align}
+\eta_1 - u^{2} \pdv{}{v} \xi - u \pdv{}{v} \eta_2 + u \pdv{\xi}{t} + \pdv{\eta_2}{t} - \frac{u^{4} \pdv{}{u} \xi}{3 \varepsilon} - \frac{u^{3} \pdv{}{u} \eta_2}{3 \varepsilon} + \frac{u^{2} \pdv{}{u} \xi}{\varepsilon} + \frac{u v \pdv{}{u} \xi}{\varepsilon} + \frac{u \pdv{}{u} \eta_2}{\varepsilon} + \frac{v \pdv{}{u} \eta_2}{\varepsilon}&=0.\label{eq:BZ_lin_sym_1}
+\end{align}
+
+
+
+\subsection{Ans\"atze assuming that the equations for the tangents are independent of the states}
+The assumption that the derivatives of the tangents are at most functions of the time $t$ amounts to finding the roots of a polynomial of the states $u$ and $v$. Since these monomials are linearly independent we obtain the following equations:
 \begin{align}
   1:&\pdv{\eta_1}{t} - \frac{1}{\varepsilon}\left(\eta_1 - \eta_2\right)=0,\\
   v:&\pdv{\eta_1}{u} - \pdv{\xi}{t}=0,\\
@@ -31,21 +37,16 @@ and we see that this equation amounts to finding the roots of a polynomial of th
   u^{3}:&- \pdv{\eta_1}{u} + \pdv{\xi}{t}=0,\\
 u^{3} v:&\pdv{\xi}{u}=0,\\
  u^{4}:&- \frac{1}{3}\pdv{\xi}{v} + \frac{2}{3 \varepsilon}\pdv{\xi}{u}=0,\\
- u^{6}:&- \pdv{\xi}{u}=0.\\
+ u^{6}:&- \pdv{\xi}{u}=0.
 \end{align}
-
-Similarly, the second linearised symmetry condition is given by
+for the first linearised symmetry condition and the following equations
 \begin{align}
-\eta_1 - u^{2} \pdv{}{v} \xi - u \pdv{}{v} \eta_2 + u \pdv{\xi}{t} + \pdv{\eta_2}{t} - \frac{u^{4} \pdv{}{u} \xi}{3 \varepsilon} - \frac{u^{3} \pdv{}{u} \eta_2}{3 \varepsilon} + \frac{u^{2} \pdv{}{u} \xi}{\varepsilon} + \frac{u v \pdv{}{u} \xi}{\varepsilon} + \frac{u \pdv{}{u} \eta_2}{\varepsilon} + \frac{v \pdv{}{u} \eta_2}{\varepsilon}&=0\label{eq:BZ_lin_sym_1}
-\end{align}
-and the corresponding determining equations
-
-\begin{align*}
 1:&\eta_1 + \pdv{\eta_2}{t}=0\\
 v:&\pdv{\eta_2}{u}=0\\
 u:&- \pdv{\eta_2}{v}  + \pdv{\xi}{t} + \frac{1}{\varepsilon}\pdv{\eta_2}{u} =0\\
 u v:&\pdv{\xi}{u}=0\\
 u^{2}:&- \pdv{\xi}{v} + \frac{1}{\varepsilon}\pdv{\xi}{u} =0\\
 u^{3}:&- \pdv{\eta_2}{u}=0\\
-u^{4}:&- \pdv{\xi}{u}=0\\
-\end{align*}
+u^{4}:&- \pdv{\xi}{u}=0
+\end{align}
+for the second linearised symmetry condition. 

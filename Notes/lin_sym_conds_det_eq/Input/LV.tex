@@ -33,9 +33,25 @@ Now, let's expand this as much as possible and then try to derive the determinin
   \alpha u^{2} v^{2} \pdv{\xi}{v}  - \alpha u^{2} v \pdv{\xi}{v} - \alpha u v^{2} \pdv{\xi}{v} + \alpha u v \pdv{\eta_1}{v}&\nonumber\\
   + \alpha u v \pdv{\xi}{v}  - \alpha v \pdv{\eta_1}{v}  + \eta_1 v - \eta_1 + \eta_2 u &\nonumber\\
   - u^{2} v^{2} \pdv{\xi}{u}  + 2 u^{2} v \pdv{\xi}{u}  - u^{2} \pdv{\xi}{u}  - u v \pdv{\eta_1}{u}&\label{eq:LV_lin_sym_1_expanded}\\
-  + u v \pdv{\xi}{t}+ u \pdv{\eta_1}{u}  - u \pdv{\xi}{t}+ \pdv{\eta_1}{t}&=0\nonumber
+  + u v \pdv{\xi}{t}+ u \pdv{\eta_1}{u}  - u \pdv{\xi}{t}+ \pdv{\eta_1}{t}&=0.\nonumber
 \end{align}
-and here we see that we essentially have a polynomial where the different monomials are powers of the states $u$ and $v$. Now, since all these monomials are \textit{linearly independent} it follows that all coefficients in front of these monomials must be zero. This is what gives us our \textit{determining equations}, and more precisely here are our determining equations:
+
+
+
+Similarly, the second linearised symmetry condition in equation \eqref{eq:LV_lin_sym_2} is expanded as follows:
+
+
+
+\begin{align}
+  - \alpha^{2} u^{2} v^{2} \pdv{\xi}{v}  + 2 \alpha^{2} u v^{2} \pdv{\xi}{v} - \alpha^{2} v^{2} \pdv{\xi}{v} - \alpha \eta_1 v - \alpha \eta_2 u&\nonumber\\
+  + \alpha \eta_2 + \alpha u^{2} v^{2} \pdv{\xi}{u} - \alpha u^{2} v \pdv{\xi}{u} - \alpha u v^{2} \pdv{\xi}{u} + \alpha u v \pdv{\eta_2}{v}&\nonumber\\
+  + \alpha u v \pdv{\xi}{u}  - \alpha u v \pdv{\xi}{t} - \alpha v \pdv{\eta_2}{v}  + \alpha v \pdv{\xi}{t}&\label{eq:LV_lin_sym_2_expanded}\\
+  - u v \pdv{\eta_2}{u}  + u \pdv{\eta_2}{u}  + \pdv{\eta_2}{t}&=0.\nonumber
+\end{align}
+To find the symmetries of the LV model, we must solve equations \eqref{eq:LV_lin_sym_1_expanded} and \eqref{eq:LV_lin_sym_2_expanded}. As there is no general theory for how to do this, we resort to testing different ans\"atze for the tangents $\xi,\eta_1$ and $\eta_2$. 
+
+\subsection{Ans\"atze assuming that the equations for the tangents are independent of the states}
+The first ans\"atze we test is to assume that equations \eqref{eq:LV_lin_sym_1_expanded} and \eqref{eq:LV_lin_sym_2_expanded} are polynomials in the states $u,v$ where the coefficients are merely functions of the time $t$. Given this assumption, all monomials in the states are \textit{linearly independent} it follows that all coefficients in front of these monomials must be zero. This is gives us the following equations
 
 
 
@@ -47,24 +63,9 @@ u v:&\alpha \pdv{\eta_1}{v}  + \alpha \pdv{\xi}{v}  - \pdv{\eta_1}{u}  + \pdv{\x
 u v^{2}:&- \alpha \pdv{\xi}{v} =0,\\
 u^{2}:&- \pdv{\xi}{u} =0,\\
 u^{2} v:&- \alpha \pdv{\xi}{v}  + 2 \pdv{\xi}{u} =0,\\
-u^{2} v^{2}:&\alpha \pdv{\xi}{v} - \pdv{\xi}{u}=0.
+u^{2} v^{2}:&\alpha \pdv{\xi}{v} - \pdv{\xi}{u}=0,
 \end{align}
-
-
-Similarly, the second linearised symmetry condition in equation \eqref{eq:LV_lin_sym_2} is expanded as follows:
-
-
-
-\begin{align}
-  - \alpha^{2} u^{2} v^{2} \pdv{\xi}{v}  + 2 \alpha^{2} u v^{2} \pdv{\xi}{v} - \alpha^{2} v^{2} \pdv{\xi}{v} - \alpha \eta_1 v - \alpha \eta_2 u&\nonumber\\
-  + \alpha \eta_2 + \alpha u^{2} v^{2} \pdv{\xi}{u} - \alpha u^{2} v \pdv{\xi}{u} - \alpha u v^{2} \pdv{\xi}{u} + \alpha u v \pdv{\eta_2}{v}&\nonumber\\
-  + \alpha u v \pdv{\xi}{u}  - \alpha u v \pdv{\xi}{t} - \alpha v \pdv{\eta_2}{v}  + \alpha v \pdv{\xi}{t}&\label{eq:LV_lin_sym_1_expanded}\\
-  - u v \pdv{\eta_2}{u}  + u \pdv{\eta_2}{u}  + \pdv{\eta_2}{t}&=0\nonumber
-\end{align}
-and again equation can be viewed as finding the roots of a polynomial which has monomials determined by the states $u$ and $v$. Since these monomials are linearly independent we can derive the determining equation stemming from this linearised symmetry condition:
-
-
-
+for the first linearised symmetry condition and the following equations
 \begin{align}
 1:&\alpha \eta_2 + \pdv{\eta_2}{t}=0,\\
 v:&- \alpha \eta_1 - \alpha \pdv{\eta_2}{v}  + \alpha \pdv{\xi}{t}=0,\\
@@ -73,5 +74,6 @@ u:&- \alpha \eta_2 + \pdv{\eta_2}{u} =0,\\
 u v:&\alpha \pdv{\eta_2}{v}  + \alpha \pdv{\xi}{u}  - \alpha \pdv{\xi}{t} - \pdv{\eta_2}{u} =0,\\
 u v^{2}:&2 \alpha^{2} \pdv{\xi}{v}  - \alpha \pdv{\xi}{u} =0,\\
 u^{2} v:&- \alpha \pdv{\xi}{u} =0,\\
-u^{2} v^{2}:&- \alpha^{2} \pdv{\xi}{v}  + \alpha \pdv{\xi}{u} =0.
+u^{2} v^{2}:&- \alpha^{2} \pdv{\xi}{v}  + \alpha \pdv{\xi}{u} =0,
 \end{align}
+for the second linearised symmetry condition. 
