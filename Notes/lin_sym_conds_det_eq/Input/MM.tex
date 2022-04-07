@@ -1,0 +1,98 @@
+We remind ourselves that we want to study the SIR model
+\begin{equation*}
+  \begin{split}
+    \dv{s}{t}&=-k_1 es+k_{-1}c,\\
+    \dv{c}{t}&=k_1 es-(k_{-1}+k_2)c,\\
+    \dv{e}{t}&=-k_1 es+(k_{-1}+k_2)c,\\
+    \dv{p}{t}&=k_2 c.\\        
+    \end{split}
+  \label{eq:MM}
+\end{equation*}
+  and we are looking for a generator of the following kind:
+\begin{equation}
+X=\xi(t,s,e,c,p)\partial_t+\eta_1(t,s,e,c,p)\partial_s+\eta_2(t,s,e,c,p)\partial_e+\eta_3(t,s,e,c,p)\partial_c+\eta_4(t,s,e,c,p)\partial_p.
+\end{equation}
+The first linearised symmetry condition is given by the following equation:
+\begin{align}
+  k_{1}^{2} e^{2} s^{2} \pdv{\xi}{c} - k_{1}^{2} e^{2} s^{2} \pdv{\xi}{e} - k_{1}^{2} e^{2} s^{2} \pdv{\xi}{s} - k_{1} k_{2} c e s \pdv{\xi}{c} + k_{1} k_{2} c e s \pdv{\xi}{e}&\nonumber\\
+  + k_{1} k_{2} c e s \pdv{\xi}{p} - 2 k_{1} k_{1} c e s \pdv{\xi}{c} + 2 k_{1} k_{1} c e s \pdv{\xi}{e} + 2 k_{1} k_{1} c e s \pdv{\xi}{s}&\nonumber\\
+  + k_{1} e \eta_1 + k_{1} e s \frac{d}{d c} \eta_1 - k_{1} e s \pdv{\eta_1}{e} &\nonumber\\
+  - k_{1} e s \pdv{\eta_1}{s} + k_{1} e s \pdv{\xi}{t} + k_{1} \eta_3 s + k_{2} k_{1} c^{2} \pdv{\xi}{c}&\nonumber\\
+  - k_{2} k_{1} c^{2} \pdv{\xi}{e} - k_{2} k_{1} c^{2} \pdv{\xi}{p} - k_{2} c \frac{d}{d c} \eta_1 + k_{2} c \pdv{\eta_1}{e}&\nonumber\\
+  + k_{2} c \pdv{\eta_1}{p} + k_{1}^{2} c^{2} \pdv{\xi}{c} - k_{1}^{2} c^{2} \pdv{\xi}{e} - k_{1}^{2} c^{2} \pdv{\xi}{s}&\nonumber\\
+  - k_{1} c \frac{d}{d c} \eta_1 + k_{1} c \pdv{\eta_1}{e} + k_{1} c \pdv{\eta_1}{s} - k_{1} c \pdv{\xi}{t} &\nonumber\\
+  - k_{1} \eta_2 + \pdv{\eta_1}{t}&=0.\label{eq:MM_lin_sym_1}
+\end{align}
+The second linearised symmetry condition is given by the following equation:
+\begin{align}
+  - k_{1}^{2} e^{2} s^{2} \pdv{\xi}{c} + k_{1}^{2} e^{2} s^{2} \pdv{\xi}{e} + k_{1}^{2} e^{2} s^{2} \pdv{\xi}{s} + 2 k_{1} k_{2} c e s \pdv{\xi}{c}&\nonumber\\
+  - 2 k_{1} k_{2} c e s \pdv{\xi}{e} - k_{1} k_{2} c e s \pdv{\xi}{p} - k_{1} k_{2} c e s \pdv{\xi}{s} + 2 k_{1} k_{1} c e s \pdv{\xi}{c}&\nonumber\\
+  - 2 k_{1} k_{1} c e s \pdv{\xi}{e} - 2 k_{1} k_{1} c e s \pdv{\xi}{s} - k_{1} e \eta_1 + k_{1} e s \pdv{\eta_2}{c}&\nonumber\\
+  - k_{1} e s \pdv{\eta_2}{e} - k_{1} e s \pdv{\eta_2}{s} - k_{1} e s \pdv{\xi}{t} - k_{1} \eta_3 s - k_{2}^{2} c^{2} \pdv{\xi}{c} &\nonumber\\
+  + k_{2}^{2} c^{2} \pdv{\xi}{e} + k_{2}^{2} c^{2} \pdv{\xi}{p} - 2 k_{2} k_{1} c^{2} \pdv{\xi}{c} + 2 k_{2} k_{1} c^{2} \pdv{\xi}{e} + k_{2} k_{1} c^{2} \pdv{\xi}{p} + k_{2} k_{1} c^{2} \pdv{\xi}{s}&\nonumber\\
+  - k_{2} c \pdv{\eta_2}{c} + k_{2} c \pdv{\eta_2}{e} + k_{2} c \pdv{\eta_2}{p} + k_{2} c \pdv{\xi}{t} + k_{2} \eta_2 - k_{1}^{2} c^{2} \pdv{\xi}{c}&\nonumber\\
+  + k_{1}^{2} c^{2} \pdv{\xi}{e} + k_{1}^{2} c^{2} \pdv{\xi}{s} - k_{1} c \pdv{\eta_2}{c} + k_{1} c \pdv{\eta_2}{e} + k_{1} c \pdv{\eta_2}{s} + k_{1} c \pdv{\xi}{t}&\nonumber\\
+  + k_{1} \eta_2 + \pdv{\eta_2}{t}&=0.\label{eq:MM_lin_sym_2}
+\end{align}
+The third linearised symmetry condition is given by the following equation:
+\begin{align}
+  k_{1}^{2} e^{2} s^{2} \pdv{\xi}{c} - k_{1}^{2} e^{2} s^{2} \pdv{\xi}{e} - k_{1}^{2} e^{2} s^{2} \pdv{\xi}{s} - 2 k_{1} k_{2} c e s \pdv{\xi}{c} + 2 k_{1} k_{2} c e s \pdv{\xi}{e}&\nonumber\\
+  + k_{1} k_{2} c e s \pdv{\xi}{p} + k_{1} k_{2} c e s \pdv{\xi}{s} - 2 k_{1} k_{1} c e s \pdv{\xi}{c} + 2 k_{1} k_{1} c e s \pdv{\xi}{e} + 2 k_{1} k_{1} c e s \pdv{\xi}{s} &\nonumber\\
+  + k_{1} e \eta_1 + k_{1} e s \pdv{\eta_3}{c} - k_{1} e s \pdv{\eta_3}{e} - k_{1} e s \pdv{\eta_3}{s} + k_{1} e s \pdv{\xi}{t}&\nonumber\\
+  + k_{1} \eta_3 s + k_{2}^{2} c^{2} \pdv{\xi}{c} - k_{2}^{2} c^{2} \pdv{\xi}{e} - k_{2}^{2} c^{2} \pdv{\xi}{p} + 2 k_{2} k_{1} c^{2} \pdv{\xi}{c} - 2 k_{2} k_{1} c^{2} \pdv{\xi}{e}&\nonumber\\
+  - k_{2} k_{1} c^{2} \pdv{\xi}{p} - k_{2} k_{1} c^{2} \pdv{\xi}{s} - k_{2} c \pdv{\eta_3}{c} + k_{2} c \pdv{\eta_3}{e} + k_{2} c \pdv{\eta_3}{p} - k_{2} c \pdv{\xi}{t} &\nonumber\\
+  - k_{2} \eta_2 + k_{1}^{2} c^{2} \pdv{\xi}{c} - k_{1}^{2} c^{2} \pdv{\xi}{e} - k_{1}^{2} c^{2} \pdv{\xi}{s} - k_{1} c \pdv{\eta_3}{c} + k_{1} c \pdv{\eta_3}{e}&\nonumber\\
+  + k_{1} c \pdv{\eta_3}{s} - k_{1} c \pdv{\xi}{t} - k_{1} \eta_2 + \pdv{\eta_3}{t}&=0.\label{eq:MM_lin_sym_3}
+\end{align}
+The fourth linearised symmetry condition is given by the following equation:
+\begin{align}
+  - k_{1} k_{2} c e s \pdv{\xi}{c} + k_{1} k_{2} c e s \pdv{\xi}{e} + k_{1} k_{2} c e s \pdv{\xi}{s} + k_{1} e s \pdv{\eta_4}{c} - k_{1} e s \pdv{\eta_4}{e}&\nonumber\\
+  - k_{1} e s \pdv{\eta_4}{s} + k_{2}^{2} c^{2} \pdv{\xi}{c} - k_{2}^{2} c^{2} \pdv{\xi}{e} - k_{2}^{2} c^{2} \pdv{\xi}{p} + k_{2} k_{1} c^{2} \pdv{\xi}{c} - k_{2} k_{1} c^{2} \pdv{\xi}{e}&\nonumber\\
+  - k_{2} k_{1} c^{2} \pdv{\xi}{s} - k_{2} c \pdv{\eta_4}{c} + k_{2} c \pdv{\eta_4}{e} + k_{2} c \pdv{\eta_4}{p} - k_{2} c \pdv{\xi}{t} - k_{2} \eta_2&\nonumber\\
+  - k_{1} c \pdv{\eta_4}{c} + k_{1} c \pdv{\eta_4}{e} + k_{1} c \pdv{\eta_4}{s} + \pdv{\eta_4}{t}&=0.
+  \label{eq:MM_lin_sym_4}
+\end{align}
+\subsection{Ans\"atze assuming that the equations for the tangents are independent of the states}
+
+The assumption that the derivatives of the tangents are at most functions of the time $t$ amounts to finding the roots of a polynomial of the states $s,e,c$ and $p$. Since these monomials are linearly independent we obtain the following equations:
+\begin{align}
+1:&- k_{1} \eta_2 + \pdv{\eta_1}{t}=0,\\
+e:&k_{1} \eta_1=0,\\
+c:&- k_{2} \pdv{\eta_1}{c} + k_{2} \pdv{\eta_1}{e} + k_{2} \pdv{\eta_1}{p} - k_{1} \pdv{\eta_1}{c} + k_{1} \pdv{\eta_1}{e} + k_{1} \pdv{\eta_1}{s} - k_{1} \pdv{\xi}{t}=0,\\
+c^{2}:&k_{2} k_{1} \pdv{\xi}{c} - k_{2} k_{1} \pdv{\xi}{e} - k_{2} k_{1} \pdv{\xi}{p} + k_{1}^{2} \pdv{\xi}{c} - k_{1}^{2} \pdv{\xi}{e} - k_{1}^{2} \pdv{\xi}{s}=0,\\
+s:&k_{1} \eta_3=0,\\
+s e:&k_{1} \pdv{\eta_1}{c} - k_{1} \pdv{\eta_1}{e} - k_{1} \pdv{\eta_1}{s} + k_{1} \pdv{\xi}{t}=0,\\
+s c e:&- k_{1} k_{2} \pdv{\xi}{c} + k_{1} k_{2} \pdv{\xi}{e} + k_{1} k_{2} \pdv{\xi}{p} - 2 k_{1} k_{1} \pdv{\xi}{c} + 2 k_{1} k_{1} \pdv{\xi}{e} + 2 k_{1} k_{1} \pdv{\xi}{s}=0,\\
+s^{2} e^{2}:&k_{1}^{2} \pdv{\xi}{c} - k_{1}^{2} \pdv{\xi}{e} - k_{1}^{2} \pdv{\xi}{s}=0,
+\end{align}
+for the first linearised symmetry condition, the following equations
+\begin{align}
+1:&k_{2} \eta_2 + k_{1} \eta_2 + \pdv{\eta_2}{t}=0,\\
+e:&- k_{1} \eta_1=0,\\
+c:&- k_{2} \pdv{\eta_2}{c} + k_{2} \pdv{\eta_2}{e} + k_{2} \pdv{\eta_2}{p} + k_{2} \pdv{\xi}{t} - k_{1} \pdv{\eta_2}{c} + k_{1} \pdv{\eta_2}{e} + k_{1} \pdv{\eta_2}{s} + k_{1} \pdv{\xi}{t}=0,\\
+c^{2}:&- k_{2}^{2} \pdv{\xi}{c} + k_{2}^{2} \pdv{\xi}{e} + k_{2}^{2} \pdv{\xi}{p} - 2 k_{2} k_{1} \pdv{\xi}{c} + 2 k_{2} k_{1} \pdv{\xi}{e} + k_{2} k_{1} \pdv{\xi}{p} + k_{2} k_{1} \pdv{\xi}{s} - k_{1}^{2} \pdv{\xi}{c} + k_{1}^{2} \pdv{\xi}{e} + k_{1}^{2} \pdv{\xi}{s}=0,\\
+s:&- k_{1} \eta_3=0,\\
+s e:&k_{1} \pdv{\eta_2}{c} - k_{1} \pdv{\eta_2}{e} - k_{1} \pdv{\eta_2}{s} - k_{1} \pdv{\xi}{t}=0,\\
+s c e:&2 k_{1} k_{2} \pdv{\xi}{c} - 2 k_{1} k_{2} \pdv{\xi}{e} - k_{1} k_{2} \pdv{\xi}{p} - k_{1} k_{2} \pdv{\xi}{s} + 2 k_{1} k_{1} \pdv{\xi}{c} - 2 k_{1} k_{1} \pdv{\xi}{e} - 2 k_{1} k_{1} \pdv{\xi}{s}=0,\\
+s^{2} e^{2}:&- k_{1}^{2} \pdv{\xi}{c} + k_{1}^{2} \pdv{\xi}{e} + k_{1}^{2} \pdv{\xi}{s}=0,
+\end{align}
+for the second linearised symmetry condition and the following equations
+\begin{align}
+1:&- k_{2} \eta_2 - k_{1} \eta_2 + \pdv{\eta_3}{t}=0,\\
+e:&k_{1} \eta_1=0,\\
+c:&- k_{2} \pdv{\eta_3}{c} + k_{2} \pdv{\eta_3}{e} + k_{2} \pdv{\eta_3}{p} - k_{2} \pdv{\xi}{t} - k_{1} \pdv{\eta_3}{c} + k_{1} \pdv{\eta_3}{e} + k_{1} \pdv{\eta_3}{s} - k_{1} \pdv{\xi}{t}=0,\\
+c^{2}:&k_{2}^{2} \pdv{\xi}{c} - k_{2}^{2} \pdv{\xi}{e} - k_{2}^{2} \pdv{\xi}{p} + 2 k_{2} k_{1} \pdv{\xi}{c} - 2 k_{2} k_{1} \pdv{\xi}{e} - k_{2} k_{1} \pdv{\xi}{p} - k_{2} k_{1} \pdv{\xi}{s} + k_{1}^{2} \pdv{\xi}{c} - k_{1}^{2} \pdv{\xi}{e} - k_{1}^{2} \pdv{\xi}{s}=0,\\
+s:&k_{1} \eta_3=0,\\
+s e:&k_{1} \pdv{\eta_3}{c} - k_{1} \pdv{\eta_3}{e} - k_{1} \pdv{\eta_3}{s}+ k_{1} \pdv{\xi}{t}=0,\\
+s c e:&- 2 k_{1} k_{2} \pdv{\xi}{c} + 2 k_{1} k_{2} \pdv{\xi}{e} + k_{1} k_{2} \pdv{\xi}{p} + k_{1} k_{2} \pdv{\xi}{s} - 2 k_{1} k_{1} \pdv{\xi}{c} + 2 k_{1} k_{1} \pdv{\xi}{e} + 2 k_{1} k_{1} \pdv{\xi}{s}=0,\\
+s^{2} e^{2}:&k_{1}^{2} \pdv{\xi}{c} - k_{1}^{2} \pdv{\xi}{e} - k_{1}^{2} \pdv{\xi}{s}=0,
+\end{align}
+for the third linearised symmetry condition and the following equations
+\begin{align}
+1:&- k_{2} \eta_2+ \pdv{\eta_4}{t}=0,\\
+c:&- k_{2} \pdv{\eta_4}{c} + k_{2} \pdv{\eta_4}{e} + k_{2} \pdv{\eta_4}{p} - k_{2} \pdv{\xi}{t} - k_{1} \pdv{\eta_4}{c} + k_{1} \pdv{\eta_4}{e} + k_{1} \pdv{\eta_4}{s}=0,\\
+c^{2}:&k_{2}^{2} \pdv{\xi}{c} - k_{2}^{2} \pdv{\xi}{e} - k_{2}^{2} \pdv{\xi}{p} + k_{2} k_{1} \pdv{\xi}{c} - k_{2} k_{1} \pdv{\xi}{e} - k_{2} k_{1} \pdv{\xi}{s}=0,\\
+s e:&k_{1} \pdv{\eta_4}{c} - k_{1} \pdv{\eta_4}{e} - k_{1} \pdv{\eta_4}{s}=0,\\
+s c e:&- k_{1} k_{2} \pdv{\xi}{c} + k_{1} k_{2} \pdv{\xi}{e} + k_{1} k_{2} \pdv{\xi}{s}=0,
+\end{align}
+for the fourth linearised symmetry condition.
