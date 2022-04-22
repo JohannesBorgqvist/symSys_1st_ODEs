@@ -8,75 +8,26 @@ We remind ourselves that we want to study the Lotka-Volterra model:
 \end{equation*}
 and we are looking for a generator of the following kind:
 \begin{equation}
-X=\xi(t,u,v)\partial_t+\eta_1(t,u,v)\partial_u+\eta_2(t,u,v)\partial_v.
+X=\xi(t)\partial_t+\eta_1(t,u,v)\partial_u+\eta_2(t,u,v)\partial_v
 \end{equation}
-Now, derive the linearised symmetry conditions in equation \eqref{eq:lin_sym_practice} by plugging in our model in equation \eqref{eq:LV}. Given that we have autnomous reaction terms, our linearised symmetry conditions can be written as follows:
-
-
-\begin{align}
-    &\pdv{\eta_1}{t}+u(1-v)\pdv{\eta_1}{u}+\alpha v(u-1)\pdv{\eta_1}{v}\nonumber\\
-    &-\left[u(1-v)\right]\left(\pdv{\xi}{t}+u(1-v)\pdv{\xi}{u}+\alpha v(u-1)\pdv{\xi}{v}\right)\label{eq:LV_lin_sym_1}\\
-    &=\eta_1(1-v)-\eta_2 u,\nonumber\\
-    &\pdv{\eta_2}{t}+u(1-v)\pdv{\eta_2}{u}+\alpha v(u-1)\pdv{\eta_2}{v}\nonumber\\
-    &-\left[\alpha v(u-1)\right]\left(\pdv{\xi}{t}+u(1-v)\pdv{\xi}{u}+\alpha v(u-1)\pdv{\xi}{v}\right)\label{eq:LV_lin_sym_2}\\
-    &=\alpha\eta_1 v+\alpha\eta_2(u-1).\nonumber
-\end{align}
-
-
-
-
-Now, let's expand this as much as possible and then try to derive the determining equations. Equation \eqref{eq:LV_lin_sym_1} is expanded as follows
-
-
+which implies that the generator is \textit{fibre preserving}. Now, derive the linearised symmetry conditions in equation \eqref{eq:lin_sym_practice} by plugging in our model in equation \eqref{eq:LV}. Given that we have autnomous reaction terms, our linearised symmetry conditions can be written as follows:
 
 \begin{align}
-  \alpha u^{2} v^{2} \pdv{\xi}{v}  - \alpha u^{2} v \pdv{\xi}{v} - \alpha u v^{2} \pdv{\xi}{v} + \alpha u v \pdv{\eta_1}{v}&\nonumber\\
-  + \alpha u v \pdv{\xi}{v}  - \alpha v \pdv{\eta_1}{v}  + \eta_1 v - \eta_1 + \eta_2 u &\nonumber\\
-  - u^{2} v^{2} \pdv{\xi}{u}  + 2 u^{2} v \pdv{\xi}{u}  - u^{2} \pdv{\xi}{u}  - u v \pdv{\eta_1}{u}&\label{eq:LV_lin_sym_1_expanded}\\
-  + u v \pdv{\xi}{t}+ u \pdv{\eta_1}{u}  - u \pdv{\xi}{t}+ \pdv{\eta_1}{t}&=0.\nonumber
+a \left(u - 1\right) v \frac{\partial\eta_{1}}{\partial v} - \left(1 - v\right) \eta_{1} + \left(1 - v\right) u \frac{\partial\eta_{1}}{\partial u} - \left(1 - v\right) u \frac{d\xi}{dt} + \eta_{2} u + \frac{\partial\eta_1}{\partial t}&=0,\label{eq:LV_lin_sym_1}\\
+- a \left(u - 1\right) \eta_{2} + a \left(u - 1\right) v \frac{\partial\eta_{2}}{\partial v} - a \left(u - 1\right) v \frac{d\xi}{dt} - a \eta_{1} v + \left(1 - v\right) u \frac{\partial\eta_{2}}{\partial u} + \frac{\partial\eta_2}{\partial t}&=0.\label{eq:LV_lin_sym_2}
 \end{align}
+These equations correspond to a coupled system of first order PDEs in two variables ($u$ and $v$) where we consider $\dd\xi/\dd t$ to be an unknown function. A property of these equations, is that they are decoupled in the sense that Equation \eqref{eq:LV_lin_sym_1} contains $\eta_2$ in only one place while Equation \eqref{eq:LV_lin_sym_2} contains $\eta_1$ in only one place. Thus, we can, for example, solve Equation \eqref{eq:LV_lin_sym_1} for $\eta_2$ and then substitute this into Equation \eqref{eq:LV_lin_sym_2}. Essentially, this will convert the system to a single PDE of order two in three variables ($t,u,v$). Using sympy as a tool for conducting the differentiations and simplifications, we will now present the results of these calculations. Equation \eqref{eq:LV_lin_sym_1} can be re-written as follows:
 
-
-
-Similarly, the second linearised symmetry condition in equation \eqref{eq:LV_lin_sym_2} is expanded as follows:
-
-
-
+\begin{equation}
+  \eta_{2}=- a v \frac{\partial\eta_{1}}{\partial v} + \frac{a v \frac{\partial\eta_{1}}{\partial v}}{u} - \frac{\eta_{1} v}{u} + \frac{\eta_{1}}{u} + v \frac{\partial\eta_{1}}{\partial u} - v \frac{d\xi}{dt} - \frac{\partial\eta_{1}}{\partial u} + \frac{d\xi}{dt} - \frac{\frac{\partial\eta_1}{\partial t}}{u}.\\
+  \label{eq:LV_lin_sym_1_modified}
+\end{equation}
+Now, by substituting Equation \eqref{eq:LV_lin_sym_1_modified} into Equation \eqref{eq:LV_lin_sym_2} the following equation is obtained:
 \begin{align}
-  - \alpha^{2} u^{2} v^{2} \pdv{\xi}{v}  + 2 \alpha^{2} u v^{2} \pdv{\xi}{v} - \alpha^{2} v^{2} \pdv{\xi}{v} - \alpha \eta_1 v - \alpha \eta_2 u&\nonumber\\
-  + \alpha \eta_2 + \alpha u^{2} v^{2} \pdv{\xi}{u} - \alpha u^{2} v \pdv{\xi}{u} - \alpha u v^{2} \pdv{\xi}{u} + \alpha u v \pdv{\eta_2}{v}&\nonumber\\
-  + \alpha u v \pdv{\xi}{u}  - \alpha u v \pdv{\xi}{t} - \alpha v \pdv{\eta_2}{v}  + \alpha v \pdv{\xi}{t}&\label{eq:LV_lin_sym_2_expanded}\\
-  - u v \pdv{\eta_2}{u}  + u \pdv{\eta_2}{u}  + \pdv{\eta_2}{t}&=0.\nonumber
+  - a^{2} u^{2} v^{2} \frac{d^{2}}{d v^{2}} \eta_{1} + 2 a^{2} u v^{2} \frac{d^{2}}{d v^{2}} \eta_{1} - a^{2} v^{2} \frac{d^{2}}{d v^{2}} \eta_{1} - a \eta_{1} u v - a \eta_{1} u + a \eta_{1} + 2 a u^{2} v^{2} \frac{d^{2}}{d vd u} \eta_{1}&\nonumber\\
+  - 2 a u^{2} v \frac{d^{2}}{d vd u} \eta_{1} + a u^{2} \frac{\partial\eta_{1}}{\partial u} - a u^{2} \frac{d\xi}{dt} - a u v^{2} \frac{\partial\eta_{1}}{\partial v} - 2 a u v^{2} \frac{d^{2}}{d vd u} \eta_{1} + a u v \frac{\partial\eta_{1}}{\partial v} &\nonumber\\
+  + 2 a u v \frac{d^{2}}{d vd u} \eta_{1} - a u v \pdv{\eta_1}{t}{v} - a u \frac{\partial\eta_{1}}{\partial u} + a u \frac{d\xi}{dt}&\nonumber\\
+  + a u \frac{\partial\eta_1}{\partial t} + 2 a v^{2} \frac{\partial\eta_{1}}{\partial v} - 2 a v \frac{\partial\eta_{1}}{\partial v} + a v \pdv{\eta_1}{t}{v}&\nonumber\\
+  - a \frac{\partial\eta_1}{\partial t} - \eta_{1} v^{2} + 2 \eta_{1} v - \eta_{1} - u^{2} v^{2} \frac{d^{2}}{d u^{2}} \eta_{1} + 2 u^{2} v \frac{d^{2}}{d u^{2}} \eta_{1} - u^{2} \frac{d^{2}}{d u^{2}} \eta_{1} + u v^{2} \frac{\partial\eta_{1}}{\partial u}&\nonumber\\
+  - 2 u v \frac{\partial\eta_{1}}{\partial u} + u v \pdv{\eta_1}{t}{u} + u \frac{\partial\eta_{1}}{\partial u} - u \pdv{\eta_1}{t}{u} - v \frac{\partial\eta_1}{\partial t} + \frac{\partial\eta_1}{\partial t}&=0.\label{eq:LV_lin_sym_2_modified}
 \end{align}
-To find the symmetries of the LV model, we must solve equations \eqref{eq:LV_lin_sym_1_expanded} and \eqref{eq:LV_lin_sym_2_expanded}. As there is no general theory for how to do this, we resort to testing different ans\"atze for the tangents $\xi,\eta_1$ and $\eta_2$. 
-
-\subsection{Ans\"atze assuming that the equations for the tangents are independent of the states}
-The first ans\"atze we test is to assume that equations \eqref{eq:LV_lin_sym_1_expanded} and \eqref{eq:LV_lin_sym_2_expanded} are polynomials in the states $u,v$ where the coefficients are merely functions of the time $t$. Given this assumption, all monomials in the states are \textit{linearly independent} it follows that all coefficients in front of these monomials must be zero. This is gives us the following equations
-
-
-
-\begin{align}
-1:&- \eta_1 +\pdv{\eta_1}{t}=0,\\
-v:&- \alpha \pdv{\eta_1}{v}  + \eta_1=0,\\
-u:&\eta_2 + \pdv{\eta_1}{u}  - \pdv{\xi}{t}=0,\\
-u v:&\alpha \pdv{\eta_1}{v}  + \alpha \pdv{\xi}{v}  - \pdv{\eta_1}{u}  + \pdv{\xi}{t}=0,\\
-u v^{2}:&- \alpha \pdv{\xi}{v} =0,\\
-u^{2}:&- \pdv{\xi}{u} =0,\\
-u^{2} v:&- \alpha \pdv{\xi}{v}  + 2 \pdv{\xi}{u} =0,\\
-u^{2} v^{2}:&\alpha \pdv{\xi}{v} - \pdv{\xi}{u}=0,
-\end{align}
-for the first linearised symmetry condition and the following equations
-\begin{align}
-1:&\alpha \eta_2 + \pdv{\eta_2}{t}=0,\\
-v:&- \alpha \eta_1 - \alpha \pdv{\eta_2}{v}  + \alpha \pdv{\xi}{t}=0,\\
-v^{2}:&- \alpha^{2} \pdv{\xi}{v} =0,\\
-u:&- \alpha \eta_2 + \pdv{\eta_2}{u} =0,\\
-u v:&\alpha \pdv{\eta_2}{v}  + \alpha \pdv{\xi}{u}  - \alpha \pdv{\xi}{t} - \pdv{\eta_2}{u} =0,\\
-u v^{2}:&2 \alpha^{2} \pdv{\xi}{v}  - \alpha \pdv{\xi}{u} =0,\\
-u^{2} v:&- \alpha \pdv{\xi}{u} =0,\\
-u^{2} v^{2}:&- \alpha^{2} \pdv{\xi}{v}  + \alpha \pdv{\xi}{u} =0,
-\end{align}
-for the second linearised symmetry condition.
-
-\subsection{Re-writing the symmetry conditions as a two separable equations}
-What we can do is to separate our two linearised equations in \eqref{eq:LV_lin_sym_1} and \eqref{eq:LV_lin_sym_2} so that they only depend one one tangent $\eta_1$ and $\eta_2$ at a time. More precisely, we can solve \eqref{eq:LV_lin_sym_1} for $\eta_2$ and then we can substitute this expression into \eqref{eq:LV_lin_sym_2} in order to get a second order PDE for $\eta_1$. Using this second order PDE, we then search for a change of variables so that 
