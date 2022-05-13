@@ -18,6 +18,7 @@
 *.yml~
 *.xlsx~
 *.sh~
+*.jl~
 # We also remove the gitignore itself
 .gitignore~
 # Also, we remove some annoying folders that get created in the Code folder when the scripts are executed.
