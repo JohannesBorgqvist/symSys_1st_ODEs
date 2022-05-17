@@ -25,12 +25,24 @@ println("The states are:")
 for state in states
     println(string.(state))
 end
+# Define our growth rate a
+@variables a
+# Define our reaction terms
+omega_list = [u*(1-v), a*v*(u-1)]
 # Create the tangential ansatze
 degree = 2
-monomials, tangential_ansatze, unknown_coefficients = create_tangential_ansatze(degree,variables)
-print("\t\tMONOMIALS:\n",monomials,"\n\n")
-print("\t\tTANGENTIAL ANSATZE:\n",tangential_ansatze,"\n\n")
-print(tangential_ansatze[1])
-print("\t\tUNKNOWN COEFFICIENTS:\n",unknown_coefficients,"\n\n")
+monomials, tangential_ansatze, unknown_coefficients, polynomials = create_tangential_ansatze(degree,variables)
+# Formulate the linearised symmetry condition
+lin_syms = lin_sym_conds_fibre_preserving(degree,variables,tangential_ansatze,omega_list,polynomials)
+# Write things to a latex document
+str_1 = latexify(lin_syms[1])
+str_1 = replace(str_1, "\\begin{equation}" => "\\begin{align*}")
+str_1 = replace(str_1, "\n\\end{equation}" => "&=0\\\\")
+str_2 = latexify(lin_syms[2])
+str_2 = replace(str_2,"\\begin{equation}\n"=>"")
+str_2 = replace(str_2, "\n\\end{equation}" => "&=0\\\\\n\\end{align*}")
+tot_str = string(str_1,str_2)
+write("latex_output_julia/lin_syms.tex",tot_str)
+
 
 
