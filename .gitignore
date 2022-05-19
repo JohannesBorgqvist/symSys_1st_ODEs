@@ -24,3 +24,5 @@
 # Also, we remove some annoying folders that get created in the Code folder when the scripts are executed.
 /Code/__pycache__
 /Code/.ipynb_checkpoints
+# Also, we make a folder with a temporary presentation which we do not want to push
+/Presentations/
