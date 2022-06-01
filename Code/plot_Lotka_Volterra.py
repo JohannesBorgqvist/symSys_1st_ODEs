@@ -90,7 +90,7 @@ axs[1].set_xlabel(xlabel='Time, $t$',fontsize=25)
 axs[1].set_ylabel(ylabel='Population size',fontsize=25)
 # Title and saving the figure
 f1.suptitle('Evolution of fox and rabbit populations',fontsize=30,weight='bold')
-f1.savefig('rabbits_and_foxes_dynamics.png')
+f1.savefig('../Figures/rabbits_and_foxes_dynamics.png')
 
 #=================================================================================
 #=================================================================================
@@ -141,4 +141,4 @@ axs[2].set_title(label='Anti-clockwise rotations',fontsize=30,style='italic')
 # Title and saving the figure
 f1.suptitle('Evolution of fox and rabbit populations',fontsize=30,weight='bold')
 p.show()
-f1.savefig('rabbits_and_foxes_transformations.png')
+f1.savefig('../Figures/rabbits_and_foxes_transformations.png')
