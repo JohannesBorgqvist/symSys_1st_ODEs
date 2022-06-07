@@ -1,0 +1,140 @@
+Here, we will present a condensed version of the mathematical theory of symmetries of differential equations. For the interested reader, there are many excellent introductory texts~\cite{bluman1989symmetries,hydon2000symmetry,olver2000applications,olver2008equivalence,lang2001,nakahara2003} and here we will focus on general two component of first order ODEs
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{\tau}&=\omega_1(t,u,v),\\
+    \dv{v}{\tau}&=\omega_2(t,u,v),\\    
+    \end{split}
+  \label{eq:sys_general}
+\end{equation}
+describing the time evolution of either the concentration profile of two proteins $u(\tau)$ and $v(\tau)$ or the evolution of two populations. Given this system, we subsequently will present the notions of Lie-transformations, their prolongations and symmetries of differential equations. 
+
+
+% Lie groups of infinitesimal transformations
+\subsection{Lie groups of infinitesimal transformations}
+Here, a one parameter Lie-symmetry meaning a one parameter $\mathcal{C}^{\infty}$-diffeomorphism is a transformation
+\begin{equation}
+  (\hat{\tau}(t,u(\tau),v(\tau);\epsilon),\hat{u}(t,u(\tau),v(\tau);\epsilon),\hat{v}(t,u(\tau),v(\tau);\epsilon))=\left(\phi_1(\tau,u,v;\epsilon),\phi_2(\tau,u,v;\epsilon),\phi_3(\tau,u,v;\epsilon)\right)
+  \label{eq:symmetry_original}
+  \end{equation}
+parameterised by the parameter $\epsilon$ where the transformation is defined by the infinitely differentiable functions $\phi_i\in\mathcal{C}^{\infty}(\mathbb{R}^4),\quad i=1,2,3$. Now, we will parametrise such symmetries in terms of $\epsilon$ in the following way
+\begin{equation}
+\Gamma_{\epsilon}:(\tau,u(\tau),v(\tau))\mapsto\left(\hat{\tau}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon)\right)
+\label{eq:symmetry_general}
+\end{equation}
+and the characterising feature of a symmetry of a differential equation is that if $(\tau,u(\tau),v(\tau))$ is a solution to the system of ODEs in Equation \eqref{eq:sys_general} then so is $(\hat{\tau}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon))$. The set of such one parameter Lie-transformations $G$ together with a multiplication operation $\times$, forms a \textit{one parameter Lie group of transformations} denoted by $(G,\times)$. Such a Lie-group has three defining properties:
+
+\begin{enumerate}
+    \item \textit{Multiplication}: For two transformation parameters $\epsilon,\delta\in\mathbb{R}$, multiplication of symmetries (meaning that we first transform with $\delta$ and then with $\epsilon$) is defined by: $\Gamma_\epsilon\times\Gamma_\delta=\Gamma_{\epsilon+\delta}$,
+    \item \textit{Identity element}: The trivial symmetry $\Gamma_0=\Gamma_{\epsilon=0}$ acts trivially on curves: $\Gamma_0 (\tau,u(\tau),v(\tau))=(\tau,u(\tau),v(\tau))$,
+    \item \textit{Inverse element}: The inverse symmetry $\Gamma^{-1}_{\epsilon}$ is defined by $\Gamma^{-1}_{\epsilon}=\Gamma_{-\epsilon}$.
+\end{enumerate}
+Moreover, by the continuity of these transformations we can Taylor expand $\Gamma_{\epsilon}$ around $\epsilon\approx 0$ which gives us
+\begin{align}
+  \hat{\tau}&=\tau+\xi(\tau,u,v)\epsilon+\mathcal{O}(\epsilon^2),\\
+  \hat{u}&=u+\eta_1(\tau,u,v)\epsilon+\mathcal{O}(\epsilon^2),\\
+  \hat{v}&=v+\eta_2(\tau,u,v)\epsilon+\mathcal{O}(\epsilon^2),
+\end{align}
+and here the tangents $\xi$, $\eta_1$ and $\eta_2$ are referred to as the \textit{infinitesimals} which, in turn, are defined as follows:
+\begin{align}
+  \xi(\tau,u,v)&=\left.\pdv{\phi_1(\tau,u,v;\epsilon)}{\epsilon}\right|_{\epsilon=0},\label{eq:tangent_1}\\
+  \eta_1(\tau,u,v)&=\left.\pdv{\phi_2(\tau,u,v;\epsilon)}{\epsilon}\right|_{\epsilon=0},\label{eq:tangent_2}\\
+  \eta_2(\tau,u,v)&=\left.\pdv{\phi_3(\tau,u,v;\epsilon)}{\epsilon}\right|_{\epsilon=0},\label{eq:tangent_3}
+\end{align}
+where the functions $\phi_1,\phi_2,\phi_3\in\mathcal{C}^{\infty}(\mathbb{R}^{4})$ define the symmetry according to Equation \eqref{eq:symmetry_original}. Now, one of the most powerful results from the theory of Lie-symmetries is that the global behaviour of the symmetry in Equation \eqref{eq:symmetry_general} can be retrieved from the local behaviour in terms of the infinitesimals in Equations \eqref{eq:tangent_1} to \eqref{eq:tangent_3}. More precisely, the vector field defined by
+\begin{equation}
+X=\xi(\tau,u,v)\partial_t+\eta_1(\tau,u,v)\partial_u+\eta_2(\tau,u,v)\partial_v
+  \label{eq:generator}
+\end{equation}
+is referred to as the \textit{infinitesimal generator of the Lie group}. Using this vector field, \textit{Lie's first fundamental theorem} \cite{bluman1989symmetries} says that the symmetry in Equation \eqref{eq:symmetry_general}, is in fact given by
+
+\begin{equation}
+\Gamma_{\epsilon}:(\tau,u,v)\mapsto \left(e^{\epsilon X}\tau,e^{\epsilon X}u,e^{\epsilon X}v\right)
+  \label{eq:symmetry_Lie}
+\end{equation}
+where the exponential map is defined as follows
+\begin{equation}
+  e^{\epsilon X}=\sum_{j=0}^{\infty}\dfrac{\epsilon^j}{j!}X^{j}.
+  \label{eq:exponential}
+\end{equation}
+Accordingly, it is enough to know the local behaviour represented by the infinitesimal generator of the Lie group $X$ in Equation \eqref{eq:generator} in order to also know the global behaviour of the symmetry according to Equation \eqref{eq:symmetry_Lie}. Thus, to find the symmetries we must find the infinitesimals which is possible owing to the fact that the defining property of symmetries can be expressed in terms of their local action. Before, we are able to present the notion of a symmetry of a differential equation, we must introduce the idea of so called extended transformations or prolongations.
+
+
+
+
+
+
+% Prolongations: extended transformations
+\subsection{Prolongations: extended transformations}
+Our aim is to mathematically define a symmetry of a differential equation as a Lie-transformation that maps a solution curve of the differential equation to another solution curve. More precisely, given the Lie transformation
+$$\Gamma_{\epsilon}:(\tau,u(\tau),v(\tau))\mapsto(\hat{t}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon))$$
+we would say that $\Gamma_\epsilon$ is a symmetry of the system of differential equations in Equation \eqref{eq:sys_general} if it maps a solutions curve $(\tau,u(\tau),v(\tau))$ of this system of ODEs to another solution curve $(\hat{t}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon))$. Here, $\tau\in\mathcal{B}\sim\mathbb{R}$ is called the \textit{independent variable} and it defines the so called \textit{base space} $\mathcal{B}$ of the symmetry $\Gamma_\epsilon$. Also, the states $(u(\tau),v(\tau))\in F\sim\mathbb{R}^2$ are called the \textit{dependent variables} and they define the so called \textit{fibre} $F$ of the symmetry $\Gamma_\epsilon$. Given these spaces, the symmetry $\Gamma_\epsilon$ acts on the so called \textit{total space} $E$ defined as $E=B\times F\sim\mathbb{R}^3$, and thus we have that $\Gamma_\epsilon:E\mapsto E$. Now, a transformation acting on solutions to differential equations must account for the derivatives of the states, e.g. $u'(\tau)$ and $v'(\tau)$, and to this end we introduce the notion of extended transforamtions.
+
+There is a natural extension of a Lie-symmetry $\Gamma_\epsilon$ referred to as the prolongation of the symmetry and it is defined by the derivatives of the states. More precisely, \textit{the first prolongation of the Lie-symmetry} $\Gamma^{(1)}_{\epsilon}$ is defined as follows
+\begin{equation}
+\Gamma_{\epsilon}^{(1)}:(\tau,u(\tau),v(\tau),u'(\tau),v'(\tau))\mapsto(\hat{t}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon),\hat{u}'(\epsilon),\hat{v}'(\epsilon))
+  \label{eq:prolongation}
+\end{equation}
+where the derivatives of the states are defined by $u'(\tau)=\omega_1(t,u,v)$ and $v'(\tau)=\omega_1(t,u,v)$ according to Equation \eqref{eq:sys_general}. Here, it is not entirely clear how the derivatives $\hat{u}'(\epsilon)$ and $\hat{v}'(\epsilon)$ are defined, and to this end we need to introduce the notion of the \textit{total derivative} $D_\tau$. This operator is defined as follows
+
+\begin{equation}
+D_\tau=\partial_\tau+u'(\tau)\partial_u+v'(\tau)\partial_v
+  \label{eq:tot_der}
+  \end{equation}
+  and given the total derivative the derivatives of the transformed coordinates are defined as follows
+  \begin{equation}
+    \begin{split}
+      \hat{u}'(\epsilon)&=\dfrac{D_\tau \hat{u}(\tau,u,v;\epsilon)}{D_\tau\hat{\tau}(\tau,u,v;\epsilon)},\\
+      \hat{v}'(\epsilon)&=\dfrac{D_\tau \hat{v}(\tau,u,v;\epsilon)}{D_\tau\hat{\tau}(\tau,u,v;\epsilon)}.\\
+    \end{split}
+    \label{eq:extended_derivatives}
+    \end{equation}
+    Moreover, the derivatives $(u'(\tau),v'(\tau))\in F'\sim\mathbb{R}^2$ define the \textit{prolonged fibre} $F'$, and \textit{the first jet space} $\mathcal{J}^{(1)}$ is defined by $\mathcal{J}^{(1)}=E\times F'$. Given the jet space, the prolonged symmetry can be succintly written in the following way $\Gamma^{(1)}_{\epsilon}:\mathcal{J}^{(1)}\mapsto\mathcal{J}^{(1)}$. Also, the operator $\Gamma_\epsilon\mapsto\Gamma^{(1)}_{\epsilon}$ is well-defined and is referred to as the \textit{lift} of the symmetry $\Gamma_{\epsilon}$. Previously, we showed that the infinitesimal action of the symmetry $\Gamma_{\epsilon}$ is expressed by the infinitesimal generator of the Lie group $X$ in Equation \eqref{eq:generator}, and similarly there is an infinitesimal representation of the prolonged symmetry $\Gamma^{(1)}_{\epsilon}$.
+
+    Locally, we can describe the action of the first prolongation of the symmetry $\Gamma^{(1)}_{\epsilon}$ by the \textit{first prolongation of the infinitesimal generator of the Lie group} $X^{(1)}$. This operator is defined as follows
+\begin{equation}
+X^{(1)}=X+\eta_1^{(1)}(\tau,u,v)\partial_{u'}+\eta_2^{(1)}(\tau,u,v)\partial_{v'}
+\label{eq:prolonged_generator}
+\end{equation}
+and here the prolonged infinitesimals $\eta_1^{(1)}$ and $\eta_{2}^{(1)}$ respectively are given by the \textit{prolongation formula}
+\begin{equation}
+\eta_{i}^{(1)}(\tau,u,v)=D_\tau\eta_i(\tau,u,v)-\omega_i(\tau,u,v) D_\tau\xi(\tau,u,v),\quad i=1,2.
+  \label{eq:prolongation_formula}
+\end{equation}
+Now, given the notion of prolongations, we are now able to formulate the conditions that define a symmetry of a differential equation. 
+
+
+% Lie symmetries of differential 
+\subsection{Symmetries of differential equations}
+Consider a one parameter Lie transformation $\Gamma_\epsilon:(\tau,u(\tau),v(\tau))\mapsto(\hat{\tau}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon))$. Then, this transformation is a symmetry of the system of differential equations in Equation \eqref{eq:sys_general} if it maps a solution curve $(\tau,u(\tau),v(\tau))$ to another solution curve $(\hat{\tau}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon))$. Using the notions of jet spaces and prolongations, it can be shown that a Lie-transformation $\Gamma_\epsilon$ is a symmetry of the system of differential equations in Equation \eqref{eq:sys_general} if and only if the following so called \textit{symmetry conditions} hold
+\begin{equation}
+ \begin{split}
+   u'(\epsilon)&=\omega_1(\hat{\tau}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon))\quad\mathrm{whenever}\quad\dv{u}{\tau}=\omega_1(\tau,u,v),\\
+   v'(\epsilon)&=\omega_2(\hat{\tau}(\epsilon),\hat{u}(\epsilon),\hat{v}(\epsilon))\quad\mathrm{whenever}\quad\dv{v}{\tau}=\omega_2(\tau,u,v),\\   
+ \end{split}
+ \label{eq:sym_cond}
+\end{equation}
+where the derivatives $u'(\epsilon)$ and $v'(\epsilon)$ are defined by Equation \eqref{eq:extended_derivatives}. In general, it is difficult to use these symmetry conditions and instead one can formulate the same condition in terms of the infinitesimal action of the prolonged symmetry. 
+
+
+
+ More precsely, a Lie transformation $\Gamma_\epsilon$ is a symmetry of the system of differential equations in Equation \eqref{eq:sys_general} if and only if the \textit{linearised symmetry conditions} given by
+\begin{equation}
+  \begin{split}
+    X^{(1)}\left(\dv{u}{t}-\omega_1(\tau,u,v)\right)&=0\quad\mathrm{whenever}\quad\dv{u}{\tau}=\omega_1(\tau,u,v),\\
+    X^{(1)}\left(\dv{v}{t}-\omega_2(\tau,u,v)\right)&=0\quad\mathrm{whenever}\quad\dv{v}{\tau}=\omega_2(\tau,u,v),
+    \end{split}
+  \label{eq:lin_sym_ori}
+  \end{equation}
+are satisfied. By the linearity of the prolonged generator $X^{(1)}$ in Equation \eqref{eq:prolonged_generator}, these equations can in fact be written as follows \cite{stephani1989differential}:
+\begin{equation}
+  \begin{split}
+    \eta_1^{(1)}(\tau,u,v)&=X(\omega_1(\tau,u,v))\quad\mathrm{whenever}\quad\dv{u}{\tau}=\omega_1(\tau,u,v),\\
+    \eta_2^{(1)}(\tau,u,v)&=X(\omega_2(\tau,u,v))\quad\mathrm{whenever}\quad\dv{v}{\tau}=\omega_2(\tau,u,v),
+    \end{split}
+  \label{eq:lin_sym}
+\end{equation}
+where the prolonged tangents in the left hand sides are given by the prolongation formula in Equation \eqref{eq:prolongation_formula}. In general, the symmetries of a given differential equation are found by solving the linearised symmetry conditions for the infinitesimals and then the symmetry is retrieved using the exponential map. Next, we will focus on a common class of ODEs in mathematical biology, namely that of autonomous models and specifically time-invariant models. 
+
+
+

@@ -1,0 +1,79 @@
+%--------------------------------------------------------------------------------------
+% Definition of the document
+%--------------------------------------------------------------------------------------
+\documentclass[12pt]{article}
+%--------------------------------------------------------------------------------------
+% Define packages needed for the writing
+%--------------------------------------------------------------------------------------
+% General document formatting
+\usepackage[margin=1in]{geometry}
+%\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}    
+% Related to math
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+% To write derivative more efficiently
+\usepackage{physics}
+%--------------------------------------------------------------------------------------
+% Define the specific setup for the document
+% --------------------------------------------------------------------------------------
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+%--------------------------------------------------------------------------------------
+% Define the specific setup for the document
+%--------------------------------------------------------------------------------------
+% Set the font of the equations to Helvetica as well. 
+% Increase the spacing between the lines
+\linespread{1.5}
+%--------------------------------------------------------------------------------------
+% THE DOCUMENTS BEGINS
+%--------------------------------------------------------------------------------------
+\begin{document}
+\title{\textbf{Fibre-preserving symmetries of time-invariant models in mathematical biology acting on the phase plane}}
+\author{Johannes Borgqvist}
+\date{\today}
+\maketitle
+\tableofcontents
+\clearpage
+%--------------------------------------------------------------------------------------
+% THE INTRO
+\section{Introduction}
+\input{./Input/Intro}
+%--------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
+% Fibre preserving symmetries
+\section{Mathematical theory of symmetries of differential equations}
+\input{./Input/theory}
+% --------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
+% Fibre preserving symmetries
+\section{Fibre-preserving symmetries of time-invariant models acting on the phase-plane}
+\input{./Input/fibre_preserving_symmetries}
+%--------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
+% Lotka-Volterra model
+\section{The fibre-preserving symmetries of the LV-model restricted to the phase plane}
+\input{./Input/LV}
+% --------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
+% The BZ-model
+\section{The fibre-preserving symmetries of the BZ-model restricted to the phase plane}
+\input{./Input/BZ}
+% --------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
+% 
+\section{The fibre-preserving symmetries of the Brusselator restricted to the phase plane}
+\input{./Input/Brusselator}
+%--------------------------------------------------------------------------------------
+% THE BIBLIOGRAPHY
+%--------------------------------------------------------------------------------------
+\clearpage
+\bibliographystyle{unsrt}
+\bibliography{symmetry_bib}
+%--------------------------------------------------------------------------------------
+% THE DOCUMENT ENDS
+%--------------------------------------------------------------------------------------
+\end{document}

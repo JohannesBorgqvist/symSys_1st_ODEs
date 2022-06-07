@@ -1,0 +1,32 @@
+There are numerous examples of biological systems that give rise to oscillatory behaviour. Some of these are the dynamics of a population consisting of predators and prey, chemical reactions such as the Belusov-Zhabotinskii reaction or the so called Brusselator reaction proposed by Prigogene and Lefever. In these cases, the oscillations have been modelled by mathematical models consisting of a two state system of first order ODEs describing the change in either populations sizes or the concentrations of chemical species over time. Mathematically, these oscillations have been described in terms of linear stability analysis, where the models are firstly linearised around their steady states and then the stability of these local linear systems is determined. However, this analytical tool can merely answer questions about the long term behaviour of the system and it does not reveal what properties that are conserved during these oscillations.
+
+A well-known mathematical technique for deriving conserved properties in theoretical physics is that of symmetry methods. Symmetries are transformations which preserve the defining property of the objects they act on, and in the context of ODEs a symmetry is an operator mapping a solution curve to another solution curve. Moreover, symmetries have been used with huge success in theoretical physics to describe physical entities in terms of conservation laws. Here, we aim to apply these techniques on oscillatory dynamical systems modelled by a two state system of first order ODEs. In particular, we will focus on three models, namely the Lotka-Volterra (LV) model, the Belusov-Zhabotinskii (BZ) model and the so called Brusselator. The (dimensionless) LV model is given by 
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{\tau}&=u(1-v),\\
+    \dv{v}{\tau}&=\alpha v(u-1).\\    
+    \end{split}
+  \label{eq:LV}
+\end{equation}
+and it describes the ``predator-prey'' dynamics of the evolution of prey $u(\tau)$ and predators $v(\tau)$ at dimensionless time $\tau$. Moreover, the BZ model is given by
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{\tau}&=\dfrac{1}{\varepsilon}v-\dfrac{1}{\varepsilon}\left(\dfrac{1}{3}u^3-u\right),\\
+    \dv{v}{\tau}&=-u.\\    
+    \end{split}
+  \label{eq:BZ}
+\end{equation}
+describing the formation and degradation of the two chemical species $u(\tau)$ and $v(\tau)$ at time $\tau$. Similarly, another oscillatory chemical system is the so called Brusselator given by
+
+\begin{equation}
+  \begin{split}
+    \dv{u}{\tau}&=1-(b-1)u+au^2 v,\\
+    \dv{v}{\tau}&=bu-au^2 v.\\
+    \end{split}
+  \label{eq:Brusselator}
+\end{equation}
+where $u(\tau)$ and $v(\tau)$ are two chemical species. All these three systems can give rise to oscillatory behaviour, and our aim of this work is to be able to characterise oscillations in two state dynamical systems of first order ODEs in terms of their symmetries. Inspired by these three systems, we will restrict our focus to \textit{autonomous} systems, specifically \textit{time-invariant} systems, where the right hand sides are given by polynomials in the states $u$ and $v$. For these type of systems, it is well-known that oscillations correspond to closed trajectories in the $(u,v)$-phase plane and therefore we will furthermore restrict our analysis to symmetries that act exclusively on the $(u,v)$-phase plane meaning that these symmetries are independent of time. Subsequently, we will derive the general equation defining fibre-preserving symmetries restricted to the $(u,v)$-phase plane, after that we will present the symmetries of each of these models and lastly we will interpret their meaning by deriving the differential invariants associated with these symmetries. 
+
+
