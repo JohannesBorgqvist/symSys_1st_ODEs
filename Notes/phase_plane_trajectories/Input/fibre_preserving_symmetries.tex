@@ -89,7 +89,7 @@ $\;$\\Morover, a subgroup of time-invariant models as in Equation \eqref{eq:sys_
 \end{corollary}
 \dotfill
 \begin{proof}
-In the case when the reaction terms $\omega_1(u,v)$ and $\omega_2(u,v)$ are polynomials of degree $d_1$ and $d_2$ respectively and where two polynomial ans\"atze of degree $d_3$ and $d_4$ are used for the infinitesimals $\eta_1(u,v)$ and $\eta_2(u,v)$, the linearised symmetry condition in Equation \eqref{eq:lin_sym_fibre} corresponds to finding the roots of a multivariate polynomial in two varibles, namely $u$ and $v$. The degree of this polynomial will either be determined by the term $\omega_1^2$, the term $\omega_2^2$ or the degrees $d_3$ and $d_4$. Therefore, the number of monomials composed of $u$ and $v$ in this polynomial is given by Equation \eqref{eq:num_monomials}. Since these monomials are linearly independent it follows that all their coefficients in Equation \eqref{eq:lin_sym_fibre} equal zero. Lastly, all coefficients of the monomials composed of $u$ and $v$ are non-linear equations involving the unknown constants in the polynomial ans\"atze for $\eta_1(u,v)$ and $\eta_2(u,v)$, and hence the claim of the corollary follows.
+  \noindent In the case when the reaction terms $\omega_1(u,v)$ and $\omega_2(u,v)$ are polynomials of degree $d_1$ and $d_2$ respectively and where two polynomial ans\"atze of degree $d_3$ and $d_4$ are used for the infinitesimals $\eta_1(u,v)$ and $\eta_2(u,v)$, the linearised symmetry condition in Equation \eqref{eq:lin_sym_fibre} corresponds to finding the roots of a multivariate polynomial in two varibles, namely $u$ and $v$. The degree of this polynomial will either be determined by the term $\omega_1^2$, the term $\omega_2^2$ or the degrees $d_3$ and $d_4$. Therefore, the number of monomials composed of $u$ and $v$ in this polynomial is given by Equation \eqref{eq:num_monomials}. Since these monomials are linearly independent it follows that all their coefficients in Equation \eqref{eq:lin_sym_fibre} equal zero. Lastly, all coefficients of the monomials composed of $u$ and $v$ are non-linear equations involving the unknown constants in the polynomial ans\"atze for $\eta_1(u,v)$ and $\eta_2(u,v)$, and hence the claim of the corollary follows.
 \end{proof}
 \dotfill\\
 \hrule
@@ -100,4 +100,46 @@ In the case when the reaction terms $\omega_1(u,v)$ and $\omega_2(u,v)$ are poly
   where $f$ is an arbitrary function \cite{bluman1989symmetries}. Thus, if we choose the degrees $d_3$ and $d_4$ to be larger than $\max\left(d_1,d_2\right)$, we are guaranteed to find trivial generators.
 \end{remark}
 \hrule
-\noindent $\;$\\Subsequently, we will try to solve this linearised symmetry condition for the three models that were presented previously starting with the LV-model. 
+  $\;$\\\noindent In fact, we can characterise all symmetries as either trivial or non-trivial. The trivial symmetries map points on a solution curve to \textit{the same solution curve}, and infinitesimally this corresponds to the infinitesimals, i.e. the local action of the symmetry, being parallel to the vector field of the ODE itself. If the infinitesimals are not parallel to the vector field of the ODE itself, the symmetries map a solution curve to another distinct solution curve and in this case the symmetries are referred to as non-trivial. Next, we will prove the condition defining whether a fibre-preserving symmetry restricted to the phase plane is trivial or not. 
+
+\hrule
+\begin{theorem}[Trivial and non-trivial fibre-preserving symmetries of time invariant models restricted to the phase plane.]
+  Consider the time-invariant system of ODEs in Equation \eqref{eq:sys_auto}. Further, let $\Gamma_\epsilon$ be a fibre preserving symmetry of this model that is restricted to the $(u,v)$-phase plane according to Definition \ref{def:symmetry_fibre_phase_plane} and let the corresponding infinitesimal generator of the Lie group $X$ be given by Equation \eqref{eq:generator_phase_plane}. Then, the symmetry is \textit{trivial} if the infinitesimals $\eta_1(u,v)$ and $\eta_2(u,v)$ satisfy
+  \begin{equation}
+    \omega_1(u,v)\eta_1(u,v)\equiv\omega_2(u,v)\eta_2(u,v)
+    \label{eq:trivial_symmetry}
+    \end{equation}
+    in addition to solving Equation \eqref{eq:lin_sym_fibre}. Conversely, the symmetry is non-trivial if it satisfies
+  \begin{equation}
+    \omega_1(u,v)\eta_1(u,v)\neq\omega_2(u,v)\eta_2(u,v)
+    \label{eq:nontrivial_symmetry}
+    \end{equation}    
+in addition to Equation \eqref{eq:lin_sym_fibre}.
+\label{thm:trivial_and_nontrivial}
+\end{theorem}
+  \dotfill
+\begin{proof}
+  The dynamics of the $(u,v)$-phase plane is governed by Equation \eqref{eq:sys_phase}. Locally, any solution to this equation at a point $(u,v)$ in the phase plane travels with the vector
+  $$\vec{v}_1=\begin{pmatrix}1 & \dd v/\dd u\end{pmatrix}^T=\begin{pmatrix}1 & \Omega(u,v)\end{pmatrix}^T$$
+  where $\Omega(u,v)=\omega_2(u,v)/\omega_1(u,v)$. The local action of the symmetry at the same point $(u,v)$ in the phase plane is determined by the vector
+  $$\vec{v}_2=\begin{pmatrix}\eta_1(u,v) & \eta_2(u,v)\end{pmatrix}^T.$$
+  Lastly, the scalar product between the two vectors $\vec{v}_1$ and $\vec{v}_2$ are given by
+  \begin{equation}
+    \overline{Q}=\langle\vec{v}_1,\vec{v}_2\rangle=\vec{v}_1^T\vec{v}_2=\eta_1(u,v)-\Omega(u,v)\eta_2(u,v)
+    \label{eq:characteristic}
+    \end{equation}
+  and the two vectors are parallel if $\overline{Q}=0$ and non-parallel if $\overline{Q}\neq 0$.
+  
+\end{proof}
+\dotfill\\
+\hrule
+\begin{remark}
+The inner product $\overline{Q}$ in Equation \eqref{eq:characteristic} is referred to as the \textit{reduced characteristic} \cite{hydon2000symmetry}.
+\end{remark}
+\hrule
+  $\;$\\\noindent
+  \noindent $\;$\\Subsequently, we will try to solve this linearised symmetry condition for the three models that were presented previously starting with the LV-model. Since we are mainly interested in non-trivial symmetries, we will solve Equation \eqref{eq:lin_sym_fibre} subject to the condition in Equation \eqref{eq:nontrivial_symmetry}. 
+
+
+
+  
