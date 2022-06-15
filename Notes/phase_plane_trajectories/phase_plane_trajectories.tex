@@ -13,6 +13,8 @@
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 % To write derivative more efficiently
 \usepackage{physics}
+% To add figures
+\usepackage{graphicx}
 %--------------------------------------------------------------------------------------
 % Define the specific setup for the document
 % --------------------------------------------------------------------------------------
@@ -28,6 +30,8 @@
 % Set the font of the equations to Helvetica as well. 
 % Increase the spacing between the lines
 \linespread{1.5}
+% Set the graphics-path, i.e. where we store the figures
+\graphicspath{{./images/}}
 %--------------------------------------------------------------------------------------
 % THE DOCUMENTS BEGINS
 %--------------------------------------------------------------------------------------
@@ -55,17 +59,22 @@
 %--------------------------------------------------------------------------------------
 %--------------------------------------------------------------------------------------
 % Lotka-Volterra model
-\section{The fibre-preserving symmetries of the LV-model restricted to the phase plane}
+\section{The symmetries of the LV-model}
 \input{./Input/LV}
 % --------------------------------------------------------------------------------------
 %--------------------------------------------------------------------------------------
+% The SIR model
+\section{The symmetries of the SIR-model}
+\input{./Input/SIR}
+%--------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------
 % The BZ-model
-\section{The fibre-preserving symmetries of the BZ-model restricted to the phase plane}
+\section{The symmetries of the BZ-model}
 \input{./Input/BZ}
 % --------------------------------------------------------------------------------------
 %--------------------------------------------------------------------------------------
 % 
-\section{The fibre-preserving symmetries of the Brusselator restricted to the phase plane}
+\section{The symmetries of the Brusselator}
 \input{./Input/Brusselator}
 %--------------------------------------------------------------------------------------
 % THE BIBLIOGRAPHY

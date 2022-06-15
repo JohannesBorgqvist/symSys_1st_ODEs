@@ -1,0 +1,84 @@
+\documentclass[tikz,crop,convert={density=200,outext=.png},border=0.4cm]{standalone}
+
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta}
+\usepackage{physics}
+\usepackage{xcolor}
+\definecolor{clr_1}{RGB}{0,68,27}
+\definecolor{clr_2}{RGB}{153,216,201}
+\definecolor{clr_3}{RGB}{77,0,75}
+\definecolor{clr_4}{RGB}{140,150,198}
+\pgfplotsset{compat=newest,
+    %width=6cm,
+    %height=3cm,
+    scale only axis=true,
+    max space between ticks=25pt,
+    try min ticks=5,
+    every axis/.style={
+        axis y line=middle,
+        axis x line=middle,
+        axis line style={thick,->,>=latex, shorten >=-.3cm}
+    },
+    every axis plot/.append style={thick},
+    tick style={black, thick},
+}
+\tikzset{
+    semithick/.style={line width=0.8pt},
+}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{dateplot}
+% Document begins
+\begin{document}
+% =========================================================================================================
+% Tau trans figure
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={Time, $\tau$},
+    ylabel={Population size},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.1,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    legend style={at={(axis description cs:0.5,0.75)},anchor=west,nodes={scale=1.00, transform shape}},    
+    grid style=dashed,
+]
+\input{./Input/tau_trans.tex}
+\end{axis}
+\end{tikzpicture}
+%=========================================================================================================
+% =========================================================================================================
+% u trans figure
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={Prey, $u(\tau)$},
+    ylabel={Predator, $v(\tau)$},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.1,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    legend style={at={(axis description cs:0.1,0.3)},anchor=west,nodes={scale=1.00, transform shape}},    
+    grid style=dashed,
+]
+\input{./Input/u_trans.tex}
+\end{axis}
+\end{tikzpicture}
+%=========================================================================================================
+% =========================================================================================================
+% v trans figure
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={Prey, $u(\tau)$},
+    ylabel={Predator, $v(\tau)$},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.1,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    legend style={at={(axis description cs:0.1,0.3)},anchor=west,nodes={scale=1.00, transform shape}},    
+    grid style=dashed,
+]
+\input{./Input/v_trans.tex}
+\end{axis}
+\end{tikzpicture}
+%=========================================================================================================
+\end{document}

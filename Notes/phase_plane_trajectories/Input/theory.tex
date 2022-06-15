@@ -121,8 +121,8 @@ where the derivatives $u'(\epsilon)$ and $v'(\epsilon)$ are defined by Equation 
  More precsely, a Lie transformation $\Gamma_\epsilon$ is a symmetry of the system of differential equations in Equation \eqref{eq:sys_general} if and only if the \textit{linearised symmetry conditions} given by
 \begin{equation}
   \begin{split}
-    X^{(1)}\left(\dv{u}{t}-\omega_1(\tau,u,v)\right)&=0\quad\mathrm{whenever}\quad\dv{u}{\tau}=\omega_1(\tau,u,v),\\
-    X^{(1)}\left(\dv{v}{t}-\omega_2(\tau,u,v)\right)&=0\quad\mathrm{whenever}\quad\dv{v}{\tau}=\omega_2(\tau,u,v),
+    X^{(1)}\left(\dv{u}{\tau}-\omega_1(\tau,u,v)\right)&=0\quad\mathrm{whenever}\quad\dv{u}{\tau}=\omega_1(\tau,u,v),\\
+    X^{(1)}\left(\dv{v}{\tau}-\omega_2(\tau,u,v)\right)&=0\quad\mathrm{whenever}\quad\dv{v}{\tau}=\omega_2(\tau,u,v),
     \end{split}
   \label{eq:lin_sym_ori}
   \end{equation}
@@ -136,5 +136,41 @@ are satisfied. By the linearity of the prolonged generator $X^{(1)}$ in Equation
 \end{equation}
 where the prolonged tangents in the left hand sides are given by the prolongation formula in Equation \eqref{eq:prolongation_formula}. In general, the symmetries of a given differential equation are found by solving the linearised symmetry conditions for the infinitesimals and then the symmetry is retrieved using the exponential map. Next, we will focus on a common class of ODEs in mathematical biology, namely that of autonomous models and specifically time-invariant models. 
 
+% Invariants and canonical coordinates
+\subsection{Invariants and canonical coordinates}
+In practice, the meaning of symmetries is often interpreted in terms of their invariants. Given the first prolongation of an infinitesimal generator of the Lie group
+$$X^{(1)}=\xi(\tau,u,v)\partial_\tau+\eta_1(\tau,u,v)\partial_u+\eta_2(\tau,u,v)\partial_v+\eta_{1}^{(1)}(\tau,u,v)\partial_{u'}+\eta_{2}^{(1)}(\tau,u,v)\partial_{v}$$
+an \textit{invariant} of this generator is a non-constant function $I=I(t,u,v,u',v')$ satisfying the following equation
+\begin{equation}
+  X^{(1)}\left(I\right)=0.
+  \label{eq:invariant}
+\end{equation}
+In the light of this definition, we see that the linearised symmetry conditions in Equation \eqref{eq:lin_sym_ori} in fact corresponds to saying that the solution manifold of the system of ODEs itself is invariant under the infinitesimal action of the symmetry. In terms of interpretations, the invariants corresponds to conserved properties and in particular we can classify the invariants into two types. If the symmetry is trivial, meaning that it maps the points on a solution curve to other points on the same solution curve, then the invariants of this symmetry correspond to conservation laws, such as energy conservation, of the observed system. If the symmetry is non-trivial, meaning that the symmetry maps points on a solution curve to points on another distinct solution curve, then the invariant corresponds to properties that are conserved for numerous distinct solution curves. It is also possible to conduct a coordinate change where most of the transformed coordinates are invariants of the symmetry at hand, and such coordinates are referred to as canonical coordinates.
 
+In practice, a symmetry $\Gamma_\epsilon$ is often calculated from its infinitesimal generator of the Lie group $X$ using so called \textit{canonical coordinates} rather than the exponential map in Equation \eqref{eq:symmetry_Lie}. Given an infinitesimal generator of the Lie group $X=\xi\partial_\tau+\eta_1\partial_u+\eta_2\partial_v$ expressed in the original coordinates $(\tau,u(\tau),v(\tau))$ of the total space, there exist another set of coordinates $(s,r_1,r_2)=(s(\tau,u(\tau),v(\tau)),r_1(\tau,u(\tau),v(\tau)),r_2(\tau,u(\tau),v(\tau)))$ such that the infinitesimal generator gets transformed into a translation generator in $s$, i.e. $X=\partial_s$. In other words, we want the following equation to hold
+\begin{equation}
+  \left.\dv{\hat{r}_1}{\epsilon}\right|_{\epsilon=0}=  \left.\dv{\hat{r}_2}{\epsilon}\right|_{\epsilon=0}=0,\quad  \left.\dv{\hat{s}}{\epsilon}\right|_{\epsilon=0}=1.
+  \label{eq:canonical_1}
+  \end{equation}
+  or to express it in terms of the resulting symmetry
+\begin{equation}
+  \Gamma_{\epsilon}:(s,r_1,r_2)\mapsto(\hat{s}(\epsilon),\hat{r}_1(\epsilon),\hat{r}_2(\epsilon)),\quad(\hat{s},\hat{r}_1,\hat{r}_2)=(s(\hat{\tau},\hat{u},\hat{v}),r_1(\hat{\tau},\hat{u},\hat{v}),r_2(\hat{\tau},\hat{u},\hat{v}))=(s+\epsilon,r_1,r_2)
+  \label{eq:canonical_2}
+  \end{equation}  
+  Using the chain rule on the transformed coordinates in Equation \eqref{eq:canonical_2}, we obtain
+  \begin{align*}
+    \dv{\hat{r}_1}{\epsilon}&=\dv{\hat{\tau}}{\epsilon}\dv{r_1}{\hat{\tau}}+\dv{\hat{u}}{\epsilon}\dv{r_1}{\hat{u}}+\dv{\hat{v}}{\epsilon}\dv{r_1}{\hat{v}},\\
+    \dv{\hat{r}_2}{\epsilon}&=\dv{\hat{\tau}}{\epsilon}\dv{r_2}{\hat{\tau}}+\dv{\hat{u}}{\epsilon}\dv{r_1}{\hat{u}}+\dv{\hat{v}}{\epsilon}\dv{r_2}{\hat{v}},\\
+    \dv{\hat{s}}{\epsilon}&=\dv{\hat{\tau}}{\epsilon}\dv{s}{\hat{\tau}}+\dv{\hat{u}}{\epsilon}\dv{s}{\hat{u}}+\dv{\hat{v}}{\epsilon}\dv{s}{\hat{v}},\\
+  \end{align*}
+  and next we can evaluate the above equations at $\epsilon=0$. The left hand sides are then given by Equation \eqref{eq:canonical_1}. Also, we have that $\hat{\tau}(\epsilon=0)=\tau$, $\hat{u}(\epsilon=0)=u$ and $\hat{v}(\epsilon=0)=v$. Lastly, the infinitesimals are defined as $\xi(\tau,u,v)=\left.\dd\hat{\tau}/\dd\epsilon\right|_{\epsilon=0}$, $\eta_1(\tau,u,v)=\left.\dd\hat{u}/\dd\epsilon\right|_{\epsilon=0}$ and $\eta_2(\tau,u,v)=\left.\dd\hat{v}/\dd\epsilon\right|_{\epsilon=0}$. All in all, this implies that the canonical coordinates $(s,r_1,r_2)$ satisfy the following equations
 
+  \begin{equation}
+    \begin{split}
+     \xi(\tau,u,v)\dv{r_1}{\tau}+\eta_1(\tau,u,v)\dv{r_1}{u}+\eta_2(\tau,u,v)\dv{r_1}{v}&=0,\\
+    \xi(\tau,u,v)\dv{r_2}{\tau}+\eta_1(\tau,u,v)\dv{r_1}{u}+\eta_2(\tau,u,v)\dv{r_2}{v}&=0,\\
+    \xi(\tau,u,v)\dv{s}{\tau}+\eta_1(\tau,u,v)\dv{s}{u}+\eta_2(\tau,u,v)\dv{s}{v}&=1.\\      
+  \end{split}
+  \label{eq:canonical_final}
+\end{equation}
+Now, we can obtain the symmetry $\Gamma_\epsilon$ generated by an infinitesimal generator of the Lie group $X$ through its canonical coordinates. Firstly, we would calculate the canonical coordinates by solving the system in Equation \eqref{eq:canonical_final}. Then, since the symmetry is easily expressed in terms of its canonical coordinates as $\hat{s}(\tau,u,v;\epsilon)=s(\tau,u,v)+\epsilon$, $\hat{r}_1(\tau,u,v;\epsilon)=r_1(\tau,u,v)$ and $\hat{r}_2(\tau,u,v;\epsilon)=r_2(\tau,u,v)$, we can then convert back to the original coordinates to obtain the expression for the symmetry. 

@@ -8,8 +8,10 @@
    (TeX-run-style-hooks
     "latex2e"
     "./Input/Intro"
+    "./Input/theory"
     "./Input/fibre_preserving_symmetries"
     "./Input/LV"
+    "./Input/SIR"
     "./Input/BZ"
     "./Input/Brusselator"
     "article"
@@ -20,6 +22,14 @@
     "amssymb"
     "amsfonts"
     "amsthm"
-    "physics"))
+    "physics"
+    "graphicx")
+   (LaTeX-add-bibliographies
+    "symmetry_bib")
+   (LaTeX-add-amsthm-newtheorems
+    "theorem"
+    "definition"
+    "corollary"
+    "remark"))
  :latex)
 
