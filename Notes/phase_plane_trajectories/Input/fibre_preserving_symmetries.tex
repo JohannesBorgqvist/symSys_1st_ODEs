@@ -206,8 +206,12 @@ $\:$\\[0.1cm]\\
     \eta_2(u,v)&=\dfrac{P_{2,n}(u,v)}{P_{2,d}(u,v)}\label{eq:ansatz_2}    
    \end{align}
 where the degrees of the polynomials in the numerators $P_{1,n}$ and $P_{2,n}$ are $d_{1,n}$ and $d_{2,n}$ respectively and the degrees of the polynomials in the denominators $P_{1,d}$ and $P_{2,d}$ are $d_{1,d}$ and $d_{2,d}$ respectively. Then, the linearised symmetry condition in Equation \eqref{eq:lin_sym_fibre} decomposes into a system of $d\in\mathbb{N}_+$ non-linear algebraic equations for the unknown coefficients in the polynomial ans\"atze for the infinitesimals $\eta_1(u,v)$ and $\eta_2(u,v)$ where the number of equations are bounded by $0\leq d\leq D$ where the upper bound is given by
-  \begin{equation}
-    D={2+\delta-1\choose \delta}=\delta+1,\quad\delta=\max\left((d_1^2 d_{2,n} d_{2,d}),(d_2^2d_{1,n}d_{1,d}),(d_1d_2d_{1,n}d_{1,d}d_{2,d}^2),(d_1d_2d_{1,d}^2d_{2,d}d_{2,n})\right).
+\small
+\begin{equation}
+  \begin{split}
+    D&={2+\delta-1\choose \delta}=\delta+1,\\
+    \delta&=\max\left((2d_1+d_{2,n}+d_{2,d}),(2d_2+d_{1,n}+d_{1,d}),(d_1+d_2+d_{1,n}+d_{1,d}+2d_{2,d}),(d_1+d_2+2d_{1,d}+d_{2,d}+d_{2,n})\right).
+    \end{split}
     \label{eq:num_monomials}
     \end{equation}
 
@@ -223,7 +227,7 @@ where the degrees of the polynomials in the numerators $P_{1,n}$ and $P_{2,n}$ a
      \end{split}
 \label{eq:lin_sym_ansatz}
 \end{equation}
-and all the partial derivatives of the tangential ans\"atze will result in the terms $P_{1,d}^2$ and $P_{2,d}^2$ in the denominator on the left hand side. By multiplying Equation \eqref{eq:lin_sym_ansatz} by the factor $P_{1,d}^2 P_{2,d}^2$, the resulting equation is
+and all the partial derivatives of the tangential ans\"atze will result in the terms $P_{1,d}^2$ and $P_{2,d}^2$ in the denominators on the left hand side. By multiplying Equation \eqref{eq:lin_sym_ansatz} by the factor $P_{1,d}^2 P_{2,d}^2$, the resulting equation is
  \begin{equation}
    \begin{split}
      &P_{1,d}^2 P_{2,d}^2\omega_1^2 \pdv{}{u}\left(\frac{P_{2,n}}{P_{2,d}}\right)+P_{1,d}^2 P_{2,d}^2\omega_1\omega_2\left(\pdv{}{v}\left(\frac{P_{2,n}}{P_{2,d}}\right)-\pdv{}{u}\left(\frac{P_{1,n}}{P_{1,d}}\right)\right)-P_{1,d}^2 P_{2,d}^2\omega_2^2\pdv{}{v}\left(\frac{P_{1,n}}{P_{1,d}}\right)\\
@@ -231,7 +235,7 @@ and all the partial derivatives of the tangential ans\"atze will result in the t
      \end{split}
 \label{eq:lin_sym_ansatz_modified}
 \end{equation}
-\noindent The first term on the left hand side is a polynomial of order $d_1^2 d_{2,n} d_{2,d}$ and the third term on the left hand side is a polynomial of order $d_2^2d_{1,n}d_{1,d}$. The first term on the right hand side is a polynomial of order $d_1d_2d_{1,n}d_{1,d}d_{2,d}^2$ and the second term is a polynomial or order $d_1d_2d_{1,d}^2d_{2,d}d_{2,n}$. Therefore, Equation \eqref{eq:lin_sym_ansatz_modified} corresponds to finding the roots of a polynomial in $u$ and $v$ where the number of monomials is given by Equation \eqref{eq:num_monomials}. Since these monomials are linearly independent it follows that all their coefficients in Equation \eqref{eq:lin_sym_fibre} equal zero. Lastly, all coefficients of the monomials composed of $u$ and $v$ are non-linear equations involving the unknown constants in the polynomial ans\"atze for $\eta_1(u,v)$ and $\eta_2(u,v)$, and hence the claim of the corollary follows.
+\noindent The first term on the left hand side is a polynomial of order $2d_1+d_{2,n}+d_{2,d}$ and the third term on the left hand side is a polynomial of order $2d_2+d_{1,n}+d_{1,d}$. The first term on the right hand side is a polynomial of order $d_1+d_2+d_{1,n}+d_{1,d}+2d_{2,d}$ and the second term is a polynomial or order $d_1+d_2+2d_{1,d}+d_{2,d}+d_{2,n}$. Therefore, Equation \eqref{eq:lin_sym_ansatz_modified} corresponds to finding the roots of a polynomial in $u$ and $v$ where the number of monomials is given by Equation \eqref{eq:num_monomials}. Since these monomials are linearly independent it follows that all their coefficients in Equation \eqref{eq:lin_sym_fibre} equal zero. Lastly, all coefficients of the monomials composed of $u$ and $v$ are non-linear equations involving the unknown constants in the polynomial ans\"atze for $\eta_1(u,v)$ and $\eta_2(u,v)$, and hence the claim of the corollary follows.
 \end{proof}
 \dotfill\\
 \hrule

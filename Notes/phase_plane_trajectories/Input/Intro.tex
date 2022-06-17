@@ -1,6 +1,6 @@
 There are numerous examples of biological systems that give rise to oscillatory behaviour. Some of these are the dynamics of a population consisting of predators and prey, chemical reactions such as the Belusov-Zhabotinskii reaction or the so called Brusselator reaction proposed by Prigogene and Lefever. In these cases, the oscillations have been modelled by mathematical models consisting of a two state system of first order ODEs describing the change in either populations sizes or the concentrations of chemical species over time. Mathematically, these oscillations have been described in terms of linear stability analysis, where the models are firstly linearised around their steady states and then the stability of these local linear systems is determined. However, this analytical tool can merely answer questions about the long term behaviour of the system and it does not reveal what properties that are conserved during these oscillations.
 
-A well-known mathematical technique for deriving conserved properties in theoretical physics is that of symmetry methods. Symmetries are transformations which preserve the defining property of the objects they act on, and in the context of ODEs a symmetry is an operator mapping a solution curve to another solution curve. Moreover, symmetries have been used with huge success in theoretical physics to describe physical entities in terms of conservation laws. Here, we aim to apply these techniques on oscillatory dynamical systems modelled by a two state system of first order ODEs. In particular, we will focus on three models, namely the Lotka-Volterra (LV) model, the SIR model sometimes referred to as the Kermack-McKendrick model, the Belusov-Zhabotinskii (BZ) model and the so called Brusselator. The (dimensionless) LV model is given by 
+A well-known mathematical technique for deriving conserved properties in theoretical physics is that of symmetry methods. Symmetries are transformations which preserve the defining property of the objects they act on, and in the context of ODEs a symmetry is an operator mapping a solution curve to another solution curve. Moreover, symmetries have been used with huge success in theoretical physics to describe physical entities in terms of conservation laws. Here, we aim to apply these techniques on oscillatory dynamical systems modelled by a two state system of first order ODEs. In particular, we will focus on three models, namely the Lotka-Volterra (LV) model \cite{lotka1920undamped,lotka1925elements,volterra1926variations}, the SIR model sometimes referred to as the Kermack-McKendrick model \cite{SIR-model}, the Belusov-Zhabotinskii (BZ) model \cite{belousov1959oscillating,am1964periodic} and the so called Brusselator \cite{prigogine1968symmetry} originally formulated by Prigogene and Lefever. The (dimensionless) LV model is given by \cite{murray2002}
 
 \begin{equation}
   \begin{split}
@@ -9,7 +9,7 @@ A well-known mathematical technique for deriving conserved properties in theoret
     \end{split}
   \label{eq:LV}
 \end{equation}
-and it describes the ``predator-prey'' dynamics of the evolution of prey $u(\tau)$ and predators $v(\tau)$ at dimensionless time $\tau$. The SIR-model is given by describes the dynamics of the spread of an epidemic in a population consisting of susceptibles $S(t)$, infectives $I(t)$ and the removed class $R(t)$. The model is given by
+and it describes the ``predator-prey'' dynamics of the evolution of prey $u(\tau)$ and predators $v(\tau)$ at dimensionless time $\tau$. The SIR-model is given by describes the dynamics of the spread of an epidemic in a population consisting of susceptibles $S(t)$, infectives $I(t)$ and the removed class $R(t)$. The model is given by \cite{murray2002}
 \begin{equation}
   \begin{split}
     \dv{S}{t}&=-rSI,\\
@@ -18,7 +18,7 @@ and it describes the ``predator-prey'' dynamics of the evolution of prey $u(\tau
     \end{split}
   \label{eq:SIR}
 \end{equation}
-where $r>0$ is the infection rate and $a>0$ is the removal rate of infectives. Moreover, the BZ model is given by
+where $r>0$ is the infection rate and $a>0$ is the removal rate of infectives. Moreover, the BZ model is given by \cite{murray2002}
 
 \begin{equation}
   \begin{split}
@@ -27,7 +27,7 @@ where $r>0$ is the infection rate and $a>0$ is the removal rate of infectives. M
     \end{split}
   \label{eq:BZ}
 \end{equation}
-describing the formation and degradation of the two chemical species $u(\tau)$ and $v(\tau)$ at time $\tau$. Similarly, another oscillatory chemical system is the so called Brusselator given by
+describing the formation and degradation of the two chemical species $u(\tau)$ and $v(\tau)$ at time $\tau$. Similarly, another oscillatory chemical system is the so called Brusselator \cite{prigogine1968symmetry} given by \cite{murray2002}
 
 \begin{equation}
   \begin{split}

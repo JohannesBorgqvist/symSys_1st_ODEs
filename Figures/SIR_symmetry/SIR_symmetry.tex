@@ -1,0 +1,57 @@
+\documentclass[tikz,crop,convert={density=200,outext=.png},border=0.4cm]{standalone}
+
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta}
+\usepackage{physics}
+\usepackage{xcolor}
+\definecolor{clr_1}{RGB}{0,68,27}
+\definecolor{clr_2}{RGB}{35,139,69}
+\definecolor{clr_3}{RGB}{102,194,164}
+\definecolor{clr_4}{RGB}{140,150,198}
+\pgfplotsset{compat=newest,
+    %width=6cm,
+    %height=3cm,
+    scale only axis=true,
+    max space between ticks=25pt,
+    try min ticks=5,
+    every axis/.style={
+        axis y line=middle,
+        axis x line=middle,
+        axis line style={thick,->,>=latex, shorten >=-.3cm}
+    },
+    every axis plot/.append style={thick},
+    tick style={black, thick},
+}
+\tikzset{
+    semithick/.style={line width=0.8pt},
+}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{dateplot}
+% Document begins
+\begin{document}
+% =========================================================================================================
+% Tau trans figure
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={Susceptibles, $S(t)$},
+    ylabel={Infected, $I(t)$},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.2,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    legend style={at={(axis description cs:0.3,0.9)},anchor=west,nodes={scale=1.00, transform shape}},    
+    grid style=dashed,
+    extra x ticks = {0},
+    extra y ticks= {0},    
+    xticklabels={$0$, $\rho$, $N$},
+    xtick={0,202,763},
+    yticklabels={$0$, $I_{\max}$,$I_{\max}+\epsilon$,$I_{\max}+2\epsilon$, $N$},
+    ytick={0,292,392,492,763}, ]
+    ]
+    
+\input{./Input/S_trans}
+\end{axis}
+\end{tikzpicture}
+
+\end{document}

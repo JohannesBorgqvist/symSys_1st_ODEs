@@ -1,12 +1,17 @@
-We will now consider the symmetries of the LV-model given by
+We will now consider the symmetries of the LV-model \cite{lotka1920undamped,lotka1925elements,volterra1926variations} given by
 \begin{equation}
   \begin{split}
     \dv{u}{\tau}&=u(1-v),\\
-    \dv{v}{\tau}&=\alpha v(u-1).\\    
+    \dv{v}{\tau}&=\alpha v(u-1),\\    
     \end{split}
   \label{eq:LV}
 \end{equation}
-Since this model is time-invariant and separable its symmetries are given by
+where the dynamics in the $(u,v)$-phase plane is determined by
+\begin{equation}
+\dv{v}{u}=\dfrac{\alpha v(u-1)}{u(1-v)}.
+  \label{eq:LV_phase_plane}
+\end{equation}
+Since this model is time-invariant and separable its symmetries are given by (Thm \ref{thm:separable})
 \begin{align}
   X_0&=\partial_\tau+u(1-v)\partial_u+\alpha v(u-1)\partial_v,\label{eq:LV_0}\\
   X_\tau&=\partial_\tau,\label{eq:LV_tau}\\
@@ -27,13 +32,26 @@ In practice, this means that we obtain the transformed coordinates $\hat{u}(\eps
 u-\ln(u)+\epsilon&=\hat{u}-\ln(\hat{u}),\label{eq:LV_u_implicit}\\
 \ln\left(v^{1/\alpha}\right)-\dfrac{v}{\alpha}+\epsilon&=\ln\left(\hat{v}^{1/\alpha}\right)-\dfrac{\hat{v}}{\alpha},\label{eq:LV_v_implicit}
 \end{align}
-for $\hat{u}$ and $\hat{v}$ respectively. The action of these unidirectional symmetries is illustrated below (Fig \ref{fig:LV_symmetries}). 
+for $\hat{u}$ and $\hat{v}$ respectively. The action of these unidirectional symmetries is illustrated below (Fig \ref{fig:LV_symmetries}). To interpret the symmetries of the LV model it is of interest to analyse their respective invariants.
 
 
 \begin{figure}[htbp!]
   \begin{center}
 \includegraphics[width=\textwidth]{LV_symmetries}
-\caption{\textit{Unidirectional symmetries of the LV-model}. In all cases, the original solution is obtained with the parameter $\alpha=1$, the initial conditions $(u_0,v_0)=(1.00,0.10)$ and the solutions are then transformed with a transformation parameter of $\epsilon=0.5$. (\textbf{A}) The action of the time translation symmetry $\Gamma^{\mathrm{LV},\tau}_{\epsilon}$. (\textbf{B}) The action of the $u$-directional symmetry $\Gamma^{\mathrm{LV},u}_{\epsilon}$. (\textbf{C}) The action of the $v$-directional symmetry $\Gamma^{\mathrm{LV},v}_{\epsilon}$.}
+\caption{\textit{Unidirectional symmetries of the LV-model}. The original solution is defined by $\alpha=1$, the initial conditions $(u_0,v_0)=(1.00,0.10)$ and the solutions are then transformed with a transformation parameter of $\epsilon=0.5$. (\textbf{A}) The action of the time translation symmetry $\Gamma^{\mathrm{LV},\tau}_{\epsilon}$. (\textbf{B}) The action of the $u$-directional symmetry $\Gamma^{\mathrm{LV},u}_{\epsilon}$ which gives rise to a solution curve with an internal energy of $H+\alpha\epsilon$. (\textbf{C}) The action of the $v$-directional symmetry $\Gamma^{\mathrm{LV},v}_{\epsilon}$ which gives rise to a solution curve with an internal energy of $H-\alpha\epsilon$.}
 \label{fig:LV_symmetries}
 \end{center}
 \end{figure}
+
+The invariants of the trivial symmetry corresponds to solving the ODE in the $(u,v)$-phase plane in Equation \eqref{eq:LV_phase_plane}. Since this ODE is separable, it is straightforward to solve and its phase trajectories are given by \cite{murray2002}
+\begin{equation}
+  H=\alpha u+v-\ln\left(u^\alpha v\right),\quad H=u_0+v_0-\ln\left(u_0^\alpha v_0\right)
+  \label{eq:phase_trajectory_LV}
+\end{equation}
+where $u_0$ and $v_0$ correspond to the initial conditions defining the particular solution curve. Here, $H$ is an invariant of the trivial infinitesimal generator $X_0$ in Equation \eqref{eq:LV_0}, and it should be interpreted as the energy of a solution trajectory which in fact corresponds to a conservation law of the LV-model \cite{murray2002}. Moreover, given Equation \eqref{eq:phase_trajectory_LV} for a closed solution trajectory in the $(u,v)$-phase plane, it is possible to formulate the action of the symmetries $\Gamma^{\mathrm{LV},u}_\epsilon$ in Equation \eqref{eq:LV_u} and $\Gamma^{\mathrm{LV},v}_\epsilon$ in Equation \eqref{eq:LV_v} in terms of the transformed solution curve. In both cases, the solution curves that are obtained after transforming the original solution curve in Equation \eqref{eq:phase_trajectory_LV} are given by the following equations
+\begin{align}
+  \Gamma_{\epsilon}^{\mathrm{LV},u}:H+\alpha\epsilon=\alpha u+v-\ln\left(u^\alpha v\right),\quad H=u_0+v_0-\ln\left(u_0^\alpha v_0\right),\label{eq:trans_LV_u}\\
+  \Gamma_{\epsilon}^{\mathrm{LV},v}:H-\alpha\epsilon=\alpha u+v-\ln\left(u^\alpha v\right),\quad H=u_0+v_0-\ln\left(u_0^\alpha v_0\right).\label{eq:trans_LV_v}
+\end{align}
+From this equation, we can conclude that transformation by both these symmetries of the LV-model correspond to changing the initial conditions $u_0$ and $v_0$ defining a particular solution curve and the parameter $\alpha$ is preserved under the action of these symmetries. Next, we wish to calculate the invariants of the non-trivial symmetries generated by $X_u$ in Equation \eqref{eq:LV_u} and $X_v$ in Equation \eqref{eq:LV_v} in order to interpret their biological meaning.
+
