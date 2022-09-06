@@ -34,23 +34,32 @@
 \begin{document}
 \begin{tikzpicture}
 
-\node[inner sep=0pt] (mixed) at (-5.75,0)
-{\includegraphics[width=6cm,page=1]{{./individual_figures_LV_symmetries}}};
+%\node[inner sep=0pt] (mixed) at (-5.75,0)
+%{\includegraphics[width=6cm,page=1]{{./individual_figures_LV_symmetries}}};
 
-\node[inner sep=0pt] (mixed) at (0,0)
-{\includegraphics[width=6cm,page=2]{{./individual_figures_LV_symmetries}}};
+%\node[inner sep=0pt] (mixed) at (0,0)
+%{\includegraphics[width=6cm,page=2]{{./individual_figures_LV_symmetries}}};
+\node[inner sep=0pt] (mixed) at (-3.75,0)
+{\includegraphics[width=8cm,page=2]{{./individual_figures_LV_symmetries}}};
+  
 
-
-\node[inner sep=0pt] (mixed) at (5.75,0)
-{\includegraphics[width=6cm,page=3]{{./individual_figures_LV_symmetries}}};
-
+%\node[inner sep=0pt] (mixed) at (5.75,0)
+%{\includegraphics[width=6cm,page=3]{{./individual_figures_LV_symmetries}}};
+\node[inner sep=0pt] (mixed) at (3.75,0)
+{\includegraphics[width=8cm,page=3]{{./individual_figures_LV_symmetries}}};
 
 %\draw (-2.75,-3) -- (-2.75,3);
 %\draw (-8.5,-3) -- (-8.5,3);
 %\draw (3,-3) -- (3,3);
-\node (b) at (-2.5,2.75) { (\textbf{B})};
-\node[left=4.92cm of b] (a) {(\textbf{A})};
-\node[right=4.92cm of b] (a) {(\textbf{C})};
+%\node (b) at (-2.5,2.75) { (\textbf{B})};
+%\node[left=4.92cm of b] (a) {(\textbf{A})};
+%\node[right=4.92cm of b] (a) {(\textbf{C})};
+\node (b) at (0.35,3.75) { (\textbf{B})};
+\node[left=6.67cm of b] (a) {(\textbf{A})};
+
+% Add some major axes labels as well
+\node[rotate=90,align=center] (b) at (-7.75,0) {Predator, $v(\tau)$};
+\node[align=center] (b) at (0,-3.25) {Prey, $u(\tau)$};
 
 \end{tikzpicture}
 

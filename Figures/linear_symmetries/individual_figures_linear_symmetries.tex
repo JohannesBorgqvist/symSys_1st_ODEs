@@ -1,0 +1,137 @@
+\documentclass[tikz,crop,convert={density=200,outext=.png},border=0.4cm]{standalone}
+
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta}
+\usepackage{physics}
+\usepackage{xcolor}
+% STABLE NODE r
+\definecolor{stab_r_1}{RGB}{0,68,27}
+\definecolor{stab_r_2}{RGB}{0,109,44}
+\definecolor{stab_r_3}{RGB}{102,194,164}
+% STABLE NODE THETA
+\definecolor{stab_theta_1}{RGB}{0,68,27}
+\definecolor{stab_theta_2}{RGB}{0,109,44}
+\definecolor{stab_theta_3}{RGB}{102,194,164}
+% \definecolor{stab_theta_1}{RGB}{103,0,31}
+%\definecolor{stab_theta_2}{RGB}{206,18,86}
+%\definecolor{stab_theta_3}{RGB}{223,101,176}
+% SADDLE POINT r
+\definecolor{saddle_r_1}{RGB}{2,56,88}
+\definecolor{saddle_r_2}{RGB}{5,112,176}
+\definecolor{saddle_r_3}{RGB}{116,169,207}
+% SADDLE POINT THETA
+\definecolor{saddle_theta_1}{RGB}{2,56,88}
+\definecolor{saddle_theta_2}{RGB}{5,112,176}
+\definecolor{saddle_theta_3}{RGB}{116,169,207}
+% \definecolor{saddle_theta_1}{RGB}{102,37,6}
+%\definecolor{saddle_theta_2}{RGB}{204,76,2}
+%\definecolor{saddle_theta_3}{RGB}{254,153,41}
+\pgfplotsset{compat=newest,
+    %width=6cm,
+    %height=3cm,
+    scale only axis=true,
+    max space between ticks=25pt,
+    try min ticks=5,
+    every axis/.style={
+        axis y line=middle,
+        axis x line=middle,
+        axis line style={thick,->,>=latex, shorten >=-.3cm}
+    },
+    every axis plot/.append style={thick},
+    tick style={black, thick},
+}
+\tikzset{
+    semithick/.style={line width=0.8pt},
+}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{dateplot}
+% Document begins
+\begin{document}
+
+% =========================================================================================================
+% r trans figure stable node
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={$u(\tau)$},
+    ylabel={$v(\tau)$},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.1,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    %ymax = 4.5,
+    %xmax = 4.5,
+    legend style={at={(axis description cs:0.05,0.8)},anchor=west,nodes={scale=1.5, transform shape}},
+    label style={font=\Large},
+    tick label style={font=\Large},
+    legend cell align={left},
+    grid style=dashed,
+]
+\input{./Input/stable_r.tex}
+\end{axis}
+\end{tikzpicture}
+% =========================================================================================================
+% theta trans figure stable node
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={$u(\tau)$},
+    ylabel={$v(\tau)$},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.1,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    ymax = 3.22,
+    %xmax = 4.5,
+    legend style={at={(axis description cs:0.05,0.8)},anchor=west,nodes={scale=1.5, transform shape}},
+    label style={font=\Large},
+    tick label style={font=\Large},
+    legend cell align={left},
+    grid style=dashed,
+]
+\input{./Input/stable_theta.tex}
+\end{axis}
+\end{tikzpicture}
+% =========================================================================================================
+% r trans figure saddle point
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={$u(\tau)$},
+    ylabel={$v(\tau)$},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.1,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    %ymax = 3.22,
+    %xmax = 4.5,
+    legend style={at={(axis description cs:0.6,0.8)},anchor=west,nodes={scale=1.5, transform shape}},
+    label style={font=\Large},
+    tick label style={font=\Large},
+    legend cell align={left},
+    grid style=dashed,
+]
+\input{./Input/saddle_r.tex}
+\end{axis}
+\end{tikzpicture}
+% =========================================================================================================
+% r trans figure saddle point
+\begin{tikzpicture}
+  % The axis of the plot
+\begin{axis}[
+    xlabel={$u(\tau)$},
+    ylabel={$v(\tau)$},
+    x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+    y label style={at={(axis description cs:-0.1,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,
+    %ymax = 3.22,
+    %xmax = 4.5,
+    legend style={at={(axis description cs:0.6,0.8)},anchor=west,nodes={scale=1.5, transform shape}},
+    label style={font=\Large},
+    tick label style={font=\Large},
+    legend cell align={left},
+    grid style=dashed,
+]
+\input{./Input/saddle_theta.tex}
+\end{axis}
+\end{tikzpicture}
+%=========================================================================================================
+\end{document}

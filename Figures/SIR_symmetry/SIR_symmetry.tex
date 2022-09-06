@@ -38,16 +38,20 @@
     xlabel={Susceptibles, $S(t)$},
     ylabel={Infected, $I(t)$},
     x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
-    y label style={at={(axis description cs:-0.2,0.55)},rotate=90,anchor=south},
-    scaled x ticks = false,
-    legend style={at={(axis description cs:0.3,0.9)},anchor=west,nodes={scale=1.00, transform shape}},    
+    y label style={at={(axis description cs:-0.25,0.55)},rotate=90,anchor=south},
+    scaled x ticks = false,    
     grid style=dashed,
     extra x ticks = {0},
     extra y ticks= {0},    
     xticklabels={$0$, $\rho$, $N$},
     xtick={0,202,763},
     yticklabels={$0$, $I_{\max}$,$I_{\max}+\epsilon$,$I_{\max}+2\epsilon$, $N$},
-    ytick={0,292,392,492,763}, ]
+    ytick={0,292,392,492,763},
+    legend style={at={(axis description cs:0.5,0.8)},anchor=west,nodes={scale=1.5, transform shape}},
+    label style={font=\Large},
+    tick label style={font=\Large},
+    legend cell align={left},
+    ]
     ]
     
 \input{./Input/S_trans}

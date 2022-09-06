@@ -1,0 +1,50 @@
+%--------------------------------------------------------------------------------------
+% Definition of the document
+%--------------------------------------------------------------------------------------
+\documentclass[12pt]{article}
+%--------------------------------------------------------------------------------------
+% Define packages needed for the writing
+%--------------------------------------------------------------------------------------
+% General document formatting
+\usepackage[margin=1in]{geometry}
+%\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}    
+% Related to math
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+% To write derivative more efficiently
+\usepackage{physics}
+% To add figures
+\usepackage{graphicx}
+%--------------------------------------------------------------------------------------
+% Define the specific setup for the document
+% --------------------------------------------------------------------------------------
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+%--------------------------------------------------------------------------------------
+% Define the specific setup for the document
+%--------------------------------------------------------------------------------------
+% Set the font of the equations to Helvetica as well. 
+% Increase the spacing between the lines
+%\linespread{1.5}
+%--------------------------------------------------------------------------------------
+% THE DOCUMENTS BEGINS
+%--------------------------------------------------------------------------------------
+\begin{document}
+\title{\textbf{Plugging in rational ans\"atze into the linearised symmetry condition for the phase plane}}
+\author{Johannes Borgqvist}
+\date{\today}
+\maketitle
+\tableofcontents
+\clearpage
+%--------------------------------------------------------------------------------------
+% THE LV-model
+\section{LV-model}
+\input{./Input/generators_LV}
+%--------------------------------------------------------------------------------------
+% THE DOCUMENT ENDS
+%--------------------------------------------------------------------------------------
+\end{document}

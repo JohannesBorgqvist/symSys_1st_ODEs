@@ -1,0 +1,24 @@
+The LV-model in the phase plane is given by:
+\begin{equation}
+\dv{v}{u}=\dfrac{a v \left(u - 1\right)}{u \left(1 - v\right)}
+\label{eq:LV}
+\end{equation}
+The monomials are:
+\begin{equation}
+M=\left[\begin{matrix}1\\v\\v^{2}\\u\\u v\\u^{2}\end{matrix}\right].
+\end{equation}
+
+The unknown coefficient in our polynomial ansatze are:
+\begin{equation}
+\mathbf{c}=\left[\begin{matrix}c_{0}\\c_{1}\\c_{2}\\c_{3}\\c_{4}\\c_{5}\\c_{6}\\c_{7}\\c_{8}\\c_{9}\\c_{10}\\c_{11}\\c_{12}\\c_{13}\\c_{14}\\c_{15}\\c_{16}\\c_{17}\\c_{18}\\c_{19}\\c_{20}\\c_{21}\\c_{22}\\c_{23}\end{matrix}\right].
+\end{equation}
+
+Now, we use rational ansatze of the type $\eta_1=P_1/P_2$ and $\eta_2=P_3/P_4$. Our four polynomials are:
+
+\begin{align*}
+P_1&=c_{0} + c_{1} v + c_{2} v^{2} + c_{3} u + c_{4} u v + c_{5} u^{2},\\
+P_2&=c_{10} u v + c_{11} u^{2} + c_{6} + c_{7} v + c_{8} v^{2} + c_{9} u,\\
+P_3&=c_{12} + c_{13} v + c_{14} v^{2} + c_{15} u + c_{16} u v + c_{17} u^{2},\\
+P_4&=c_{18} + c_{19} v + c_{20} v^{2} + c_{21} u + c_{22} u v + c_{23} u^{2}.\\
+\end{align*}
+The system of equations resulting from plugging in these ansatze into the linearised symmetry condition contains 73 equations.

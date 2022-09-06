@@ -277,8 +277,8 @@ plot_LaTeX_2D(t_trans,v,"../Figures/LV_symmetries/Input/tau_trans.tex","color=cl
 plot_LaTeX_2D(asarray([u_sym_temp for u_sym_temp in u_sym[0]]),asarray([v[u_indices[0]]*((index+1)/(index+1)) for index in range(len(epsilon_vec))]),"../Figures/LV_symmetries/Input/u_trans.tex","color=black,->,>=latex,densely dashed","$\\Gamma^{\mathrm{LV},u}_{\\epsilon}$")
 for index,u_index in enumerate(list(u_indices)):
     plot_LaTeX_2D(asarray([u_sym_temp for u_sym_temp in u_sym[index]]),asarray([v[u_index]*((index+1)/(index+1)) for index in range(len(epsilon_vec))]),"../Figures/LV_symmetries/Input/u_trans.tex","color=black,->,>=latex,densely dashed",[])
-plot_LaTeX_2D(u,v,"../Figures/LV_symmetries/Input/u_trans.tex","color=clr_1,line width=1.5pt,","Original population")
-plot_LaTeX_2D(u_transformed_2,v_transformed_2,"../Figures/LV_symmetries/Input/u_trans.tex","color=clr_2,line width=1.5pt,","Transformed population")
+plot_LaTeX_2D(u,v,"../Figures/LV_symmetries/Input/u_trans.tex","color=clr_1,line width=1.5pt,","$(u,v)$")
+plot_LaTeX_2D(u_transformed_2,v_transformed_2,"../Figures/LV_symmetries/Input/u_trans.tex","color=clr_2,line width=1.5pt,","$(\\hat{u},\\hat{v})$")
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Scaled translations in v
 #plot_LaTeX_2D(asarray([u[v_indices[0]]*index/index for index in range(len(epsilon_vec))]),asarray([v_sym_temp[0] for v_sym_temp in v_sym[v_indices[0]]]),"../Figures/LV_symmetries/Input/v_trans.tex","color=black,->,>=latex,densely dashed","$\\Gamma^{\mathrm{LV},v}_{\\epsilon}$")
@@ -288,8 +288,8 @@ for index,v_index in enumerate(list(v_indices)):
     else:
         plot_LaTeX_2D(asarray([u[v_index]*index/index for index in range(len(epsilon_vec))]),asarray([v_sym_temp for v_index, v_sym_temp in enumerate(v_sym[index])]),"../Figures/LV_symmetries/Input/v_trans.tex","color=black,->,>=latex,densely dashed",[])
         
-plot_LaTeX_2D(u,v,"../Figures/LV_symmetries/Input/v_trans.tex","color=clr_3,line width=1.5pt,","Original population")
-plot_LaTeX_2D(u_transformed,v_transformed,"../Figures/LV_symmetries/Input/v_trans.tex","color=clr_4,line width=1.5pt,","Transformed population")
+plot_LaTeX_2D(u,v,"../Figures/LV_symmetries/Input/v_trans.tex","color=clr_3,line width=1.5pt,","$(u,v)$")
+plot_LaTeX_2D(u_transformed,v_transformed,"../Figures/LV_symmetries/Input/v_trans.tex","color=clr_4,line width=1.5pt,","$(\\hat{u},\\hat{v})$")
 #plot_LaTeX_2D(asarray([u[index] for index, v_temp in enumerate(v_transformed) if index>280 and index<456]),asarray([v_temp for index, v_temp in enumerate(v_transformed) if index >280 and index<456]),"../Figures/LV_symmetries/Input/v_trans.tex","color=clr_4,line width=1.5pt,","Transformed population")
 #plot_LaTeX_2D(asarray([u[index] for index, v_temp in enumerate(v_transformed) if index>105 and index<175]),asarray([v_temp for index, v_temp in enumerate(v_transformed) if index >105 and index<175]),"../Figures/LV_symmetries/Input/v_trans.tex","color=clr_4,line width=1.5pt,",[])
 
@@ -380,20 +380,20 @@ plt.show()
 #=================================================================================
 for index,S_index in enumerate(list(S_indices)):
     if index == 0:
-        plot_LaTeX_2D(asarray(S_sym[index]),asarray([((I_new[S_index]*(temp_index+1))/(temp_index+1)) for temp_index in range(len(epsilon_vec))]),"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,->,>=latex,densely dashed","$\\Gamma^{\mathrm{SIR},S}_{\\epsilon}$")
+        plot_LaTeX_2D(asarray(S_sym[index]),asarray([((I_new[S_index]*(temp_index+1))/(temp_index+1)) for temp_index in range(len(epsilon_vec))]),"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,->,>=latex,densely dashed,line width=1.0pt","$\\Gamma^{\mathrm{SIR},S}_{\\epsilon}$")
     elif index<5:
         plot_LaTeX_2D(asarray(S_sym[index]),asarray([((I_new[S_index]*(temp_index+1))/(temp_index+1)) for temp_index in range(len(epsilon_vec))]),"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,->,>=latex,densely dashed",[])
 for index in range(len(S_sym_2)):
-    plot_LaTeX_2D(asarray(S_sym_2[index]),asarray([I_trans_new[S_indices_2[index]]*((temp_index+1)/(temp_index+1)) for temp_index in range(len(epsilon_vec))]),"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,->,>=latex,densely dashed",[])
-plot_LaTeX_2D(S_new,I_new,"../Figures/SIR_symmetry/Input/S_trans.tex","color=clr_1,line width=1.0pt,","$I(S)$")
-plot_LaTeX_2D(S_trans_new,I_trans_new,"../Figures/SIR_symmetry/Input/S_trans.tex","color=clr_2,line width=1.0pt,","$\\hat{I}(S;\\epsilon)$")
-plot_LaTeX_2D(S_trans_new_2,I_trans_new_2,"../Figures/SIR_symmetry/Input/S_trans.tex","color=clr_3,line width=1.0pt,","$\\hat{\\hat{I}}(S;\\epsilon)=\\hat{I}(S;2\\epsilon)$")
-plot_LaTeX_2D([N*x for x in linspace(0,1,50)],[N*(1-x) for x in linspace(0,1,50)],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,mark=diamond*,only marks,line width=1.5pt,","$N=I+S$")
-plot_LaTeX_2D([0, p],[I_max,I_max],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.5pt,",[])
-plot_LaTeX_2D([0, p],[I_max+epsilon,I_max+epsilon],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.5pt,",[])
-plot_LaTeX_2D([0, p],[I_max+2*epsilon,I_max+2*epsilon],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.5pt,",[])
-plot_LaTeX_2D([p, p],[0,I_max+2*epsilon],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.5pt,",[])
-
+    plot_LaTeX_2D(asarray(S_sym_2[index]),asarray([I_trans_new[S_indices_2[index]]*((temp_index+1)/(temp_index+1)) for temp_index in range(len(epsilon_vec))]),"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,->,>=latex,densely dashed,line width=1.0pt",[])
+plot_LaTeX_2D([N*x for x in linspace(0,1,50)],[N*(1-x) for x in linspace(0,1,B50)],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,mark=diamond*,only marks,line width=0.75pt,","$N=I+S$")
+plot_LaTeX_2D([0, p],[I_max,I_max],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.0pt,",[])
+plot_LaTeX_2D([0, p],[I_max+epsilon,I_max+epsilon],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.0pt,",[])
+plot_LaTeX_2D([0, p],[I_max+2*epsilon,I_max+2*epsilon],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.0pt,",[])
+plot_LaTeX_2D([p, p],[0,I_max+2*epsilon],"../Figures/SIR_symmetry/Input/S_trans.tex","color=black,densely dashed,line width=1.0pt,",[])
+# We add the solutions last
+plot_LaTeX_2D(S_new,I_new,"../Figures/SIR_symmetry/Input/S_trans.tex","color=clr_1,line width=2.0pt,","$I(S)$")
+plot_LaTeX_2D(S_trans_new,I_trans_new,"../Figures/SIR_symmetry/Input/S_trans.tex","color=clr_2,line width=2.0pt,","$\\hat{I}(S;\\epsilon)$")
+plot_LaTeX_2D(S_trans_new_2,I_trans_new_2,"../Figures/SIR_symmetry/Input/S_trans.tex","color=clr_3,line width=2.0pt,","$\\hat{\\hat{I}}(S;\\epsilon)=\\hat{I}(S;2\\epsilon)$")
 
 print("\n\n\tHere are some nice properties:")
 print("\t\tN\t=\t%d"%(N))
